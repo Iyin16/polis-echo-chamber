@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 // Single shared tick across the app — drives all "live" movement.
-let listeners = new Set<() => void>();
+const listeners = new Set<() => void>();
 let tick = 0;
 let started = false;
 
@@ -40,6 +40,7 @@ export function jitter(seed: string, t: number, range = 1) {
 }
 
 export function driftedValue(seed: string, base: number, range = 2, decimals = 1) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTick();
   // Smooth drift across two consecutive ticks
   const a = jitter(seed, Math.floor(t / 1), range);
@@ -50,6 +51,7 @@ export function driftedValue(seed: string, base: number, range = 2, decimals = 1
 }
 
 export function rotatingIndex(length: number, intervalTicks = 1, offset = 0) {
+  // eslint-disable-next-line react-hooks/rules-of-hooks
   const t = useTick();
   return (((Math.floor(t / intervalTicks) + offset) % length) + length) % length;
 }

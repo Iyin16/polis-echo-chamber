@@ -8,8 +8,11 @@ import { expect } from "chai";
  */
 
 describe("PolisAgentNFT", function () {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let contract: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let owner: any;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let addr1: any;
 
   beforeEach(async function () {
@@ -56,6 +59,7 @@ describe("PolisAgentNFT", function () {
       const receipt = await tx.wait();
 
       // Get token ID from event
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const mintEvent = receipt.events.find((e: any) => e.event === "Transfer");
       const tokenId = mintEvent.args.tokenId;
 

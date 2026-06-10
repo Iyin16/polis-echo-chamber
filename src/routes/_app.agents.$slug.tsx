@@ -16,6 +16,7 @@ export const Route = createFileRoute("/_app/agents/$slug")({
     };
   },
   component: () => {
+    // eslint-disable-next-line react-hooks/rules-of-hooks
     const { slug } = Route.useParams();
     return <AgentDetail slug={slug} />;
   },

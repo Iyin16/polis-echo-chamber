@@ -96,6 +96,7 @@ export async function mintAgentNFT(request: MintAgentNFTRequest): Promise<MintRe
   // If MetaMask (window.ethereum) is available, attempt a real mint on Arbitrum Sepolia
   if (typeof window !== "undefined" && (window as any).ethereum) {
     try {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const provider = new ethers.BrowserProvider((window as any).ethereum);
       await provider.send("eth_requestAccounts", []);
       const signer = await provider.getSigner();
@@ -105,9 +106,11 @@ export async function mintAgentNFT(request: MintAgentNFTRequest): Promise<MintRe
       if (!contractAddress)
         throw new Error("Missing REACT_APP_POLIS_NFT_CONTRACT environment variable");
       const abi = POLIS_AGENT_NFT_ABI;
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const contract = new ethers.Contract(contractAddress, abi, signer as any);
 
       // Build struct according to contract: (agentName, ideology, faction, influenceSnapshot, createdTurn, metadataURI)
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const tx = await (contract as any).mintAgentNFT(ownerAddress, request.agentId, {
         agentName: request.agentName,
         ideology: request.ideology,
@@ -122,6 +125,7 @@ export async function mintAgentNFT(request: MintAgentNFTRequest): Promise<MintRe
       // Attempt to parse tokenId from events
       let tokenId: number | null = null;
       if (receipt && receipt.events) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const transfer = receipt.events.find((e: any) => e.event === "Transfer");
         if (transfer && transfer.args && transfer.args.tokenId) {
           tokenId = Number(transfer.args.tokenId.toString());

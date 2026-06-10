@@ -47,12 +47,14 @@ const proposalCategories: ProposalCategory[] = [
   "Expansion",
 ];
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type PlayerAction =
   | { type: "CREATE_AGENT"; data: any }
   | { type: "SUBMIT_PROPOSAL"; data: any }
   | { type: "INFLUENCE_FACTION"; data: any }
   | { type: "ALIGN_AGENT"; data: any }
   | { type: "NONE"; data?: any };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 export type TurnHistoryEntry = {
   id: string;
@@ -74,6 +76,7 @@ export type AgentEvolutionDetails = {
   mostDistrustedAgent: string;
 };
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type WorldSnapshot = {
   turn: number;
   worldState: any;

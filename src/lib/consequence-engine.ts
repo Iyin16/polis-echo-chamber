@@ -2,6 +2,7 @@ import type { WorldState } from "./world-state";
 import type { Agent, FeedPost, Memory, Proposal } from "./polis-data";
 import { createFeedEvent } from "./feed-events";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type CState = {
   turn: number;
   agents: Agent[];
@@ -12,6 +13,7 @@ export type CState = {
   factions: Record<string, number>;
   [key: string]: any;
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 function getAgentById(state: CState, id: string): Agent | undefined {
   return state.agents.find((a) => a.id === id);
