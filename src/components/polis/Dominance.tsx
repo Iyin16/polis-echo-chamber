@@ -365,3 +365,37 @@ function Meter({
     </div>
   );
 }
+
+function VitalTile({
+  label, value, suffix, icon, tone, bar, compact, valueStyle, textTone,
+}: {
+  label: string;
+  value: string;
+  suffix?: string;
+  icon: React.ReactNode;
+  tone: "amber" | "crimson" | "cyan";
+  bar?: number;
+  compact?: boolean;
+  valueStyle?: React.CSSProperties;
+  textTone?: string;
+}) {
+  const colorVar = tone === "amber" ? "var(--amber)" : tone === "crimson" ? "var(--crimson)" : "var(--cyan)";
+  const tc = textTone ?? (tone === "amber" ? "text-amber" : tone === "crimson" ? "text-crimson" : "text-cyan");
+  return (
+    <div className="rounded-sm border hairline bg-background/40 px-2.5 py-2">
+      <div className="flex items-center gap-1.5 font-mono text-[9px] uppercase tracking-[0.18em] text-muted-foreground">
+        <span className={tc}>{icon}</span>
+        <span className="truncate">{label}</span>
+      </div>
+      <div className={`mt-1.5 font-serif ${compact ? "text-[15px]" : "text-[20px]"} tabular-nums truncate ${tc}`} style={valueStyle}>
+        {value}{suffix ? <span className="text-muted-foreground text-[11px] ml-0.5">{suffix}</span> : null}
+      </div>
+      {typeof bar === "number" ? (
+        <div className="mt-2 h-1 rounded-full bg-foreground/5 overflow-hidden">
+          <div className="h-full transition-all duration-1000" style={{ width: `${bar}%`, background: `linear-gradient(90deg, ${colorVar}55, ${colorVar})` }} />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
