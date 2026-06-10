@@ -20,16 +20,41 @@ const statusLabel = (s: string) => {
 export function PersonaPanel() {
   const { agents } = usePolisStore();
   const [registeredAgents, setRegisteredAgents] = useState<Record<string, boolean>>({});
+  const [mintedAgents, setMintedAgents] = useState<Record<string, { tokenId: number } | null>>({});
   const [address, setAddress] = useState<string | null>(null);
   const [hasWallet, setHasWallet] = useState(false);
   const [connecting, setConnecting] = useState(false);
 
+  const ranked = useMemo(() => {
+    return [...agents]
+      .sort((a, b) => b.influence + b.reputation / 2 - (a.influence + a.reputation / 2))
+      .reduce<Record<string, number>>((acc, a, i) => {
+        acc[a.id] = i + 1;
+        return acc;
+      }, {});
+  }, [agents]);
+
   useEffect(() => {
     const statuses: Record<string, boolean> = {};
+    const minted: Record<string, { tokenId: number } | null> = {};
     agents.forEach((a) => {
       statuses[a.slug] = isAgenticRegistered(getAgentId(a));
+      try {
+        const raw = window.localStorage.getItem(`polis.nft.mint.${a.id}`);
+        if (raw) {
+          const parsed = JSON.parse(raw) as { tokenId: number };
+          minted[a.id] = { tokenId: parsed.tokenId };
+        } else if (a.nftTokenId) {
+          minted[a.id] = { tokenId: a.nftTokenId };
+        } else {
+          minted[a.id] = null;
+        }
+      } catch {
+        minted[a.id] = a.nftTokenId ? { tokenId: a.nftTokenId } : null;
+      }
     });
     setRegisteredAgents(statuses);
+    setMintedAgents(minted);
 
     const eth = (window as any).ethereum;
     if (!eth) {
@@ -40,7 +65,7 @@ export function PersonaPanel() {
     eth.request({ method: "eth_accounts" }).then((accounts: string[]) => {
       setAddress(accounts?.[0] ?? null);
     }).catch(() => null);
-  }, []);
+  }, [agents]);
 
   const connectWallet = async () => {
     const eth = (window as any).ethereum;
@@ -80,15 +105,22 @@ export function PersonaPanel() {
         </div>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-        {agents.map((a) => (
+        {agents.map((a) => {
+          const rank = ranked[a.id];
+          const relations = (a.allies?.length ?? 0) + (a.rivals?.length ?? 0) + (a.coalitions?.length ?? 0);
+          const minted = mintedAgents[a.id];
+          return (
           <Link
             key={a.id}
             to="/agents/$slug"
             params={{ slug: a.slug }}
-            className="panel card-lift card-lift-amber rounded-md p-4 group block cursor-pointer"
+            className="panel card-lift card-lift-amber rounded-md p-4 group block cursor-pointer relative"
           >
+            <span className="absolute -top-2 -left-2 inline-flex items-center gap-1 rounded-sm border border-amber/40 bg-background/90 px-1.5 py-0.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-amber">
+              <Crown className="h-3 w-3" /> #{rank?.toString().padStart(2, "0")}
+            </span>
             <div className="flex items-start gap-3">
-              <AgentAvatar agent={a} size={44} />
+              <AgentAvatar agent={a} size={48} />
               <div className="min-w-0 flex-1">
                 <div className="flex items-start justify-between gap-2">
                   <div className="min-w-0">
@@ -100,16 +132,29 @@ export function PersonaPanel() {
                   ) : null}
                 </div>
 
-                <div className="mt-3 grid grid-cols-2 gap-1.5">
-                  <Stat label="REP" value={a.reputation} accent="amber" />
-                  <Stat label="INF" value={a.influence} accent="cyan" />
-                </div>
-
-                <div className="mt-3 flex items-center justify-between gap-2">
+                <div className="mt-2.5 flex items-center justify-between gap-2">
                   <FactionTag faction={a.faction} />
                   <span className="font-mono text-[9px] uppercase tracking-[0.16em] text-muted-foreground/60">
                     {statusLabel(a.status)}
                   </span>
+                </div>
+
+                <div className="mt-3 grid grid-cols-3 gap-1.5">
+                  <Stat label="INF" value={a.influence} accent="amber" />
+                  <Stat label="REP" value={a.reputation} accent="cyan" />
+                  <div className="rounded-sm border hairline bg-background/40 px-2 py-1">
+                    <div className="flex items-center justify-between">
+                      <span className="font-mono text-[9px] tracking-widest text-muted-foreground">REL</span>
+                      <span className="font-mono text-[10.5px] text-silver inline-flex items-center gap-1">
+                        <Users className="h-2.5 w-2.5" />{relations}
+                      </span>
+                    </div>
+                    <div className="mt-1 flex gap-0.5 h-0.5">
+                      <span className="h-full bg-amber rounded-full" style={{ width: `${(a.allies?.length ?? 0) * 18}%` }} />
+                      <span className="h-full bg-crimson rounded-full" style={{ width: `${(a.rivals?.length ?? 0) * 18}%` }} />
+                      <span className="h-full bg-cyan rounded-full" style={{ width: `${(a.coalitions?.length ?? 0) * 14}%` }} />
+                    </div>
+                  </div>
                 </div>
 
                 <div className="mt-2.5 flex flex-wrap gap-1">
@@ -122,11 +167,34 @@ export function PersonaPanel() {
                     </span>
                   ))}
                 </div>
+
+                <div className="mt-3 pt-2.5 border-t hairline flex items-center justify-between gap-2">
+                  {minted ? (
+                    <>
+                      <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-amber">
+                        <ShieldCheck className="h-3 w-3" /> Identity Verified
+                      </span>
+                      <span className="font-mono text-[9.5px] text-muted-foreground">
+                        #{minted.tokenId} · <span className="text-cyan">Arbitrum</span>
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">
+                        <Gem className="h-3 w-3 text-amber" /> Mint Sovereign Identity
+                      </span>
+                      <span className="font-mono text-[9px] text-muted-foreground/70">on Arbitrum</span>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           </Link>
-        ))}
+          );
+        })}
       </div>
+
+
 
       <div className="mt-8">
         <SectionHeader label="Chamber Composition" />
