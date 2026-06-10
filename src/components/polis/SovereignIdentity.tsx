@@ -39,7 +39,15 @@ function shortHash(h?: string) {
   return `${h.slice(0, 8)}…${h.slice(-6)}`;
 }
 
-export function SovereignIdentity({ agent, createdTurn = 31, compact = false }: { agent: Agent; createdTurn?: number; compact?: boolean }) {
+export function SovereignIdentity({
+  agent,
+  createdTurn = 31,
+  compact = false,
+}: {
+  agent: Agent;
+  createdTurn?: number;
+  compact?: boolean;
+}) {
   const [mint, setMint] = useState<MintRecord | null>(null);
   const [minting, setMinting] = useState(false);
 
@@ -112,7 +120,9 @@ export function SovereignIdentity({ agent, createdTurn = 31, compact = false }: 
           <AgentAvatar agent={agent} size={compact ? 40 : 56} />
           <div className="min-w-0 flex-1">
             <p className="font-serif text-[15px] leading-tight">{agent.name}</p>
-            <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">{agent.ideology}</p>
+            <p className="font-mono text-[10px] text-muted-foreground mt-0.5 truncate">
+              {agent.ideology}
+            </p>
             {isMinted && mint ? (
               <div className="mt-2 grid grid-cols-2 gap-x-3 gap-y-1 font-mono text-[10px] text-muted-foreground">
                 <div>
@@ -122,7 +132,10 @@ export function SovereignIdentity({ agent, createdTurn = 31, compact = false }: 
                   Network <span className="text-cyan">Arbitrum</span>
                 </div>
                 <div className="col-span-2">
-                  Minted <span className="text-foreground/85">{new Date(mint.mintedAt).toLocaleString()}</span>
+                  Minted{" "}
+                  <span className="text-foreground/85">
+                    {new Date(mint.mintedAt).toLocaleString()}
+                  </span>
                 </div>
                 {mint.txHash ? (
                   <div className="col-span-2 truncate">
@@ -132,7 +145,8 @@ export function SovereignIdentity({ agent, createdTurn = 31, compact = false }: 
               </div>
             ) : (
               <p className="mt-2 text-[11.5px] text-foreground/70 leading-relaxed">
-                Minting creates a permanent sovereign identity record for this political actor on Arbitrum.
+                Minting creates a permanent sovereign identity record for this political actor on
+                Arbitrum.
               </p>
             )}
           </div>

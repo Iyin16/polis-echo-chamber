@@ -154,6 +154,7 @@ function applyStreakConsequences(state: CState): CState {
 // ── 2. Dominance > 70% ─────────────────────────────────────────────────────
 
 function applyDominanceConsequences(state: CState): CState {
+  /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
   const factionDominance: Record<string, number> = (state.worldState as any).factionDominance ?? {};
   const feedUpdates: FeedPost[] = [];
   const memoryUpdates: Memory[] = [];
@@ -207,12 +208,10 @@ function applyDominanceConsequences(state: CState): CState {
         "Rival factions received a temporary alliance bonus.",
         "Chamber polarization increased.",
       ],
-      involvedAgents: [...factionAgents, ...rivals]
-        .slice(0, 4)
-        .map((a) => ({
-          agentId: a.id,
-          role: a.faction === faction ? "Dominant faction" : "Rival coalition",
-        })),
+      involvedAgents: [...factionAgents, ...rivals].slice(0, 4).map((a) => ({
+        agentId: a.id,
+        role: a.faction === faction ? "Dominant faction" : "Rival coalition",
+      })),
       longTermImpact: [
         "Dominant faction may splinter if dissent is not managed.",
         "Opposition coalition may persist across future cycles.",

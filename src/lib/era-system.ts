@@ -2,6 +2,7 @@ import type { CivilizationEra, EraHistoryEntry, WorldState } from "./world-state
 import type { Agent, FeedPost, Memory, Proposal } from "./polis-data";
 import { createFeedEvent } from "./feed-events";
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 type CState = {
   turn: number;
   agents: Agent[];
@@ -12,6 +13,7 @@ type CState = {
   factions: Record<string, number>;
   [key: string]: any;
 };
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 const ERA_LABELS: Record<CivilizationEra, string> = {
   Formation: "Formation Era",
@@ -44,6 +46,7 @@ export const ERA_COLORS: Record<CivilizationEra, string> = {
 
 // ── Era determination ──────────────────────────────────────────────────────
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export function determineEra(worldState: WorldState & Record<string, any>): CivilizationEra {
   const tension = worldState.politicalTension ?? 20;
   const stability = worldState.stability ?? 50;

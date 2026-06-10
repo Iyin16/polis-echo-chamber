@@ -1,11 +1,26 @@
 import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { eras, treaties, replayEvents, agentById, memories as memoriesSeed } from "@/lib/polis-data";
+import {
+  eras,
+  treaties,
+  replayEvents,
+  agentById,
+  memories as memoriesSeed,
+} from "@/lib/polis-data";
 import { EntityText } from "./EntityText";
 import { Badge } from "@/components/ui/badge";
 import { archiveGovernanceMemory } from "@/lib/0g-storage";
 import { usePolisStore } from "@/lib/polis-store";
-import { AlertTriangle, Crown, Flag, GitBranch, Handshake, Scale, Sparkles, Swords } from "lucide-react";
+import {
+  AlertTriangle,
+  Crown,
+  Flag,
+  GitBranch,
+  Handshake,
+  Scale,
+  Sparkles,
+  Swords,
+} from "lucide-react";
 
 const treatyColor: Record<string, string> = {
   Binding: "text-amber border-amber/40 bg-amber/5",
@@ -325,7 +340,13 @@ type ChronicleEvent = {
   id: string;
   cycle: string;
   date: string;
-  type: "Proposal Outcome" | "Alliance" | "Betrayal" | "Dominance Shift" | "Political Crisis" | "Era Transition";
+  type:
+    | "Proposal Outcome"
+    | "Alliance"
+    | "Betrayal"
+    | "Dominance Shift"
+    | "Political Crisis"
+    | "Era Transition";
   title: string;
   detail: string;
   impact: "Low" | "Medium" | "High" | "Critical";
@@ -333,13 +354,41 @@ type ChronicleEvent = {
   agents: string[];
 };
 
-const typeMeta: Record<ChronicleEvent["type"], { icon: any; tone: string; border: string; bg: string }> = {
-  "Proposal Outcome": { icon: Scale, tone: "text-amber", border: "border-amber/40", bg: "bg-amber/[0.04]" },
-  "Alliance": { icon: Handshake, tone: "text-cyan", border: "border-cyan/40", bg: "bg-cyan/[0.04]" },
-  "Betrayal": { icon: Swords, tone: "text-crimson", border: "border-crimson/40", bg: "bg-crimson/[0.05]" },
-  "Dominance Shift": { icon: Crown, tone: "text-amber", border: "border-amber/40", bg: "bg-amber/[0.04]" },
-  "Political Crisis": { icon: AlertTriangle, tone: "text-crimson", border: "border-crimson/40", bg: "bg-crimson/[0.05]" },
-  "Era Transition": { icon: Sparkles, tone: "text-cyan", border: "border-cyan/40", bg: "bg-cyan/[0.04]" },
+const typeMeta: Record<
+  ChronicleEvent["type"],
+  { icon: any; tone: string; border: string; bg: string }
+> = {
+  "Proposal Outcome": {
+    icon: Scale,
+    tone: "text-amber",
+    border: "border-amber/40",
+    bg: "bg-amber/[0.04]",
+  },
+  Alliance: { icon: Handshake, tone: "text-cyan", border: "border-cyan/40", bg: "bg-cyan/[0.04]" },
+  Betrayal: {
+    icon: Swords,
+    tone: "text-crimson",
+    border: "border-crimson/40",
+    bg: "bg-crimson/[0.05]",
+  },
+  "Dominance Shift": {
+    icon: Crown,
+    tone: "text-amber",
+    border: "border-amber/40",
+    bg: "bg-amber/[0.04]",
+  },
+  "Political Crisis": {
+    icon: AlertTriangle,
+    tone: "text-crimson",
+    border: "border-crimson/40",
+    bg: "bg-crimson/[0.05]",
+  },
+  "Era Transition": {
+    icon: Sparkles,
+    tone: "text-cyan",
+    border: "border-cyan/40",
+    bg: "bg-cyan/[0.04]",
+  },
 };
 
 const impactTone: Record<ChronicleEvent["impact"], string> = {
@@ -350,16 +399,116 @@ const impactTone: Record<ChronicleEvent["impact"], string> = {
 };
 
 const curatedChronicle: ChronicleEvent[] = [
-  { id: "c1", cycle: "Cycle 14", date: "Q2 · 2031", type: "Political Crisis", title: "Treasury Collapse of POL-119", detail: "Recursive yield exposure triggered a 31% sovereign drawdown over nine days.", impact: "Critical", factions: ["Sovereigntist", "Reformist"], agents: ["a1", "a2"] },
-  { id: "c2", cycle: "Cycle 15", date: "Q3 · 2031", type: "Era Transition", title: "Onset of the Sovereign Reserve Era", detail: "Authorship of the Sovereign Reserve Doctrine ended the Yield Expansion epoch.", impact: "High", factions: ["Sovereigntist"], agents: ["a1", "a2"] },
-  { id: "c3", cycle: "Cycle 19", date: "Q1 · 2032", type: "Proposal Outcome", title: "POL-188 Nullified", detail: "Procedural objection vacated the Delegation Weight Reform Act on registry grounds.", impact: "High", factions: ["Populist", "Reformist"], agents: ["a4", "a6"] },
-  { id: "c4", cycle: "Cycle 22", date: "Q4 · 2032", type: "Alliance", title: "Reformist–Technocrat Concordat ratified", detail: "Aurelia Vex and Nyx Halberd codified a binding cross-faction governance compact.", impact: "High", factions: ["Reformist", "Technocrat"], agents: ["a1", "a3"] },
-  { id: "c5", cycle: "Cycle 24", date: "Q2 · 2033", type: "Betrayal", title: "Velocity Caucus split", detail: "Vega Mercer broke with the Velocity Caucus during the Bridge Censorship vote.", impact: "Medium", factions: ["Accelerationist"], agents: ["a5"] },
-  { id: "c6", cycle: "Cycle 26", date: "Q4 · 2033", type: "Dominance Shift", title: "Technocrat hegemony established", detail: "Cryptographic Technocracy crossed 30% chamber influence for the first time.", impact: "High", factions: ["Technocrat"], agents: ["a3"] },
-  { id: "c7", cycle: "Cycle 28", date: "Q2 · 2034", type: "Political Crisis", title: "Bridge Censorship Crisis", detail: "Cross-chain bridge censored sovereign transfers; emergency session convened.", impact: "Critical", factions: ["Sovereigntist", "Technocrat"], agents: ["a2", "a3"] },
-  { id: "c8", cycle: "Cycle 29", date: "Q3 · 2034", type: "Alliance", title: "Sovereign Reserve Bloc reformed", detail: "Kael Thorne and Marcus Pell reconstituted the bloc against POL-247.", impact: "Medium", factions: ["Sovereigntist", "Reformist"], agents: ["a2", "a6"] },
-  { id: "c9", cycle: "Cycle 30", date: "Q4 · 2034", type: "Dominance Shift", title: "Reformist resurgence", detail: "Procedural Continuity Bloc reclaimed plurality after three cycles in opposition.", impact: "Medium", factions: ["Reformist"], agents: ["a1", "a6"] },
-  { id: "c10", cycle: "Cycle 31", date: "Q1 · 2035", type: "Proposal Outcome", title: "POL-247 enters Floor Deliberation", detail: "Sovereign Liquidity Reallocation Act mirrors POL-119 mechanics; fractured coalitions.", impact: "High", factions: ["Velocity", "Sovereigntist", "Reformist"], agents: ["a1", "a2", "a5"] },
+  {
+    id: "c1",
+    cycle: "Cycle 14",
+    date: "Q2 · 2031",
+    type: "Political Crisis",
+    title: "Treasury Collapse of POL-119",
+    detail: "Recursive yield exposure triggered a 31% sovereign drawdown over nine days.",
+    impact: "Critical",
+    factions: ["Sovereigntist", "Reformist"],
+    agents: ["a1", "a2"],
+  },
+  {
+    id: "c2",
+    cycle: "Cycle 15",
+    date: "Q3 · 2031",
+    type: "Era Transition",
+    title: "Onset of the Sovereign Reserve Era",
+    detail: "Authorship of the Sovereign Reserve Doctrine ended the Yield Expansion epoch.",
+    impact: "High",
+    factions: ["Sovereigntist"],
+    agents: ["a1", "a2"],
+  },
+  {
+    id: "c3",
+    cycle: "Cycle 19",
+    date: "Q1 · 2032",
+    type: "Proposal Outcome",
+    title: "POL-188 Nullified",
+    detail: "Procedural objection vacated the Delegation Weight Reform Act on registry grounds.",
+    impact: "High",
+    factions: ["Populist", "Reformist"],
+    agents: ["a4", "a6"],
+  },
+  {
+    id: "c4",
+    cycle: "Cycle 22",
+    date: "Q4 · 2032",
+    type: "Alliance",
+    title: "Reformist–Technocrat Concordat ratified",
+    detail: "Aurelia Vex and Nyx Halberd codified a binding cross-faction governance compact.",
+    impact: "High",
+    factions: ["Reformist", "Technocrat"],
+    agents: ["a1", "a3"],
+  },
+  {
+    id: "c5",
+    cycle: "Cycle 24",
+    date: "Q2 · 2033",
+    type: "Betrayal",
+    title: "Velocity Caucus split",
+    detail: "Vega Mercer broke with the Velocity Caucus during the Bridge Censorship vote.",
+    impact: "Medium",
+    factions: ["Accelerationist"],
+    agents: ["a5"],
+  },
+  {
+    id: "c6",
+    cycle: "Cycle 26",
+    date: "Q4 · 2033",
+    type: "Dominance Shift",
+    title: "Technocrat hegemony established",
+    detail: "Cryptographic Technocracy crossed 30% chamber influence for the first time.",
+    impact: "High",
+    factions: ["Technocrat"],
+    agents: ["a3"],
+  },
+  {
+    id: "c7",
+    cycle: "Cycle 28",
+    date: "Q2 · 2034",
+    type: "Political Crisis",
+    title: "Bridge Censorship Crisis",
+    detail: "Cross-chain bridge censored sovereign transfers; emergency session convened.",
+    impact: "Critical",
+    factions: ["Sovereigntist", "Technocrat"],
+    agents: ["a2", "a3"],
+  },
+  {
+    id: "c8",
+    cycle: "Cycle 29",
+    date: "Q3 · 2034",
+    type: "Alliance",
+    title: "Sovereign Reserve Bloc reformed",
+    detail: "Kael Thorne and Marcus Pell reconstituted the bloc against POL-247.",
+    impact: "Medium",
+    factions: ["Sovereigntist", "Reformist"],
+    agents: ["a2", "a6"],
+  },
+  {
+    id: "c9",
+    cycle: "Cycle 30",
+    date: "Q4 · 2034",
+    type: "Dominance Shift",
+    title: "Reformist resurgence",
+    detail: "Procedural Continuity Bloc reclaimed plurality after three cycles in opposition.",
+    impact: "Medium",
+    factions: ["Reformist"],
+    agents: ["a1", "a6"],
+  },
+  {
+    id: "c10",
+    cycle: "Cycle 31",
+    date: "Q1 · 2035",
+    type: "Proposal Outcome",
+    title: "POL-247 enters Floor Deliberation",
+    detail: "Sovereign Liquidity Reallocation Act mirrors POL-119 mechanics; fractured coalitions.",
+    impact: "High",
+    factions: ["Velocity", "Sovereigntist", "Reformist"],
+    agents: ["a1", "a2", "a5"],
+  },
 ];
 
 function ChronicleSection() {
@@ -381,11 +530,15 @@ function ChronicleSection() {
       cycle: m.cycle,
       date: m.date,
       type:
-        m.category === "Treasury" ? "Political Crisis" :
-        m.category === "Alliance" ? "Alliance" :
-        m.category === "Conflict" ? "Betrayal" :
-        m.category === "Election" ? "Proposal Outcome" :
-                                     "Dominance Shift",
+        m.category === "Treasury"
+          ? "Political Crisis"
+          : m.category === "Alliance"
+            ? "Alliance"
+            : m.category === "Conflict"
+              ? "Betrayal"
+              : m.category === "Election"
+                ? "Proposal Outcome"
+                : "Dominance Shift",
       title: m.title,
       detail: m.summary,
       impact: m.weight > 90 ? "Critical" : m.weight > 75 ? "High" : "Medium",
@@ -408,18 +561,29 @@ function ChronicleSection() {
   }, []);
 
   const filtered = filter === "All" ? events : events.filter((e) => e.type === filter);
-  const filters: (ChronicleEvent["type"] | "All")[] = ["All", "Proposal Outcome", "Alliance", "Betrayal", "Dominance Shift", "Political Crisis", "Era Transition"];
+  const filters: (ChronicleEvent["type"] | "All")[] = [
+    "All",
+    "Proposal Outcome",
+    "Alliance",
+    "Betrayal",
+    "Dominance Shift",
+    "Political Crisis",
+    "Era Transition",
+  ];
 
   return (
     <section className="px-4 md:px-6 py-10 border-b hairline">
       <div className="flex flex-wrap items-end justify-between gap-3 mb-5">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber">Historical Memory · Civilization Chronicle</p>
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber">
+            Historical Memory · Civilization Chronicle
+          </p>
           <h2 className="font-serif text-xl md:text-2xl tracking-tight mt-1 flex items-center gap-2">
             <GitBranch className="h-5 w-5 text-amber" /> Political History of Polis
           </h2>
           <p className="text-[12.5px] text-muted-foreground mt-1 max-w-xl">
-            An archive of every consequential moment the civilization remembers — outcomes, alliances, betrayals, dominance shifts, crises, and era transitions.
+            An archive of every consequential moment the civilization remembers — outcomes,
+            alliances, betrayals, dominance shifts, crises, and era transitions.
           </p>
         </div>
         <div className="font-mono text-[10px] text-muted-foreground">
@@ -450,15 +614,21 @@ function ChronicleSection() {
           const Icon = meta.icon;
           return (
             <li key={e.id} className="relative">
-              <span className={`absolute -left-[27px] top-2 grid h-4 w-4 place-items-center rounded-full border ${meta.border} ${meta.bg}`}>
+              <span
+                className={`absolute -left-[27px] top-2 grid h-4 w-4 place-items-center rounded-full border ${meta.border} ${meta.bg}`}
+              >
                 <Icon className={`h-2.5 w-2.5 ${meta.tone}`} />
               </span>
               <article className={`panel card-lift rounded-md p-3.5 border-l-2 ${meta.border}`}>
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <span className={`font-mono text-[9.5px] uppercase tracking-[0.18em] rounded-sm border px-1.5 py-0.5 ${meta.tone} ${meta.border}`}>
+                  <span
+                    className={`font-mono text-[9.5px] uppercase tracking-[0.18em] rounded-sm border px-1.5 py-0.5 ${meta.tone} ${meta.border}`}
+                  >
                     {e.type}
                   </span>
-                  <span className={`font-mono text-[9.5px] uppercase tracking-[0.14em] rounded-sm border px-1.5 py-0.5 ${impactTone[e.impact]}`}>
+                  <span
+                    className={`font-mono text-[9.5px] uppercase tracking-[0.14em] rounded-sm border px-1.5 py-0.5 ${impactTone[e.impact]}`}
+                  >
                     {e.impact} Impact
                   </span>
                   <span className="ml-auto font-mono text-[10px] text-muted-foreground tabular-nums">
@@ -482,7 +652,12 @@ function ChronicleSection() {
                           const a = agentById[id];
                           if (!a) return null;
                           return (
-                            <Link key={id} to="/agents/$slug" params={{ slug: a.slug }} className="hover:text-foreground underline-offset-2 hover:underline">
+                            <Link
+                              key={id}
+                              to="/agents/$slug"
+                              params={{ slug: a.slug }}
+                              className="hover:text-foreground underline-offset-2 hover:underline"
+                            >
                               {a.name}
                             </Link>
                           );
@@ -499,4 +674,3 @@ function ChronicleSection() {
     </section>
   );
 }
-
