@@ -9,6 +9,7 @@ import { usePolisStore } from "@/lib/polis-store";
 import { AgentAvatar } from "./AgentAvatar";
 import ChainStatus from "./ChainStatus";
 import { AgentLink, EntityText, MemoryLink, ProposalLink } from "./EntityText";
+import { SovereignIdentity } from "./SovereignIdentity";
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
 import { Badge } from "@/components/ui/badge";
 import { driftedValue } from "@/lib/use-live-pulse";
@@ -241,6 +242,10 @@ export function AgentDetail({ slug }: { slug: string }) {
           <Stat label="INF" value={a.influence} accent="cyan" />
         </div>
       </header>
+
+      <div className="mb-3">
+        <SovereignIdentity agent={a} createdTurn={31} />
+      </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
         <Block title="Governance Philosophy" className="lg:col-span-2">
