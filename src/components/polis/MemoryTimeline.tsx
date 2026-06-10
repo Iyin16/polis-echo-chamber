@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
-import { eras, treaties, replayEvents, agentById } from "@/lib/polis-data";
+import { eras, treaties, replayEvents, agentById, memories as memoriesSeed } from "@/lib/polis-data";
 import { EntityText } from "./EntityText";
 import { Badge } from "@/components/ui/badge";
 import { archiveGovernanceMemory } from "@/lib/0g-storage";
 import { usePolisStore } from "@/lib/polis-store";
+import { AlertTriangle, Crown, Flag, GitBranch, Handshake, Scale, Sparkles, Swords } from "lucide-react";
 
 const treatyColor: Record<string, string> = {
   Binding: "text-amber border-amber/40 bg-amber/5",
