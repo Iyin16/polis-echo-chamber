@@ -51,6 +51,8 @@ export function MemoryTimeline() {
 
   return (
     <>
+      <ChronicleSection />
+
       <section className="px-4 md:px-6 py-10">
         <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
           <div>
