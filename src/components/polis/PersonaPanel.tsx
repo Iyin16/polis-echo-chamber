@@ -1,10 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "@tanstack/react-router";
 import { getAgentId } from "@/lib/agent-id";
 import { isAgenticRegistered } from "@/lib/agentic";
 import { usePolisStore } from "@/lib/polis-store";
 import { AgentAvatar } from "./AgentAvatar";
 import { Badge } from "@/components/ui/badge";
+import { Crown, Gem, ShieldCheck, Users } from "lucide-react";
 
 const statusLabel = (s: string) => {
   const map: Record<string, string> = {
