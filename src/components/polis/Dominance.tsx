@@ -42,13 +42,124 @@ export function Dominance() {
 
   const tickerIdx = rotatingIndex(chamberSignals.length, 3);
 
+  const activeProposals = proposals.filter((p) => /Active|Deliberation|Voting/i.test(p.statusTag + " " + p.status)).length;
+  const emotion = tension > 70 ? "Fragmenting" : tension > 50 ? "Tense" : stability > 70 ? "Stable" : "Reforming";
+  const emotionTone = emotion === "Fragmenting" ? "text-crimson" : emotion === "Tense" ? "text-amber" : emotion === "Stable" ? "text-cyan" : "text-silver";
+  const health = Math.round(Math.max(0, Math.min(100, stability * 0.6 + (100 - tension) * 0.4)));
+  const healthTone = health > 70 ? "text-cyan" : health > 50 ? "text-amber" : "text-crimson";
+  const turnNumber = 31;
+
   return (
     <section className="px-4 md:px-6 py-10">
+      {/* Command Center Hero */}
+      <div className="panel rounded-md p-5 md:p-6 mb-6 relative overflow-hidden border-l-4 border-l-amber">
+        <div className="absolute inset-0 grid-bg opacity-30 pointer-events-none" />
+        <div className="relative">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-amber">World State · Command Center</p>
+              <h1 className="font-serif text-2xl md:text-3xl tracking-tight mt-1">Civilization Vitals</h1>
+              <p className="text-[12.5px] text-muted-foreground mt-1 max-w-xl">
+                Live telemetry of the chamber's political climate, faction balance, and civilizational health.
+              </p>
+            </div>
+            <div className="flex items-center gap-3 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              <span className="flex items-center gap-1.5"><span className="h-1.5 w-1.5 rounded-full bg-amber glow-amber animate-pulse" /> LIVE</span>
+              <span>TICK {String(t).padStart(4, "0")}</span>
+              <span>TURN <span className="text-amber tabular-nums">{turnNumber}</span></span>
+            </div>
+          </div>
+
+          <div className="mt-5 grid grid-cols-2 md:grid-cols-4 xl:grid-cols-7 gap-2.5">
+            <VitalTile
+              label="World Stability"
+              value={`${stability.toFixed(0)}`}
+              suffix="/100"
+              icon={<ShieldAlert className="h-3 w-3" />}
+              tone="amber"
+              bar={stability}
+            />
+            <VitalTile
+              label="Political Tension"
+              value={`${tension.toFixed(0)}`}
+              suffix="/100"
+              icon={<Flame className="h-3 w-3" />}
+              tone="crimson"
+              bar={tension}
+            />
+            <VitalTile
+              label="World Emotion"
+              value={emotion}
+              icon={<BrainCircuit className="h-3 w-3" />}
+              tone="cyan"
+              textTone={emotionTone}
+            />
+            <VitalTile
+              label="Current Era"
+              value={currentEra.name}
+              icon={<Sparkles className="h-3 w-3" />}
+              tone="cyan"
+              compact
+            />
+            <VitalTile
+              label="Dominant Faction"
+              value={dominant.name}
+              icon={<Crown className="h-3 w-3" />}
+              tone="amber"
+              valueStyle={{ color: dominant.color }}
+              compact
+            />
+            <VitalTile
+              label="Active Proposals"
+              value={String(activeProposals)}
+              icon={<Gauge className="h-3 w-3" />}
+              tone="amber"
+            />
+            <VitalTile
+              label="Civilization Health"
+              value={`${health}`}
+              suffix="%"
+              icon={<HeartPulse className="h-3 w-3" />}
+              tone="cyan"
+              bar={health}
+              textTone={healthTone}
+            />
+          </div>
+
+          {/* Faction dominance bar */}
+          <div className="mt-5">
+            <div className="flex items-center justify-between mb-1.5 font-mono text-[10px] uppercase tracking-[0.18em] text-muted-foreground">
+              <span>Faction Dominance</span>
+              <span className="text-amber tabular-nums">{dominant.live.toFixed(1)}% lead +{lead}</span>
+            </div>
+            <div className="flex h-2.5 w-full overflow-hidden rounded-sm">
+              {liveFactions.map((f) => (
+                <span
+                  key={f.name}
+                  className="transition-all duration-1000"
+                  style={{ width: `${f.live}%`, background: f.color }}
+                  title={`${f.name} ${f.live.toFixed(1)}%`}
+                />
+              ))}
+            </div>
+            <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[10px] text-muted-foreground">
+              {liveFactions.map((f) => (
+                <span key={f.name} className="inline-flex items-center gap-1.5">
+                  <span className="h-1.5 w-1.5 rounded-sm" style={{ background: f.color }} />
+                  <span style={{ color: f.color }}>{f.name}</span>
+                  <span className="tabular-nums">{f.live.toFixed(1)}%</span>
+                </span>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
         <div>
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Command Layer · Live</p>
-          <h1 className="font-serif text-2xl md:text-3xl tracking-tight mt-1">Faction Dominance</h1>
+          <h2 className="font-serif text-xl md:text-2xl tracking-tight mt-1">Faction Dominance</h2>
           <p className="text-[12.5px] text-muted-foreground mt-1 max-w-xl">
             Real-time monitoring of civilizational power balance across the chamber.
           </p>
