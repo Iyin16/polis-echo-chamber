@@ -1,6 +1,14 @@
 import type { WorldState } from "./world-state";
 import type { PolisState } from "./polis-store";
-import type { Agent, FeedPost, Memory, Proposal, ProposalCategory, ProposalLifecycle, ProposalOrigin } from "./polis-data";
+import type {
+  Agent,
+  FeedPost,
+  Memory,
+  Proposal,
+  ProposalCategory,
+  ProposalLifecycle,
+  ProposalOrigin,
+} from "./polis-data";
 import {
   createProposalCreatedEvent,
   createProposalDebateEvent,
@@ -17,11 +25,27 @@ import {
   createFeedEvent,
 } from "./feed-events";
 import { generateAgentPortrait } from "./portrait";
-import { applyConsequenceEngine, getFactionMorale, getAllianceTrustBonus, getTensionModifier } from "./consequence-engine";
-import { updateCivilizationEra, getEraVoteWeightModifier, getEraProposalBias, getEraIdeologyDriftMultiplier } from "./era-system";
+import {
+  applyConsequenceEngine,
+  getFactionMorale,
+  getAllianceTrustBonus,
+  getTensionModifier,
+} from "./consequence-engine";
+import {
+  updateCivilizationEra,
+  getEraVoteWeightModifier,
+  getEraProposalBias,
+  getEraIdeologyDriftMultiplier,
+} from "./era-system";
 import type { CivilizationEra } from "./world-state";
 
-const proposalCategories: ProposalCategory[] = ["Treasury", "Governance Reform", "Security", "Alliance", "Expansion"];
+const proposalCategories: ProposalCategory[] = [
+  "Treasury",
+  "Governance Reform",
+  "Security",
+  "Alliance",
+  "Expansion",
+];
 
 export type PlayerAction =
   | { type: "CREATE_AGENT"; data: any }
@@ -83,10 +107,23 @@ function cloneState(state: TurnState): TurnState {
     factions: state.factions,
     events: state.events,
     worldState: { ...state.worldState },
-    agents: state.agents.map((agent) => ({ ...agent, votingHistory: [...agent.votingHistory], memoryReferences: [...agent.memoryReferences], allies: [...agent.allies], rivals: [...agent.rivals], coalitions: [...agent.coalitions], recentActivity: [...agent.recentActivity] })),
+    agents: state.agents.map((agent) => ({
+      ...agent,
+      votingHistory: [...agent.votingHistory],
+      memoryReferences: [...agent.memoryReferences],
+      allies: [...agent.allies],
+      rivals: [...agent.rivals],
+      coalitions: [...agent.coalitions],
+      recentActivity: [...agent.recentActivity],
+    })),
     feed: [...state.feed],
     memories: [...state.memories],
-    proposals: state.proposals.map((proposal) => ({ ...proposal, votes: { ...proposal.votes }, agentReactions: [...proposal.agentReactions], historicalReferences: [...proposal.historicalReferences] })),
+    proposals: state.proposals.map((proposal) => ({
+      ...proposal,
+      votes: { ...proposal.votes },
+      agentReactions: [...proposal.agentReactions],
+      historicalReferences: [...proposal.historicalReferences],
+    })),
     history: [...state.history],
   };
 }
@@ -174,12 +211,21 @@ function shouldSpawnProposal(state: TurnState) {
 
 function createEngineProposal(state: TurnState, category: ProposalCategory): Proposal {
   const origin: ProposalOrigin = Math.random() > 0.5 ? "WORLD" : "AGENT";
-  const proposer = origin === "AGENT" ? state.agents[Math.floor(Math.random() * state.agents.length)] : undefined;
+  const proposer =
+    origin === "AGENT" ? state.agents[Math.floor(Math.random() * state.agents.length)] : undefined;
   const id = `POL-${100 + state.turn}-${Math.floor(Math.random() * 90 + 10)}`;
   const title = buildProposalTitle(category, state.turn);
-  const slug = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+  const slug = title
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
   const description = `${category} policy drafted to shape the chamber's next cycle.`;
-  const impactLevel = category === "Security" || category === "Treasury" ? "High" : category === "Expansion" ? "Moderate" : "Low" as const;
+  const impactLevel =
+    category === "Security" || category === "Treasury"
+      ? "High"
+      : category === "Expansion"
+        ? "Moderate"
+        : ("Low" as const);
   return {
     id,
     slug,
@@ -210,7 +256,13 @@ function createEngineProposal(state: TurnState, category: ProposalCategory): Pro
     sentimentTrend: [50],
     sentimentDelta: "+0.0",
     agentReactions: proposer
-      ? [{ agentId: proposer.id, position: "endorsed", statement: `${proposer.name} generated this proposal.` }]
+      ? [
+          {
+            agentId: proposer.id,
+            position: "endorsed",
+            statement: `${proposer.name} generated this proposal.`,
+          },
+        ]
       : [],
     historicalReferences: [],
     upcoming: "Debate begins next turn",
@@ -226,7 +278,9 @@ function createMemoryFromProposal(state: TurnState, proposal: Proposal): Memory 
     Expansion: "Community",
   };
 
-  const involvedAgents = state.agents.slice(0, 2).map((agent) => ({ agentId: agent.id, role: `${agent.faction} stakeholder` }));
+  const involvedAgents = state.agents
+    .slice(0, 2)
+    .map((agent) => ({ agentId: agent.id, role: `${agent.faction} stakeholder` }));
   return {
     id: `m-${Date.now()}-${proposal.id}`,
     slug: proposal.slug,
@@ -235,7 +289,10 @@ function createMemoryFromProposal(state: TurnState, proposal: Proposal): Memory 
     title: `${proposal.title} ${proposal.statusTag === "Passed" ? "Ratified" : proposal.statusTag === "Rejected" ? "Rejected" : proposal.statusTag === "Tabled"}`,
     category: proposal.category ? categoryMap[proposal.category] : "Community",
     summary: `${proposal.title} was ${proposal.statusTag.toLowerCase()} by the chamber and archived as a defining memory.`,
-    weight: Math.min(98, Math.max(42, proposal.risk + (proposal.statusTag === "Passed" ? 20 : -10))),
+    weight: Math.min(
+      98,
+      Math.max(42, proposal.risk + (proposal.statusTag === "Passed" ? 20 : -10)),
+    ),
     fullSummary: `The proposal ${proposal.title} from cycle ${state.turn} ${proposal.statusTag === "Passed" ? "was ratified" : proposal.statusTag === "Rejected" ? "failed" : "was tabled"}. It shaped the chamber's next political phase and is now preserved as a memory for faction strategy.`,
     consequences: [
       `${proposal.statusTag === "Passed" ? "Enacted" : "Rejected"} by the chamber.`,
@@ -247,9 +304,15 @@ function createMemoryFromProposal(state: TurnState, proposal: Proposal): Memory 
       `Referenced in future governance debates.`,
       `Shaped faction trust and coalition formation.`,
     ],
-    trustImpact: proposal.statusTag === "Passed" ? "Trust increased among supporters." : "Trust weakened among undecided factions.",
+    trustImpact:
+      proposal.statusTag === "Passed"
+        ? "Trust increased among supporters."
+        : "Trust weakened among undecided factions.",
     citationCount: 1,
-    memoryTags: proposal.memoryTags ?? [proposal.category ?? "Community", proposal.origin ?? "WORLD"],
+    memoryTags: proposal.memoryTags ?? [
+      proposal.category ?? "Community",
+      proposal.origin ?? "WORLD",
+    ],
   };
 }
 
@@ -259,12 +322,7 @@ function archiveResolvedProposals(state: TurnState): TurnState {
 
   const archivedMemories = archived.map((proposal) => createMemoryFromProposal(state, proposal));
   const feedUpdates: FeedPost[] = archivedMemories.map((memory) =>
-    createMemoryArchivedEvent(
-      memory.title,
-      memory.summary,
-      state.agents[0]?.id ?? "",
-      state.turn,
-    ),
+    createMemoryArchivedEvent(memory.title, memory.summary, state.agents[0]?.id ?? "", state.turn),
   );
 
   return {
@@ -286,7 +344,11 @@ function maybeGenerateProposal(state: TurnState): TurnState {
     description: `New ${proposal.origin.toLowerCase()} ${category.toLowerCase()} proposal introduced to the chamber.`,
   };
 
-  const feedEvent = createProposalCreatedEvent(proposal, proposal.proposerId ?? state.agents[0]?.id ?? "", state.turn);
+  const feedEvent = createProposalCreatedEvent(
+    proposal,
+    proposal.proposerId ?? state.agents[0]?.id ?? "",
+    state.turn,
+  );
 
   return {
     ...state,
@@ -297,7 +359,10 @@ function maybeGenerateProposal(state: TurnState): TurnState {
 }
 
 function simulateProposalVoting(state: TurnState): TurnState {
-  const voteAdditions: Record<string, { proposalId: string; position: "endorsed" | "opposed" | "abstained"; note: string }[]> = {};
+  const voteAdditions: Record<
+    string,
+    { proposalId: string; position: "endorsed" | "opposed" | "abstained"; note: string }[]
+  > = {};
   const feedUpdates: FeedPost[] = [];
 
   const proposals = state.proposals.map((proposal) => {
@@ -305,8 +370,12 @@ function simulateProposalVoting(state: TurnState): TurnState {
 
     const votes = { ...proposal.votes };
     const agentReactions = [...proposal.agentReactions];
-    const undecidedAgents = state.agents.filter((agent) => !agent.votingHistory.some((entry) => entry.proposal === proposal.id));
-    const voters = undecidedAgents.sort(() => Math.random() - 0.5).slice(0, Math.ceil(undecidedAgents.length * 0.55));
+    const undecidedAgents = state.agents.filter(
+      (agent) => !agent.votingHistory.some((entry) => entry.proposal === proposal.id),
+    );
+    const voters = undecidedAgents
+      .sort(() => Math.random() - 0.5)
+      .slice(0, Math.ceil(undecidedAgents.length * 0.55));
 
     voters.forEach((agent) => {
       const preference = applyMoraleToPreference(
@@ -351,7 +420,11 @@ function simulateProposalVoting(state: TurnState): TurnState {
       ...agent,
       votingHistory: [
         ...agent.votingHistory,
-        ...(voteAdditions[agent.id] ?? []).map((vote) => ({ proposal: vote.proposalId, position: vote.position, note: vote.note })),
+        ...(voteAdditions[agent.id] ?? []).map((vote) => ({
+          proposal: vote.proposalId,
+          position: vote.position,
+          note: vote.note,
+        })),
       ],
     })),
     feed: feedUpdates.length > 0 ? [...feedUpdates, ...state.feed].slice(0, 50) : state.feed,
@@ -360,7 +433,8 @@ function simulateProposalVoting(state: TurnState): TurnState {
 
 export async function runTurn(state: TurnState, playerAction?: PlayerAction) {
   const priorDominant = state.worldState?.dominantFaction ?? null;
-  const priorEmotion = state.worldState?.emotion ?? (state.worldState as any)?.globalSentiment ?? "Stable";
+  const priorEmotion =
+    state.worldState?.emotion ?? (state.worldState as any)?.globalSentiment ?? "Stable";
   const priorFactionInfluence = { ...(state.factions ?? {}) };
 
   let newState = cloneState(state);
@@ -401,7 +475,8 @@ export async function runTurn(state: TurnState, playerAction?: PlayerAction) {
   try {
     const newDominant = newState.worldState?.dominantFaction ?? null;
     if (newDominant && newDominant !== priorDominant) {
-      const repId = newState.agents.find((a) => a.faction === newDominant)?.id ?? newState.agents[0]?.id ?? "";
+      const repId =
+        newState.agents.find((a) => a.faction === newDominant)?.id ?? newState.agents[0]?.id ?? "";
       const ev = createDominanceChangeEvent(priorDominant, newDominant, newState.turn, repId);
       newState.feed = [ev, ...newState.feed].slice(0, 50);
     }
@@ -428,7 +503,11 @@ function applyPlayerAction(state: TurnState, playerAction: PlayerAction): TurnSt
     case "CREATE_AGENT": {
       const data = playerAction.data || {};
       const name = String(data.name ?? `New Agent ${Date.now()}`);
-      const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "") || `agent-${Date.now()}`;
+      const slug =
+        name
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, "") || `agent-${Date.now()}`;
       const initials = slug
         .split("-")
         .map((part) => part[0]?.toUpperCase())
@@ -447,7 +526,9 @@ function applyPlayerAction(state: TurnState, playerAction: PlayerAction): TurnSt
         status: "idle",
         initials: initials || "NA",
         color: (data.color as Agent["color"]) ?? "silver",
-        philosophy: String(data.philosophy ?? "A new voice in Polis working to shape chamber dynamics."),
+        philosophy: String(
+          data.philosophy ?? "A new voice in Polis working to shape chamber dynamics.",
+        ),
         temperament: String(data.temperament ?? "Measured"),
         riskTolerance: String(data.riskTolerance ?? "Moderate"),
         votingHistory: [],
@@ -471,7 +552,10 @@ function applyPlayerAction(state: TurnState, playerAction: PlayerAction): TurnSt
     case "SUBMIT_PROPOSAL": {
       const data = playerAction.data || {};
       const existing = new Set(state.proposals.map((proposal) => proposal.id));
-      let id = String(data.title ?? "Proposal").toUpperCase().replace(/[^A-Z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+      let id = String(data.title ?? "Proposal")
+        .toUpperCase()
+        .replace(/[^A-Z0-9]+/g, "-")
+        .replace(/(^-|-$)/g, "");
       if (!id) id = `POL-${Date.now()}`;
       if (existing.has(id)) {
         let counter = 1;
@@ -485,7 +569,10 @@ function applyPlayerAction(state: TurnState, playerAction: PlayerAction): TurnSt
       const origin: ProposalOrigin = "HUMAN";
       const newProposal: Proposal = {
         id,
-        slug: id.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""),
+        slug: id
+          .toLowerCase()
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/(^-|-$)/g, ""),
         title: String(data.title ?? "Untitled Proposal"),
         origin,
         proposerId: author?.id,
@@ -513,9 +600,17 @@ function applyPlayerAction(state: TurnState, playerAction: PlayerAction): TurnSt
         sentimentTrend: [50],
         sentimentDelta: "+0.0",
         agentReactions: author
-          ? [{ agentId: author.id, position: "endorsed", statement: `Introduced by ${author.name} as a ${author.faction}-aligned motion.` }]
+          ? [
+              {
+                agentId: author.id,
+                position: "endorsed",
+                statement: `Introduced by ${author.name} as a ${author.faction}-aligned motion.`,
+              },
+            ]
           : [],
-        historicalReferences: data.category ? [{ memory: String(data.category), note: "Cited as precedent." }] : [],
+        historicalReferences: data.category
+          ? [{ memory: String(data.category), note: "Cited as precedent." }]
+          : [],
         upcoming: String(data.upcoming ?? "Debate begins next turn"),
       };
 
@@ -561,14 +656,18 @@ function applyPlayerAction(state: TurnState, playerAction: PlayerAction): TurnSt
           {
             agentId: agent.id,
             position,
-            statement: String(data.note ?? `${agent.name} aligned with ${position} on ${proposal.id}.`),
+            statement: String(
+              data.note ?? `${agent.name} aligned with ${position} on ${proposal.id}.`,
+            ),
           },
         ],
       };
 
       return {
         ...state,
-        proposals: state.proposals.map((item) => (item.id === proposal.id ? updatedProposal : item)),
+        proposals: state.proposals.map((item) =>
+          item.id === proposal.id ? updatedProposal : item,
+        ),
         agents: state.agents.map((item) =>
           item.id === agent.id
             ? {
@@ -578,7 +677,9 @@ function applyPlayerAction(state: TurnState, playerAction: PlayerAction): TurnSt
                   {
                     proposal: proposal.id,
                     position,
-                    note: String(data.note ?? `${agent.name} aligned with ${position} on ${proposal.id}.`),
+                    note: String(
+                      data.note ?? `${agent.name} aligned with ${position} on ${proposal.id}.`,
+                    ),
                   },
                 ],
               }
@@ -613,7 +714,12 @@ function processProposals(state: TurnState): TurnState {
         upcoming = "Recorded in memory timeline";
       } else {
         lifecycle = "Resolved";
-        status = proposal.statusTag === "Passed" ? "Resolved — adopted" : proposal.statusTag === "Rejected" ? "Resolved — rejected" : "Resolved — tabled";
+        status =
+          proposal.statusTag === "Passed"
+            ? "Resolved — adopted"
+            : proposal.statusTag === "Rejected"
+              ? "Resolved — rejected"
+              : "Resolved — tabled";
         phase = "Resolved";
         upcoming = "Archive pending next turn";
       }
@@ -631,7 +737,11 @@ function processProposals(state: TurnState): TurnState {
         // Generate debate event when transitioning to debate phase
         if (proposal.lifecycle !== "Debated" && proposal.lifecycle !== "Voted") {
           feedUpdates.push(
-            createProposalDebateEvent(proposal, proposal.proposerId ?? state.agents[0]?.id ?? "", state.turn),
+            createProposalDebateEvent(
+              proposal,
+              proposal.proposerId ?? state.agents[0]?.id ?? "",
+              state.turn,
+            ),
           );
         }
       } else if (age === 3) {
@@ -642,7 +752,11 @@ function processProposals(state: TurnState): TurnState {
         // Generate voting event when transitioning to voting phase
         if (proposal.lifecycle !== "Voted") {
           feedUpdates.push(
-            createProposalVotingEvent(proposal, proposal.proposerId ?? state.agents[0]?.id ?? "", state.turn),
+            createProposalVotingEvent(
+              proposal,
+              proposal.proposerId ?? state.agents[0]?.id ?? "",
+              state.turn,
+            ),
           );
         }
       } else {
@@ -683,13 +797,23 @@ function processAgentBehavior(state: TurnState): TurnState {
     if (!actor) return;
 
     const preference = getAgentVotePreference(actor, proposal.category);
-    const stance = preference === "support" ? "support" : preference === "oppose" ? "oppose" : "neutral";
-    const reactionType = stance === "support" ? "Aligned" : stance === "oppose" ? "Contested" : "Observed";
+    const stance =
+      preference === "support" ? "support" : preference === "oppose" ? "oppose" : "neutral";
+    const reactionType =
+      stance === "support" ? "Aligned" : stance === "oppose" ? "Contested" : "Observed";
 
-    const position = stance === "support" ? "endorsed" : stance === "oppose" ? "opposed" : "abstained";
+    const position =
+      stance === "support" ? "endorsed" : stance === "oppose" ? "opposed" : "abstained";
     const statement = `${actor.name} is reacting to ${proposal.title} with a ${stance} stance.`;
     feedUpdates.push(
-      createAgentReactionEvent(actor.name, actor.id, proposal, position as any, statement, state.turn),
+      createAgentReactionEvent(
+        actor.name,
+        actor.id,
+        proposal,
+        position as any,
+        statement,
+        state.turn,
+      ),
     );
   });
 
@@ -698,7 +822,10 @@ function processAgentBehavior(state: TurnState): TurnState {
     feed: [...feedUpdates, ...state.feed].slice(0, 40),
     agents: state.agents.map((agent) => ({
       ...agent,
-      recentActivity: [`Observed chamber reaction at ${new Date().toLocaleTimeString()}`, ...agent.recentActivity].slice(0, 4),
+      recentActivity: [
+        `Observed chamber reaction at ${new Date().toLocaleTimeString()}`,
+        ...agent.recentActivity,
+      ].slice(0, 4),
     })),
   };
 }
@@ -718,7 +845,8 @@ function resolveVotes(state: TurnState): TurnState {
       return proposal;
     }
 
-    const readyToResolve = totalVotes >= 4 || age >= 3 || (totalVotes >= majority && support !== opposition);
+    const readyToResolve =
+      totalVotes >= 4 || age >= 3 || (totalVotes >= majority && support !== opposition);
     if (!readyToResolve) {
       return proposal;
     }
@@ -735,7 +863,12 @@ function resolveVotes(state: TurnState): TurnState {
         resolvedTurn,
       };
       feedUpdates.push(
-        createProposalPassedEvent(resolved, proposal.proposerId ?? state.agents[0]?.id ?? "", state.turn, proposal.votes),
+        createProposalPassedEvent(
+          resolved,
+          proposal.proposerId ?? state.agents[0]?.id ?? "",
+          state.turn,
+          proposal.votes,
+        ),
       );
     } else if (opposition > support + 1) {
       resolved = {
@@ -747,7 +880,12 @@ function resolveVotes(state: TurnState): TurnState {
         resolvedTurn,
       };
       feedUpdates.push(
-        createProposalFailedEvent(resolved, proposal.proposerId ?? state.agents[0]?.id ?? "", state.turn, proposal.votes),
+        createProposalFailedEvent(
+          resolved,
+          proposal.proposerId ?? state.agents[0]?.id ?? "",
+          state.turn,
+          proposal.votes,
+        ),
       );
     } else if (totalVotes === 0) {
       resolved = {
@@ -783,11 +921,24 @@ function applyWorldChanges(state: TurnState): TurnState {
   const passed = state.proposals.filter((proposal) => proposal.statusTag === "Passed").length;
   const rejected = state.proposals.filter((proposal) => proposal.statusTag === "Rejected").length;
   const adjustment = passed - rejected;
-  const carries = Math.max(-4, Math.min(4, adjustment * 2 + (passed > 0 ? 1 : 0) - (rejected > passed ? 1 : 0)));
+  const carries = Math.max(
+    -4,
+    Math.min(4, adjustment * 2 + (passed > 0 ? 1 : 0) - (rejected > passed ? 1 : 0)),
+  );
   const newStability = Math.min(100, Math.max(0, state.worldState.stability + carries * 2));
-  const era = passed > rejected ? "Accelerating Cycle" : rejected > passed ? "Contestation Era" : state.worldState.currentEra;
+  const era =
+    passed > rejected
+      ? "Accelerating Cycle"
+      : rejected > passed
+        ? "Contestation Era"
+        : state.worldState.currentEra;
 
-  const recentEvent = passed > 0 ? `Passed ${passed} proposal${passed > 1 ? "s" : ""}.` : rejected > 0 ? `Rejected ${rejected} proposal${rejected > 1 ? "s" : ""}.` : "No major vote outcome this turn.";
+  const recentEvent =
+    passed > 0
+      ? `Passed ${passed} proposal${passed > 1 ? "s" : ""}.`
+      : rejected > 0
+        ? `Rejected ${rejected} proposal${rejected > 1 ? "s" : ""}.`
+        : "No major vote outcome this turn.";
 
   return {
     ...state,
@@ -997,8 +1148,13 @@ function computeVoteWeight(agent: Agent, proposalCategory?: ProposalCategory, st
   return Math.max(1, Math.round(weight));
 }
 
-function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<string, number>): TurnState {
-  const resolvedThisTurn = state.proposals.filter((p) => p.resolvedTurn === state.turn && p.statusTag !== "Active");
+function applyInfluenceEngine(
+  state: TurnState,
+  priorFactionInfluence: Record<string, number>,
+): TurnState {
+  const resolvedThisTurn = state.proposals.filter(
+    (p) => p.resolvedTurn === state.turn && p.statusTag !== "Active",
+  );
   const feedUpdates: FeedPost[] = [];
 
   // Map faction -> agents
@@ -1013,7 +1169,10 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
   // Influence from resolved proposal outcomes
   resolvedThisTurn.forEach((proposal) => {
     state.agents.forEach((agent) => {
-      const voteEntry = agent.votingHistory.slice().reverse().find((v) => v.proposal === proposal.id);
+      const voteEntry = agent.votingHistory
+        .slice()
+        .reverse()
+        .find((v) => v.proposal === proposal.id);
       if (!voteEntry) return;
       let delta = 0;
       if (proposal.statusTag === "Passed") {
@@ -1033,7 +1192,12 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
   // Inactivity decay: small loss if no recent activity logged
   state.agents.forEach((agent) => {
     const recent = (agent.recentActivity ?? [])[0] ?? "";
-    const inactive = !recent || recent.toLowerCase().includes("entered") || recent.toLowerCase().includes("observed") ? false : false;
+    const inactive =
+      !recent ||
+      recent.toLowerCase().includes("entered") ||
+      recent.toLowerCase().includes("observed")
+        ? false
+        : false;
     // Simple heuristic: if agent has no voting history at all, decay faster
     if ((agent.votingHistory ?? []).length === 0) {
       agentDeltas.set(agent.id, (agentDeltas.get(agent.id) ?? 0) - 0.5);
@@ -1059,10 +1223,17 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
     // update agent history and trend
     const history = (agent.influenceHistory ?? []).slice(-19);
     history.push(newInfluence);
-    const trend: Agent["influenceTrend"] = newInfluence > oldInfluence ? "rising" : newInfluence < oldInfluence ? "falling" : "stable";
+    const trend: Agent["influenceTrend"] =
+      newInfluence > oldInfluence ? "rising" : newInfluence < oldInfluence ? "falling" : "stable";
 
     // emit feed event for this influence shift
-    const ev = createInfluenceShiftEvent(agent.name, agent.id, oldInfluence, newInfluence, state.turn);
+    const ev = createInfluenceShiftEvent(
+      agent.name,
+      agent.id,
+      oldInfluence,
+      newInfluence,
+      state.turn,
+    );
     feedUpdates.push(ev);
 
     return {
@@ -1076,7 +1247,9 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
   // Recompute faction totals and cohesion
   const factionTotals: Record<string, number> = {};
   Object.keys(factionAgents).forEach((f) => {
-    factionTotals[f] = updatedAgents.filter((a) => a.faction === f).reduce((s, a) => s + a.influence, 0);
+    factionTotals[f] = updatedAgents
+      .filter((a) => a.faction === f)
+      .reduce((s, a) => s + a.influence, 0);
   });
 
   const totalInfluence = Object.values(factionTotals).reduce((s, v) => s + v, 0) || 1;
@@ -1089,19 +1262,37 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
   const factionCohesion: Record<string, number> = {};
   Object.keys(factionAgents).forEach((f) => {
     const agentsInFaction = factionAgents[f];
-    if (agentsInFaction.length === 0) { factionCohesion[f] = 1; return; }
+    if (agentsInFaction.length === 0) {
+      factionCohesion[f] = 1;
+      return;
+    }
     let disagreements = 0;
     resolvedThisTurn.forEach((proposal) => {
       // compute faction majority for this proposal
-      const votes = agentsInFaction.map((a) => a.votingHistory.slice().reverse().find((v) => v.proposal === proposal.id)?.position).filter(Boolean as any) as string[];
+      const votes = agentsInFaction
+        .map(
+          (a) =>
+            a.votingHistory
+              .slice()
+              .reverse()
+              .find((v) => v.proposal === proposal.id)?.position,
+        )
+        .filter(Boolean as any) as string[];
       if (votes.length === 0) return;
       const endorsed = votes.filter((v) => v === "endorsed").length;
       const opposed = votes.filter((v) => v === "opposed").length;
       const majority = endorsed >= opposed ? "endorsed" : "opposed";
       agentsInFaction.forEach((agent) => {
-        const entry = agent.votingHistory.slice().reverse().find((v) => v.proposal === proposal.id);
+        const entry = agent.votingHistory
+          .slice()
+          .reverse()
+          .find((v) => v.proposal === proposal.id);
         if (!entry) return;
-        if ((entry.position === "endorsed" && majority !== "endorsed") || (entry.position === "opposed" && majority !== "opposed")) disagreements += 1;
+        if (
+          (entry.position === "endorsed" && majority !== "endorsed") ||
+          (entry.position === "opposed" && majority !== "opposed")
+        )
+          disagreements += 1;
       });
     });
     const maxChecks = Math.max(1, agentsInFaction.length * Math.max(1, resolvedThisTurn.length));
@@ -1111,7 +1302,8 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
 
   // Emit dominance shift events if >5% change from priorFactionInfluence
   const priorTotal = Object.values(priorFactionInfluence).reduce((s, v) => s + v, 0) || 1;
-  const priorLeader = Object.entries(priorFactionInfluence).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
+  const priorLeader =
+    Object.entries(priorFactionInfluence).sort((a, b) => b[1] - a[1])[0]?.[0] ?? null;
   Object.entries(dominancePercent).forEach(([f, percent]) => {
     const prior = priorFactionInfluence?.[f] ?? 0;
     const priorPct = Math.round((prior / priorTotal) * 1000) / 10;
@@ -1119,7 +1311,13 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
       const repId = updatedAgents.find((a) => a.faction === f)?.id ?? updatedAgents[0]?.id ?? "";
       feedUpdates.push(createDominanceChangeEvent(priorLeader, f, state.turn, repId));
       // bump world tension
-      state.worldState = { ...state.worldState, tension: Math.min(100, (state.worldState as any).tension ? (state.worldState as any).tension + 6 : 6) } as any;
+      state.worldState = {
+        ...state.worldState,
+        tension: Math.min(
+          100,
+          (state.worldState as any).tension ? (state.worldState as any).tension + 6 : 6,
+        ),
+      } as any;
     }
   });
 
@@ -1135,8 +1333,16 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
   // Regenerate portraits to reflect updated influence/faction/emotion
   const agentsWithPortraits = updatedAgents.map((agent) => {
     try {
-      const portrait = generateAgentPortrait({ ...agent, portraitSeed: (agent as any).portraitSeed });
-      return { ...agent, portraitUri: portrait.uri, portraitSeed: (agent as any).portraitSeed ?? portrait.seed, portraitStyle: portrait.style };
+      const portrait = generateAgentPortrait({
+        ...agent,
+        portraitSeed: (agent as any).portraitSeed,
+      });
+      return {
+        ...agent,
+        portraitUri: portrait.uri,
+        portraitSeed: (agent as any).portraitSeed ?? portrait.seed,
+        portraitStyle: portrait.style,
+      };
     } catch (e) {
       return agent;
     }
@@ -1151,10 +1357,21 @@ function applyInfluenceEngine(state: TurnState, priorFactionInfluence: Record<st
   };
 }
 
-
 function evolveAgents(state: TurnState): TurnState {
-  const resolvedMap = new Map(state.proposals.filter((proposal) => proposal.statusTag !== "Active" && proposal.lifecycle === "Resolved").map((proposal) => [proposal.id, proposal]));
-  const shifts: { name: string; note: string; magnitude: number; ideologyValue: number; traitDelta: number; reputationDelta: number; influenceDelta: number }[] = [];
+  const resolvedMap = new Map(
+    state.proposals
+      .filter((proposal) => proposal.statusTag !== "Active" && proposal.lifecycle === "Resolved")
+      .map((proposal) => [proposal.id, proposal]),
+  );
+  const shifts: {
+    name: string;
+    note: string;
+    magnitude: number;
+    ideologyValue: number;
+    traitDelta: number;
+    reputationDelta: number;
+    influenceDelta: number;
+  }[] = [];
   const ideologyMetric: Record<string, string> = {
     Reformist: "Collectivism",
     Technocrat: "Authority",
@@ -1168,7 +1385,16 @@ function evolveAgents(state: TurnState): TurnState {
     const opposed = agent.votingHistory.filter((entry) => entry.position === "opposed").length;
     const impactScore = supported - opposed;
     const reputationDelta = impactScore >= 2 ? 1 : impactScore <= -2 ? -1 : 0;
-    const influenceDelta = impactScore >= 3 ? 2 : impactScore === 2 ? 1 : impactScore === -1 ? -1 : impactScore <= -2 ? -2 : 0;
+    const influenceDelta =
+      impactScore >= 3
+        ? 2
+        : impactScore === 2
+          ? 1
+          : impactScore === -1
+            ? -1
+            : impactScore <= -2
+              ? -2
+              : 0;
     const baseIdeology = agent.ideology.split(" — ")[0];
 
     type ResolutionHistory = { entry: Agent["votingHistory"][number]; proposal: Proposal };
@@ -1187,15 +1413,22 @@ function evolveAgents(state: TurnState): TurnState {
 
     let ideologyShift = baseIdeology;
     if (relevantResolutions.length > 0) {
-      if (ideologyDriftValue >= 2) ideologyShift = `${baseIdeology} — hardened by recent resolution`;
+      if (ideologyDriftValue >= 2)
+        ideologyShift = `${baseIdeology} — hardened by recent resolution`;
       else if (ideologyDriftValue === 1) ideologyShift = `${baseIdeology} — recalibrating stance`;
-      else if (ideologyDriftValue === 0) ideologyShift = `${baseIdeology} — steadied by chamber outcomes`;
+      else if (ideologyDriftValue === 0)
+        ideologyShift = `${baseIdeology} — steadied by chamber outcomes`;
       else ideologyShift = `${baseIdeology} — challenged by recent outcomes`;
     }
 
     const trait = agent.traits[0] ?? "political posture";
     const traitDelta = Math.abs(impactScore) + Math.abs(ideologyDriftValue);
-    const traitPhrase = impactScore >= 2 ? `doubled down on ${trait}` : impactScore <= -2 ? `softened their ${trait}` : `refined their ${trait}`;
+    const traitPhrase =
+      impactScore >= 2
+        ? `doubled down on ${trait}`
+        : impactScore <= -2
+          ? `softened their ${trait}`
+          : `refined their ${trait}`;
     const traitChangeNote = `${agent.name} ${traitPhrase}`;
 
     const updatedAgent = {
@@ -1205,13 +1438,22 @@ function evolveAgents(state: TurnState): TurnState {
       influence: Math.min(100, Math.max(0, agent.influence + influenceDelta)),
       recentActivity: [
         `Evolved: ${reputationDelta >= 0 ? "gained" : "lost"} ${Math.abs(reputationDelta)} reputation, ${influenceDelta >= 0 ? "gained" : "lost"} ${Math.abs(influenceDelta)} influence.`,
-        ...(relevantResolutions.length > 0 ? [`Ideology drift triggered by ${relevantResolutions.length} resolution${relevantResolutions.length > 1 ? "s" : ""}.`] : []),
+        ...(relevantResolutions.length > 0
+          ? [
+              `Ideology drift triggered by ${relevantResolutions.length} resolution${relevantResolutions.length > 1 ? "s" : ""}.`,
+            ]
+          : []),
         ...agent.recentActivity,
       ].slice(0, 4),
     };
 
     const metric = ideologyMetric[agent.faction] ?? "Trust";
-    const delta = reputationDelta !== 0 ? reputationDelta * 1.3 : influenceDelta !== 0 ? influenceDelta * 1.1 : Math.sign(impactScore) * 0.8;
+    const delta =
+      reputationDelta !== 0
+        ? reputationDelta * 1.3
+        : influenceDelta !== 0
+          ? influenceDelta * 1.1
+          : Math.sign(impactScore) * 0.8;
     const line = `${agent.name} ${metric} ${delta > 0 ? "+" : ""}${delta.toFixed(1)}`;
 
     shifts.push({
@@ -1238,11 +1480,19 @@ function evolveAgents(state: TurnState): TurnState {
   const agentEvolutionDetails: AgentEvolutionDetails = {
     topIdeologyShifts,
     biggestTraitChange: biggestTrait?.note ?? "No trait change",
-    mostInfluentialAgent: mostInfluential ? `${mostInfluential.name} (${mostInfluential.faction})` : "None",
-    mostDistrustedAgent: mostDistrusted ? `${mostDistrusted.name} (${mostDistrusted.faction})` : "None",
+    mostInfluentialAgent: mostInfluential
+      ? `${mostInfluential.name} (${mostInfluential.faction})`
+      : "None",
+    mostDistrustedAgent: mostDistrusted
+      ? `${mostDistrusted.name} (${mostDistrusted.faction})`
+      : "None",
   };
 
-  const sortedEvolutions = shifts.slice().sort((a, b) => b.magnitude - a.magnitude).slice(0, 3).map((item) => item.note);
+  const sortedEvolutions = shifts
+    .slice()
+    .sort((a, b) => b.magnitude - a.magnitude)
+    .slice(0, 3)
+    .map((item) => item.note);
   return {
     ...state,
     agents,
@@ -1263,15 +1513,20 @@ function updateWorldEmotion(state: TurnState): WorldState & { totalAgents: numbe
       return 1 - margin / Math.max(1, total);
     })
     .filter((value) => value > 0);
-  const averageCloseness = closeVotes.length ? closeVotes.reduce((sum, value) => sum + value, 0) / closeVotes.length : 0.25;
+  const averageCloseness = closeVotes.length
+    ? closeVotes.reduce((sum, value) => sum + value, 0) / closeVotes.length
+    : 0.25;
   const betrayalEvents = state.proposals.reduce((count, proposal) => {
-    const factionReactions = proposal.agentReactions.reduce<Record<string, Set<string>>>((acc, reaction) => {
-      const agent = getAgentById(state, reaction.agentId);
-      if (!agent) return acc;
-      acc[agent.faction] = acc[agent.faction] ?? new Set();
-      acc[agent.faction].add(reaction.position);
-      return acc;
-    }, {});
+    const factionReactions = proposal.agentReactions.reduce<Record<string, Set<string>>>(
+      (acc, reaction) => {
+        const agent = getAgentById(state, reaction.agentId);
+        if (!agent) return acc;
+        acc[agent.faction] = acc[agent.faction] ?? new Set();
+        acc[agent.faction].add(reaction.position);
+        return acc;
+      },
+      {},
+    );
     Object.values(factionReactions).forEach((positions) => {
       if (positions.has("endorsed") && positions.has("opposed")) count += 1;
     });
@@ -1279,12 +1534,21 @@ function updateWorldEmotion(state: TurnState): WorldState & { totalAgents: numbe
   }, 0);
 
   const volatilityValues = Object.values(state.worldState.volatility ?? {});
-  const averageVolatility = volatilityValues.length ? volatilityValues.reduce((sum, value) => sum + value, 0) / volatilityValues.length : 0;
+  const averageVolatility = volatilityValues.length
+    ? volatilityValues.reduce((sum, value) => sum + value, 0) / volatilityValues.length
+    : 0;
   const stabilityTrend = state.worldState.stabilityTrend ?? [];
-  const trendDelta = stabilityTrend.length > 1 ? stabilityTrend[stabilityTrend.length - 1] - stabilityTrend[0] : 0;
+  const trendDelta =
+    stabilityTrend.length > 1 ? stabilityTrend[stabilityTrend.length - 1] - stabilityTrend[0] : 0;
   const trendDirection = trendDelta >= 4 ? 1 : trendDelta <= -4 ? -1 : 0;
 
-  const conflictScore = Math.min(1, averageCloseness * 0.45 + averageVolatility / 110 + betrayalEvents * 0.12 + (trendDirection === -1 ? 0.08 : 0));
+  const conflictScore = Math.min(
+    1,
+    averageCloseness * 0.45 +
+      averageVolatility / 110 +
+      betrayalEvents * 0.12 +
+      (trendDirection === -1 ? 0.08 : 0),
+  );
   const unstableMomentum = averageVolatility > 30 || trendDirection <= 0;
   let emotion: WorldState["emotion"] = "Stable";
 
@@ -1298,7 +1562,8 @@ function updateWorldEmotion(state: TurnState): WorldState & { totalAgents: numbe
     emotion = "Stable";
   }
 
-  const sentiment: WorldState["globalSentiment"] = averageReputation > 72 ? "positive" : averageReputation < 42 ? "negative" : "neutral";
+  const sentiment: WorldState["globalSentiment"] =
+    averageReputation > 72 ? "positive" : averageReputation < 42 ? "negative" : "neutral";
 
   return {
     ...state.worldState,
@@ -1314,11 +1579,14 @@ function getDominantFaction(state: TurnState): string {
 function generateTurnSummary(state: TurnState): string {
   const active = state.proposals.filter((proposal) => proposal.statusTag === "Active").length;
   const activeProposal = state.proposals.find((proposal) => proposal.statusTag === "Active");
-  const activeTitle = activeProposal ? `${activeProposal.title} (${activeProposal.category ?? "General"})` : "no active proposal";
+  const activeTitle = activeProposal
+    ? `${activeProposal.title} (${activeProposal.category ?? "General"})`
+    : "no active proposal";
   const sortedFactions = Object.entries(state.factions || {}).sort((a, b) => b[1] - a[1]);
   const topFaction = sortedFactions[0]?.[0] ?? "No faction";
   const secondFaction = sortedFactions[1]?.[0];
-  const topGap = sortedFactions[0] && sortedFactions[1] ? sortedFactions[0][1] - sortedFactions[1][1] : 0;
+  const topGap =
+    sortedFactions[0] && sortedFactions[1] ? sortedFactions[0][1] - sortedFactions[1][1] : 0;
   const battlePhrase = secondFaction
     ? topGap < 12
       ? `a tense battle between ${topFaction} and ${secondFaction}`
@@ -1329,7 +1597,12 @@ function generateTurnSummary(state: TurnState): string {
 
 function createHistoryEntry(state: TurnState): TurnHistoryEntry {
   const activeProposal = state.proposals.find((proposal) => proposal.statusTag === "Active");
-  const lastResolved = state.proposals.find((proposal) => proposal.statusTag === "Passed" || proposal.statusTag === "Rejected" || proposal.statusTag === "Tabled");
+  const lastResolved = state.proposals.find(
+    (proposal) =>
+      proposal.statusTag === "Passed" ||
+      proposal.statusTag === "Rejected" ||
+      proposal.statusTag === "Tabled",
+  );
   return {
     id: `h-${Date.now()}`,
     tick: state.history.length + 1,
@@ -1346,7 +1619,12 @@ function createHistoryEntry(state: TurnState): TurnHistoryEntry {
 
 export function createSnapshot(state: TurnState): WorldSnapshot {
   const activeProposal = state.proposals.find((proposal) => proposal.statusTag === "Active");
-  const lastResolved = state.proposals.find((proposal) => proposal.statusTag === "Passed" || proposal.statusTag === "Rejected" || proposal.statusTag === "Tabled");
+  const lastResolved = state.proposals.find(
+    (proposal) =>
+      proposal.statusTag === "Passed" ||
+      proposal.statusTag === "Rejected" ||
+      proposal.statusTag === "Tabled",
+  );
 
   return {
     turn: state.turn,
@@ -1364,4 +1642,3 @@ export function createSnapshot(state: TurnState): WorldSnapshot {
     majorEvent: state.events[0]?.title,
   };
 }
-

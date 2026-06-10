@@ -19,17 +19,29 @@ async function sha256Hex(input: string) {
 }
 
 export async function computeAgentMetadataHash(agent: { id?: string; name: string; slug: string }) {
-  const payload = JSON.stringify({ id: agent.id ?? null, name: agent.name, slug: agent.slug, ts: Date.now() });
+  const payload = JSON.stringify({
+    id: agent.id ?? null,
+    name: agent.name,
+    slug: agent.slug,
+    ts: Date.now(),
+  });
   return sha256Hex(payload);
 }
 
-export async function registerAgenticOnChain(agent: { id?: string; name: string; slug: string }, signerProvider?: any) {
+export async function registerAgenticOnChain(
+  agent: { id?: string; name: string; slug: string },
+  signerProvider?: any,
+) {
   try {
     const agenticId = getAgentId(agent as any);
     const metadataHash = await computeAgentMetadataHash(agent);
 
     // If no provider passed, try to use window.ethereum
-    const provider = signerProvider ?? (typeof window !== "undefined" && (window as any).ethereum ? new BrowserProvider((window as any).ethereum) : null);
+    const provider =
+      signerProvider ??
+      (typeof window !== "undefined" && (window as any).ethereum
+        ? new BrowserProvider((window as any).ethereum)
+        : null);
 
     if (!provider) {
       // Simulate registration for environments without wallet
@@ -88,7 +100,12 @@ export async function registerAgenticOnChain(agent: { id?: string; name: string;
         txHash: `0x_sim_${metadataHash.slice(0, 8)}`,
       };
 
-      const archiveRes = await archiveGovernanceMemory({ agenticId, metadataHash, simulated: true, error: String(err) }).catch(() => null);
+      const archiveRes = await archiveGovernanceMemory({
+        agenticId,
+        metadataHash,
+        simulated: true,
+        error: String(err),
+      }).catch(() => null);
       try {
         const rec = {
           ts: Date.now(),
@@ -110,12 +127,19 @@ export async function registerAgenticOnChain(agent: { id?: string; name: string;
   }
 }
 
-export async function checkAgenticRegistration(agent: { id?: string; name: string; slug: string }, provider?: any) {
+export async function checkAgenticRegistration(
+  agent: { id?: string; name: string; slug: string },
+  provider?: any,
+) {
   try {
     const agenticId = getAgentId(agent as any);
     const metadataHash = await computeAgentMetadataHash(agent);
 
-    const webProvider = provider ?? (typeof window !== "undefined" && (window as any).ethereum ? new BrowserProvider((window as any).ethereum) : null);
+    const webProvider =
+      provider ??
+      (typeof window !== "undefined" && (window as any).ethereum
+        ? new BrowserProvider((window as any).ethereum)
+        : null);
     if (!webProvider) return { registered: false, agenticId };
 
     const contract = new Contract(CONTRACT_ADDRESS, ABI, webProvider);

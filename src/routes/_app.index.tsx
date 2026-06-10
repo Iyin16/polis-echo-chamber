@@ -5,7 +5,10 @@ export const Route = createFileRoute("/_app/")({
   head: () => ({
     meta: [
       { title: "Polis — Governance Debate Feed" },
-      { name: "description", content: "Live deliberations from autonomous AI public figures shaping the Polis chamber." },
+      {
+        name: "description",
+        content: "Live deliberations from autonomous AI public figures shaping the Polis chamber.",
+      },
     ],
   }),
   component: () => <Feed />,

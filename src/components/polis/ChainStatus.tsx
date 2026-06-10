@@ -28,7 +28,7 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
         const accounts = await provider.listAccounts();
         if (!mounted) return;
         const first = accounts?.[0];
-        setAddress(typeof first === 'string' ? first : (first?.address ?? null));
+        setAddress(typeof first === "string" ? first : (first?.address ?? null));
         const net = await provider.getNetwork();
         if (!mounted) return;
         setChainId(net?.chainId ? Number(net.chainId) : null);
@@ -46,7 +46,9 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
       }
     };
     init();
-    return () => { mounted = false; };
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   const connectWallet = async () => {
@@ -58,7 +60,7 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
       const provider = new BrowserProvider(eth as any);
       const accounts = await provider.listAccounts();
       const first = accounts?.[0];
-      setAddress(typeof first === 'string' ? first : (first?.address ?? null));
+      setAddress(typeof first === "string" ? first : (first?.address ?? null));
       const net = await provider.getNetwork();
       setChainId(net?.chainId ? Number(net.chainId) : null);
       setNetworkName(net?.name ?? null);
@@ -91,9 +93,10 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-3">
           <div className="text-sm font-medium">Chain</div>
-          <div className="text-xs font-mono text-muted-foreground">{networkName ?? 'unknown'}</div>
-          <div className={`text-xs font-mono ${galileoOk ? 'text-green-400' : 'text-amber-400'}`}>
-            {galileoOk ? 'Galileo Testnet' : 'Other'}</div>
+          <div className="text-xs font-mono text-muted-foreground">{networkName ?? "unknown"}</div>
+          <div className={`text-xs font-mono ${galileoOk ? "text-green-400" : "text-amber-400"}`}>
+            {galileoOk ? "Galileo Testnet" : "Other"}
+          </div>
         </div>
         <div className="text-right text-xs">
           {connected ? (
@@ -110,7 +113,9 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
           ) : (
             <div className="text-muted-foreground">No wallet detected</div>
           )}
-          <div className="font-mono text-[11px] text-muted-foreground">Chain ID: {chainId ?? '—'}</div>
+          <div className="font-mono text-[11px] text-muted-foreground">
+            Chain ID: {chainId ?? "—"}
+          </div>
         </div>
       </div>
 
@@ -119,7 +124,12 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
           <div className="text-[11px] text-muted-foreground">Latest tx</div>
           {latestTxHash ? (
             <div className="flex items-center gap-2">
-              <a className="text-accent underline" href={`${CHAINSCAN_URL}/tx/${latestTxHash}`} target="_blank" rel="noreferrer">
+              <a
+                className="text-accent underline"
+                href={`${CHAINSCAN_URL}/tx/${latestTxHash}`}
+                target="_blank"
+                rel="noreferrer"
+              >
                 {latestTxHash.slice(0, 12)}...
               </a>
               <button
@@ -130,7 +140,9 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
                 {copiedTx ? "Copied" : "Copy"}
               </button>
             </div>
-          ) : <div className="text-muted-foreground">—</div>}
+          ) : (
+            <div className="text-muted-foreground">—</div>
+          )}
         </div>
 
         <div>
@@ -146,12 +158,19 @@ export default function ChainStatus({ latestTxHash, latestRootHash }: Props) {
                 {copiedRoot ? "Copied" : "Copy"}
               </button>
             </div>
-          ) : <div className="text-muted-foreground">—</div>}
+          ) : (
+            <div className="text-muted-foreground">—</div>
+          )}
         </div>
 
         <div>
           <div className="text-[11px] text-muted-foreground">Contract</div>
-          <a className="text-accent underline text-[12px]" href={`${CHAINSCAN_URL}/address/${AGENTIC_CONTRACT_ADDRESS}`} target="_blank" rel="noreferrer">
+          <a
+            className="text-accent underline text-[12px]"
+            href={`${CHAINSCAN_URL}/address/${AGENTIC_CONTRACT_ADDRESS}`}
+            target="_blank"
+            rel="noreferrer"
+          >
             {AGENTIC_CONTRACT_ADDRESS.slice(0, 12)}...
           </a>
         </div>

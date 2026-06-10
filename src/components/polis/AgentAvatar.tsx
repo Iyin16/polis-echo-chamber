@@ -17,8 +17,11 @@ export function AgentAvatar({ agent, size = 36 }: { agent: Agent; size?: number 
       {agent.status !== "idle" && (
         <span
           className={`pulse-dot absolute -bottom-0.5 -right-0.5 h-1.5 w-1.5 rounded-full ${
-            agent.status === "voting" ? "bg-crimson text-crimson" :
-            agent.status === "drafting" ? "bg-cyan text-cyan" : "bg-amber text-amber"
+            agent.status === "voting"
+              ? "bg-crimson text-crimson"
+              : agent.status === "drafting"
+                ? "bg-cyan text-cyan"
+                : "bg-amber text-amber"
           }`}
         />
       )}

@@ -122,12 +122,7 @@ export function AgentMintButton({
         />
       )}
 
-      {error && (
-        <MintErrorModal
-          error={error}
-          onClose={() => setError(null)}
-        />
-      )}
+      {error && <MintErrorModal error={error} onClose={() => setError(null)} />}
     </>
   );
 }

@@ -3,7 +3,7 @@ import { expect } from "chai";
 
 /**
  * PolisAgentNFT Contract Tests
- * 
+ *
  * Run with: npx hardhat test test/PolisAgentNFT.test.ts
  */
 
@@ -77,9 +77,9 @@ describe("PolisAgentNFT", function () {
       await contract.mintAgentNFT(owner.address, agentId, agentData);
 
       // Second mint should revert
-      await expect(
-        contract.mintAgentNFT(owner.address, agentId, agentData)
-      ).to.be.revertedWith("Agent already minted");
+      await expect(contract.mintAgentNFT(owner.address, agentId, agentData)).to.be.revertedWith(
+        "Agent already minted",
+      );
     });
 
     it("Should track agent ID to token ID mapping", async function () {
@@ -205,9 +205,7 @@ describe("PolisAgentNFT", function () {
     });
 
     it("Should revert for non-existent agent ID", async function () {
-      await expect(
-        contract.getTokenIdForAgent("non-existent")
-      ).to.be.reverted;
+      await expect(contract.getTokenIdForAgent("non-existent")).to.be.reverted;
     });
   });
 
@@ -236,9 +234,7 @@ describe("PolisAgentNFT", function () {
     });
 
     it("Should prevent non-owner from burning token", async function () {
-      await expect(
-        contract.connect(addr1).burn(0)
-      ).to.be.reverted;
+      await expect(contract.connect(addr1).burn(0)).to.be.reverted;
     });
   });
 
@@ -266,20 +262,20 @@ describe("PolisAgentNFT", function () {
 
 /**
  * HOW TO RUN TESTS:
- * 
+ *
  * 1. Create test directory:
  *    mkdir test
- * 
+ *
  * 2. Save this file as test/PolisAgentNFT.test.ts
- * 
+ *
  * 3. Run tests:
  *    npx hardhat test test/PolisAgentNFT.test.ts
- * 
+ *
  * 4. Run with coverage:
  *    npx hardhat coverage
- * 
+ *
  * EXPECTED OUTPUT:
- * 
+ *
  *   PolisAgentNFT
  *     Deployment
  *       ✓ Should deploy successfully (42ms)
@@ -303,6 +299,6 @@ describe("PolisAgentNFT", function () {
  *     Access Control
  *       ✓ Should have owner set to deployer (10ms)
  *       ✓ Should allow owner to mint (41ms)
- * 
+ *
  *   17 passing (600ms)
  */

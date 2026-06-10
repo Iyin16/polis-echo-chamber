@@ -38,19 +38,27 @@ export function MintResultModal({
 
         <div className="space-y-3 mb-6">
           <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1">Token ID</p>
-            <code className="text-sm font-mono bg-muted rounded px-2 py-1 text-foreground">{tokenId}</code>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1">
+              Token ID
+            </p>
+            <code className="text-sm font-mono bg-muted rounded px-2 py-1 text-foreground">
+              {tokenId}
+            </code>
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1">Contract</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1">
+              Contract
+            </p>
             <code className="text-xs font-mono bg-muted rounded px-2 py-1 text-foreground break-all">
               {contractAddress.slice(0, 10)}...{contractAddress.slice(-8)}
             </code>
           </div>
 
           <div>
-            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1">Transaction</p>
+            <p className="text-xs uppercase tracking-widest text-muted-foreground/60 mb-1">
+              Transaction
+            </p>
             <a
               href={blockExplorerUrl}
               target="_blank"
@@ -77,13 +85,7 @@ export function MintResultModal({
 /**
  * Modal showing mint error
  */
-export function MintErrorModal({
-  error,
-  onClose,
-}: {
-  error: string;
-  onClose: () => void;
-}) {
+export function MintErrorModal({ error, onClose }: { error: string; onClose: () => void }) {
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
       <div className="w-full max-w-md rounded-lg border hairline bg-background p-6 shadow-lg">

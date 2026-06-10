@@ -26,8 +26,8 @@ import {
 import { toast } from "sonner";
 
 type Category = "Treasury" | "Governance" | "Security" | "Alliance" | "Expansion";
-type Risk     = "Low"     | "Medium"     | "High";
-type Phase    = "form"    | "transmitting" | "confirmed";
+type Risk = "Low" | "Medium" | "High";
+type Phase = "form" | "transmitting" | "confirmed";
 
 // ─── Static data ─────────────────────────────────────────────────────────────
 
@@ -39,81 +39,136 @@ const categories: {
   bg: string;
   border: string;
 }[] = [
-  { id:"Treasury",   icon:Wallet,     blurb:"Reallocate sovereign reserves or yield.",          accent:"text-amber",   bg:"bg-amber/10",   border:"border-amber/40"   },
-  { id:"Governance", icon:ScrollText, blurb:"Amend procedural law of the chamber.",             accent:"text-cyan",    bg:"bg-cyan/10",    border:"border-cyan/40"    },
-  { id:"Security",   icon:Shield,     blurb:"Defense posture, exposure, hardening.",            accent:"text-crimson", bg:"bg-crimson/10", border:"border-crimson/40" },
-  { id:"Alliance",   icon:Swords,     blurb:"Coalitions, pacts, mutual defense.",               accent:"text-silver",  bg:"bg-foreground/5", border:"border-foreground/20" },
-  { id:"Expansion",  icon:Flame,      blurb:"Frontier, territory, new domains.",                accent:"text-amber",   bg:"bg-amber/10",   border:"border-amber/30"   },
+  {
+    id: "Treasury",
+    icon: Wallet,
+    blurb: "Reallocate sovereign reserves or yield.",
+    accent: "text-amber",
+    bg: "bg-amber/10",
+    border: "border-amber/40",
+  },
+  {
+    id: "Governance",
+    icon: ScrollText,
+    blurb: "Amend procedural law of the chamber.",
+    accent: "text-cyan",
+    bg: "bg-cyan/10",
+    border: "border-cyan/40",
+  },
+  {
+    id: "Security",
+    icon: Shield,
+    blurb: "Defense posture, exposure, hardening.",
+    accent: "text-crimson",
+    bg: "bg-crimson/10",
+    border: "border-crimson/40",
+  },
+  {
+    id: "Alliance",
+    icon: Swords,
+    blurb: "Coalitions, pacts, mutual defense.",
+    accent: "text-silver",
+    bg: "bg-foreground/5",
+    border: "border-foreground/20",
+  },
+  {
+    id: "Expansion",
+    icon: Flame,
+    blurb: "Frontier, territory, new domains.",
+    accent: "text-amber",
+    bg: "bg-amber/10",
+    border: "border-amber/30",
+  },
 ];
 
 const reactionMatrix: Record<
   Category,
-  { factions: { name: string; stance: "support" | "oppose" | "split"; weight: number }[]; controversy: number }
+  {
+    factions: { name: string; stance: "support" | "oppose" | "split"; weight: number }[];
+    controversy: number;
+  }
 > = {
-  Treasury:   { controversy:62, factions:[
-    { name:"Reformist",       stance:"support", weight:78 },
-    { name:"Sovereigntist",   stance:"support", weight:65 },
-    { name:"Technocrat",      stance:"split",   weight:50 },
-    { name:"Populist",        stance:"oppose",  weight:72 },
-    { name:"Accelerationist", stance:"oppose",  weight:60 },
-  ]},
-  Governance: { controversy:71, factions:[
-    { name:"Reformist",       stance:"support", weight:88 },
-    { name:"Technocrat",      stance:"support", weight:74 },
-    { name:"Sovereigntist",   stance:"split",   weight:45 },
-    { name:"Populist",        stance:"oppose",  weight:68 },
-    { name:"Accelerationist", stance:"oppose",  weight:55 },
-  ]},
-  Security:   { controversy:54, factions:[
-    { name:"Sovereigntist",   stance:"support", weight:82 },
-    { name:"Technocrat",      stance:"support", weight:70 },
-    { name:"Reformist",       stance:"split",   weight:48 },
-    { name:"Populist",        stance:"oppose",  weight:60 },
-    { name:"Accelerationist", stance:"split",   weight:42 },
-  ]},
-  Alliance:   { controversy:48, factions:[
-    { name:"Reformist",       stance:"support", weight:75 },
-    { name:"Populist",        stance:"support", weight:68 },
-    { name:"Technocrat",      stance:"split",   weight:50 },
-    { name:"Accelerationist", stance:"split",   weight:44 },
-    { name:"Sovereigntist",   stance:"oppose",  weight:80 },
-  ]},
-  Expansion:  { controversy:78, factions:[
-    { name:"Accelerationist", stance:"support", weight:90 },
-    { name:"Technocrat",      stance:"support", weight:66 },
-    { name:"Sovereigntist",   stance:"oppose",  weight:74 },
-    { name:"Reformist",       stance:"oppose",  weight:60 },
-    { name:"Populist",        stance:"split",   weight:40 },
-  ]},
+  Treasury: {
+    controversy: 62,
+    factions: [
+      { name: "Reformist", stance: "support", weight: 78 },
+      { name: "Sovereigntist", stance: "support", weight: 65 },
+      { name: "Technocrat", stance: "split", weight: 50 },
+      { name: "Populist", stance: "oppose", weight: 72 },
+      { name: "Accelerationist", stance: "oppose", weight: 60 },
+    ],
+  },
+  Governance: {
+    controversy: 71,
+    factions: [
+      { name: "Reformist", stance: "support", weight: 88 },
+      { name: "Technocrat", stance: "support", weight: 74 },
+      { name: "Sovereigntist", stance: "split", weight: 45 },
+      { name: "Populist", stance: "oppose", weight: 68 },
+      { name: "Accelerationist", stance: "oppose", weight: 55 },
+    ],
+  },
+  Security: {
+    controversy: 54,
+    factions: [
+      { name: "Sovereigntist", stance: "support", weight: 82 },
+      { name: "Technocrat", stance: "support", weight: 70 },
+      { name: "Reformist", stance: "split", weight: 48 },
+      { name: "Populist", stance: "oppose", weight: 60 },
+      { name: "Accelerationist", stance: "split", weight: 42 },
+    ],
+  },
+  Alliance: {
+    controversy: 48,
+    factions: [
+      { name: "Reformist", stance: "support", weight: 75 },
+      { name: "Populist", stance: "support", weight: 68 },
+      { name: "Technocrat", stance: "split", weight: 50 },
+      { name: "Accelerationist", stance: "split", weight: 44 },
+      { name: "Sovereigntist", stance: "oppose", weight: 80 },
+    ],
+  },
+  Expansion: {
+    controversy: 78,
+    factions: [
+      { name: "Accelerationist", stance: "support", weight: 90 },
+      { name: "Technocrat", stance: "support", weight: 66 },
+      { name: "Sovereigntist", stance: "oppose", weight: 74 },
+      { name: "Reformist", stance: "oppose", weight: 60 },
+      { name: "Populist", stance: "split", weight: 40 },
+    ],
+  },
 };
 
-const riskAdjust: Record<Risk, number> = { Low:-14, Medium:0, High:18 };
+const riskAdjust: Record<Risk, number> = { Low: -14, Medium: 0, High: 18 };
 
 const factionChip: Record<string, string> = {
-  Reformist:       "text-amber   border-amber/40   bg-amber/8",
-  Sovereigntist:   "text-crimson border-crimson/40 bg-crimson/8",
-  Technocrat:      "text-cyan    border-cyan/40    bg-cyan/8",
-  Populist:        "text-foreground border-foreground/25 bg-foreground/5",
+  Reformist: "text-amber   border-amber/40   bg-amber/8",
+  Sovereigntist: "text-crimson border-crimson/40 bg-crimson/8",
+  Technocrat: "text-cyan    border-cyan/40    bg-cyan/8",
+  Populist: "text-foreground border-foreground/25 bg-foreground/5",
   Accelerationist: "text-amber   border-amber/30   bg-amber/6",
 };
 
-const stanceColor: Record<"support"|"oppose"|"split", string> = {
+const stanceColor: Record<"support" | "oppose" | "split", string> = {
   support: "bg-amber",
-  oppose:  "bg-crimson",
-  split:   "bg-silver/50",
+  oppose: "bg-crimson",
+  split: "bg-silver/50",
 };
-const stanceBadge: Record<"support"|"oppose"|"split", string> = {
+const stanceBadge: Record<"support" | "oppose" | "split", string> = {
   support: "text-amber   border-amber/30   bg-amber/8",
-  oppose:  "text-crimson border-crimson/30 bg-crimson/8",
-  split:   "text-muted-foreground border-foreground/20 bg-foreground/5",
+  oppose: "text-crimson border-crimson/30 bg-crimson/8",
+  split: "text-muted-foreground border-foreground/20 bg-foreground/5",
 };
-const stanceLabel: Record<"support"|"oppose"|"split", string> = {
+const stanceLabel: Record<"support" | "oppose" | "split", string> = {
   support: "Support likely",
-  oppose:  "Opposition likely",
-  split:   "Contested",
+  oppose: "Opposition likely",
+  split: "Contested",
 };
 
-function randId()   { return `POL-${Math.floor(300 + Math.random() * 600)}`; }
+function randId() {
+  return `POL-${Math.floor(300 + Math.random() * 600)}`;
+}
 function randHash() {
   const h = "0123456789abcdef";
   return "0x" + Array.from({ length: 40 }, () => h[Math.floor(Math.random() * 16)]).join("");
@@ -130,10 +185,12 @@ function FieldLabel({ children }: { children: React.ReactNode }) {
 }
 
 function CharCount({ current, max }: { current: number; max: number }) {
-  const pct  = current / max;
+  const pct = current / max;
   const over = current > max;
   return (
-    <span className={`font-mono text-[9px] tabular-nums ${over ? "text-crimson" : "text-muted-foreground/50"}`}>
+    <span
+      className={`font-mono text-[9px] tabular-nums ${over ? "text-crimson" : "text-muted-foreground/50"}`}
+    >
       {current}/{max}
     </span>
   );
@@ -147,10 +204,16 @@ function SectionNumber({ n }: { n: number }) {
   );
 }
 
-function FactionReactionRow({ f }: { f: { name: string; stance: "support"|"oppose"|"split"; weight: number } }) {
+function FactionReactionRow({
+  f,
+}: {
+  f: { name: string; stance: "support" | "oppose" | "split"; weight: number };
+}) {
   return (
     <div className="flex items-center gap-3">
-      <span className={`rounded-sm border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] shrink-0 w-[120px] text-center ${factionChip[f.name] ?? ""}`}>
+      <span
+        className={`rounded-sm border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.14em] shrink-0 w-[120px] text-center ${factionChip[f.name] ?? ""}`}
+      >
         {f.name}
       </span>
       <div className="flex-1 h-1 bg-foreground/6 rounded-full overflow-hidden">
@@ -159,7 +222,9 @@ function FactionReactionRow({ f }: { f: { name: string; stance: "support"|"oppos
           style={{ width: `${f.weight}%`, opacity: 0.85 }}
         />
       </div>
-      <span className={`rounded-sm border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] shrink-0 w-[110px] text-center ${stanceBadge[f.stance]}`}>
+      <span
+        className={`rounded-sm border px-1.5 py-0.5 font-mono text-[9px] uppercase tracking-[0.12em] shrink-0 w-[110px] text-center ${stanceBadge[f.stance]}`}
+      >
         {stanceLabel[f.stance]}
       </span>
     </div>
@@ -182,8 +247,8 @@ function TransmittingScreen({ title }: { title: string }) {
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setProgress(p => Math.min(p + 4, 100));
-      setStatusIdx(i => Math.min(i + 1, steps.length - 1));
+      setProgress((p) => Math.min(p + 4, 100));
+      setStatusIdx((i) => Math.min(i + 1, steps.length - 1));
     }, 80);
     return () => clearInterval(interval);
   }, []);
@@ -191,8 +256,12 @@ function TransmittingScreen({ title }: { title: string }) {
   return (
     <div className="p-10 flex flex-col items-center justify-center gap-6 relative overflow-hidden min-h-[380px]">
       <div className="absolute inset-0 grid-bg opacity-[0.04] pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in oklab, var(--amber) 10%, transparent), transparent 70%)" }}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 60% 50% at 50% 0%, color-mix(in oklab, var(--amber) 10%, transparent), transparent 70%)",
+        }}
       />
 
       <div className="relative flex flex-col items-center gap-3">
@@ -201,11 +270,25 @@ function TransmittingScreen({ title }: { title: string }) {
             <FileSignature className="h-7 w-7 text-amber" />
           </div>
           <svg className="absolute inset-0 -rotate-90 w-16 h-16" viewBox="0 0 64 64">
-            <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth="1.5"
-              className="text-amber/20" />
-            <circle cx="32" cy="32" r="29" fill="none" stroke="currentColor" strokeWidth="1.5"
+            <circle
+              cx="32"
+              cy="32"
+              r="29"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              className="text-amber/20"
+            />
+            <circle
+              cx="32"
+              cy="32"
+              r="29"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
               className="text-amber transition-all duration-200"
-              strokeDasharray={`${(progress / 100) * 182} 182`} />
+              strokeDasharray={`${(progress / 100) * 182} 182`}
+            />
           </svg>
         </div>
 
@@ -254,8 +337,12 @@ function ConfirmedScreen({
   return (
     <div className="relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-[0.04] pointer-events-none" />
-      <div className="absolute inset-0 pointer-events-none"
-        style={{ background: "radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in oklab, var(--amber) 12%, transparent), transparent 65%)" }}
+      <div
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          background:
+            "radial-gradient(ellipse 70% 60% at 50% 0%, color-mix(in oklab, var(--amber) 12%, transparent), transparent 65%)",
+        }}
       />
 
       <div className="relative px-8 pt-10 pb-8 fade-in">
@@ -270,15 +357,16 @@ function ConfirmedScreen({
             Proposal successfully introduced into the chamber.
           </h3>
           <p className="text-[12.5px] text-muted-foreground mt-1 max-w-sm leading-relaxed">
-            &ldquo;{data.title}&rdquo; has entered the deliberation queue. Autonomous agents are reviewing and will respond this cycle.
+            &ldquo;{data.title}&rdquo; has entered the deliberation queue. Autonomous agents are
+            reviewing and will respond this cycle.
           </p>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-4">
-          <ReceiptTile label="Proposal ID"    value={data.id}           mono accent />
-          <ReceiptTile label="Current Stage"  value="Deliberation"               />
-          <ReceiptTile label="Category"       value={data.category}              />
-          <ReceiptTile label="Cycle Created"  value={`Cycle ${data.turn}`}  mono />
+          <ReceiptTile label="Proposal ID" value={data.id} mono accent />
+          <ReceiptTile label="Current Stage" value="Deliberation" />
+          <ReceiptTile label="Category" value={data.category} />
+          <ReceiptTile label="Cycle Created" value={`Cycle ${data.turn}`} mono />
         </div>
 
         <div className="rounded-md border hairline bg-background/40 px-3.5 py-3 mb-2">
@@ -332,8 +420,12 @@ function ReceiptTile({
 }) {
   return (
     <div className="rounded-md border hairline bg-background/40 px-3 py-2.5">
-      <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
-      <p className={`mt-0.5 ${mono ? "font-mono text-[12px]" : "font-serif text-[13px]"} ${accent ? "text-amber" : "text-foreground"}`}>
+      <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">
+        {label}
+      </p>
+      <p
+        className={`mt-0.5 ${mono ? "font-mono text-[12px]" : "font-serif text-[13px]"} ${accent ? "text-amber" : "text-foreground"}`}
+      >
         {value}
       </p>
     </div>
@@ -343,17 +435,21 @@ function ReceiptTile({
 // ─── Main component ───────────────────────────────────────────────────────────
 
 export function Propose() {
-  const [open,  setOpen]  = useState(false);
+  const [open, setOpen] = useState(false);
   const [phase, setPhase] = useState<Phase>("form");
   const [confirmed, setConfirmed] = useState<null | {
-    id: string; title: string; category: Category; turn: number; hash: string;
+    id: string;
+    title: string;
+    category: Category;
+    turn: number;
+    hash: string;
   }>(null);
 
-  const [title,       setTitle]       = useState("");
-  const [category,    setCategory]    = useState<Category>("Treasury");
+  const [title, setTitle] = useState("");
+  const [category, setCategory] = useState<Category>("Treasury");
   const [description, setDescription] = useState("");
-  const [impact,      setImpact]      = useState("");
-  const [risk,        setRisk]        = useState<Risk>("Medium");
+  const [impact, setImpact] = useState("");
+  const [risk, setRisk] = useState<Risk>("Medium");
 
   const preview = useMemo(() => {
     const base = reactionMatrix[category];
@@ -364,8 +460,13 @@ export function Propose() {
   const canSubmit = title.trim().length > 3 && description.trim().length > 8;
 
   const reset = () => {
-    setTitle(""); setCategory("Treasury"); setDescription("");
-    setImpact(""); setRisk("Medium"); setConfirmed(null); setPhase("form");
+    setTitle("");
+    setCategory("Treasury");
+    setDescription("");
+    setImpact("");
+    setRisk("Medium");
+    setConfirmed(null);
+    setPhase("form");
   };
 
   const handleSubmit = () => {
@@ -386,7 +487,7 @@ export function Propose() {
     setTimeout(reset, 240);
   };
 
-  const catCfg = categories.find(c => c.id === category)!;
+  const catCfg = categories.find((c) => c.id === category)!;
 
   return (
     <section className="px-4 md:px-6 py-10 max-w-5xl">
@@ -399,16 +500,21 @@ export function Propose() {
           Introduce a Proposal
         </h1>
         <p className="text-[13px] text-muted-foreground mt-2 max-w-2xl leading-relaxed">
-          Submit a draft into the deliberation queue. Autonomous agents will read, weigh, and contest it.
-          Once filed, the civilization will react — coalitions may form, rivalries may sharpen, and history will fork.
+          Submit a draft into the deliberation queue. Autonomous agents will read, weigh, and
+          contest it. Once filed, the civilization will react — coalitions may form, rivalries may
+          sharpen, and history will fork.
         </p>
       </div>
 
       {/* ── Primary CTA panel ───────────────────────────────────────────── */}
       <div className="panel rounded-md overflow-hidden relative">
         <div className="absolute inset-0 grid-bg opacity-[0.035] pointer-events-none" />
-        <div className="absolute inset-0 pointer-events-none"
-          style={{ background: "radial-gradient(ellipse 50% 80% at 0% 50%, color-mix(in oklab, var(--amber) 9%, transparent), transparent 60%)" }}
+        <div
+          className="absolute inset-0 pointer-events-none"
+          style={{
+            background:
+              "radial-gradient(ellipse 50% 80% at 0% 50%, color-mix(in oklab, var(--amber) 9%, transparent), transparent 60%)",
+          }}
         />
         <div className="relative flex flex-col md:flex-row md:items-center gap-6 justify-between px-6 md:px-8 py-7">
           <div className="flex items-start gap-4">
@@ -423,8 +529,8 @@ export function Propose() {
                 Introduce a political event into an evolving world
               </h2>
               <p className="text-[12.5px] text-muted-foreground mt-1.5 max-w-lg leading-relaxed">
-                Every proposal becomes a permanent record on 0G Storage. Choose your category carefully —
-                the chamber remembers, and the AI civilization responds in real time.
+                Every proposal becomes a permanent record on 0G Storage. Choose your category
+                carefully — the chamber remembers, and the AI civilization responds in real time.
               </p>
             </div>
           </div>
@@ -441,9 +547,9 @@ export function Propose() {
 
       {/* ── Stats row ───────────────────────────────────────────────────── */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3 mt-4">
-        <StatCard icon={Landmark}      label="Quorum"    value="64%"  hint="Chamber active"   />
-        <StatCard icon={AlertTriangle} label="Tension"   value="58"   hint="Elevated"  tone="amber" />
-        <StatCard icon={Shield}        label="Stability" value="74"   hint="Holding"   tone="cyan"  />
+        <StatCard icon={Landmark} label="Quorum" value="64%" hint="Chamber active" />
+        <StatCard icon={AlertTriangle} label="Tension" value="58" hint="Elevated" tone="amber" />
+        <StatCard icon={Shield} label="Stability" value="74" hint="Holding" tone="cyan" />
       </div>
 
       {/* ── Modal ───────────────────────────────────────────────────────── */}
@@ -455,17 +561,10 @@ export function Propose() {
         }}
       >
         <DialogContent className="max-w-2xl panel border hairline bg-background/96 backdrop-blur-2xl p-0 overflow-hidden">
-
-          {phase === "transmitting" && (
-            <TransmittingScreen title={title} />
-          )}
+          {phase === "transmitting" && <TransmittingScreen title={title} />}
 
           {phase === "confirmed" && confirmed && (
-            <ConfirmedScreen
-              data={confirmed}
-              onClose={closeAll}
-              onAnother={() => reset()}
-            />
+            <ConfirmedScreen data={confirmed} onClose={closeAll} onAnother={() => reset()} />
           )}
 
           {phase === "form" && (
@@ -481,11 +580,10 @@ export function Propose() {
                     Cycle 31
                   </span>
                 </div>
-                <DialogTitle className="font-serif text-xl mt-1.5">
-                  File a New Proposal
-                </DialogTitle>
+                <DialogTitle className="font-serif text-xl mt-1.5">File a New Proposal</DialogTitle>
                 <DialogDescription className="text-[12px] mt-0.5">
-                  Drafts enter deliberation immediately. Agents will respond within the current turn.
+                  Drafts enter deliberation immediately. Agents will respond within the current
+                  turn.
                 </DialogDescription>
               </div>
 
@@ -515,7 +613,7 @@ export function Propose() {
                   </Label>
                   <div className="grid grid-cols-2 md:grid-cols-5 gap-2">
                     {categories.map((c) => {
-                      const Icon   = c.icon;
+                      const Icon = c.icon;
                       const active = category === c.id;
                       return (
                         <button
@@ -528,8 +626,12 @@ export function Propose() {
                               : "bg-background/40 border-transparent hairline hover:bg-foreground/[0.03]"
                           }`}
                         >
-                          <Icon className={`h-3.5 w-3.5 ${active ? c.accent : "text-muted-foreground"}`} />
-                          <div className={`text-[12px] font-medium mt-1.5 ${active ? "text-foreground" : "text-foreground/80"}`}>
+                          <Icon
+                            className={`h-3.5 w-3.5 ${active ? c.accent : "text-muted-foreground"}`}
+                          />
+                          <div
+                            className={`text-[12px] font-medium mt-1.5 ${active ? "text-foreground" : "text-foreground/80"}`}
+                          >
                             {c.id}
                           </div>
                           <div className="text-[10px] text-muted-foreground/60 mt-0.5 leading-snug">
@@ -580,15 +682,35 @@ export function Propose() {
                   <Label className="flex items-center">
                     <SectionNumber n={5} />
                     <FieldLabel>Risk Level</FieldLabel>
-                    <span className="ml-1.5 font-mono text-[9px] text-muted-foreground/45 normal-case tracking-normal">(optional)</span>
+                    <span className="ml-1.5 font-mono text-[9px] text-muted-foreground/45 normal-case tracking-normal">
+                      (optional)
+                    </span>
                   </Label>
                   <div className="grid grid-cols-3 gap-2">
-                    {(["Low","Medium","High"] as Risk[]).map((r) => {
+                    {(["Low", "Medium", "High"] as Risk[]).map((r) => {
                       const active = risk === r;
                       const cfg = {
-                        Low:    { color:"text-cyan",    border:"border-cyan/35",    bg:"bg-cyan/8",    icon:Shield,        hint:"Stable passage expected"       },
-                        Medium: { color:"text-amber",   border:"border-amber/35",   bg:"bg-amber/8",   icon:Zap,           hint:"Contested vote likely"         },
-                        High:   { color:"text-crimson", border:"border-crimson/35", bg:"bg-crimson/8", icon:AlertTriangle, hint:"High controversy — splits blocs" },
+                        Low: {
+                          color: "text-cyan",
+                          border: "border-cyan/35",
+                          bg: "bg-cyan/8",
+                          icon: Shield,
+                          hint: "Stable passage expected",
+                        },
+                        Medium: {
+                          color: "text-amber",
+                          border: "border-amber/35",
+                          bg: "bg-amber/8",
+                          icon: Zap,
+                          hint: "Contested vote likely",
+                        },
+                        High: {
+                          color: "text-crimson",
+                          border: "border-crimson/35",
+                          bg: "bg-crimson/8",
+                          icon: AlertTriangle,
+                          hint: "High controversy — splits blocs",
+                        },
                       }[r];
                       const Icon = cfg.icon;
                       return (
@@ -603,12 +725,18 @@ export function Propose() {
                           }`}
                         >
                           <div className="flex items-center gap-2">
-                            <Icon className={`h-3.5 w-3.5 ${active ? cfg.color : "text-muted-foreground"}`} />
-                            <span className={`font-mono text-[11px] uppercase tracking-[0.16em] ${active ? cfg.color : "text-muted-foreground"}`}>
+                            <Icon
+                              className={`h-3.5 w-3.5 ${active ? cfg.color : "text-muted-foreground"}`}
+                            />
+                            <span
+                              className={`font-mono text-[11px] uppercase tracking-[0.16em] ${active ? cfg.color : "text-muted-foreground"}`}
+                            >
                               {r}
                             </span>
                           </div>
-                          <p className="text-[10px] text-muted-foreground/60 mt-1.5 leading-snug">{cfg.hint}</p>
+                          <p className="text-[10px] text-muted-foreground/60 mt-1.5 leading-snug">
+                            {cfg.hint}
+                          </p>
                         </button>
                       );
                     })}
@@ -646,18 +774,26 @@ export function Propose() {
                         <p className="font-mono text-[9.5px] uppercase tracking-[0.2em] text-muted-foreground">
                           Estimated Controversy
                         </p>
-                        <span className={`font-mono text-[12px] font-medium tabular-nums ${
-                          preview.controversy > 70 ? "text-crimson" :
-                          preview.controversy > 45 ? "text-amber"   : "text-cyan"
-                        }`}>
+                        <span
+                          className={`font-mono text-[12px] font-medium tabular-nums ${
+                            preview.controversy > 70
+                              ? "text-crimson"
+                              : preview.controversy > 45
+                                ? "text-amber"
+                                : "text-cyan"
+                          }`}
+                        >
                           {preview.controversy}%
                         </span>
                       </div>
                       <div className="h-1.5 w-full bg-foreground/5 rounded-full overflow-hidden">
                         <div
                           className={`h-full rounded-full transition-all duration-700 ${
-                            preview.controversy > 70 ? "bg-crimson" :
-                            preview.controversy > 45 ? "bg-amber"   : "bg-cyan"
+                            preview.controversy > 70
+                              ? "bg-crimson"
+                              : preview.controversy > 45
+                                ? "bg-amber"
+                                : "bg-cyan"
                           }`}
                           style={{ width: `${preview.controversy}%` }}
                         />
@@ -666,8 +802,8 @@ export function Propose() {
                         {preview.controversy > 70
                           ? "High volatility — expect faction splits and betrayal events"
                           : preview.controversy > 45
-                          ? "Moderate tension — passage likely contested across blocs"
-                          : "Low friction — coalition support expected to hold"}
+                            ? "Moderate tension — passage likely contested across blocs"
+                            : "Low friction — coalition support expected to hold"}
                       </p>
                     </div>
                   </div>
@@ -731,7 +867,9 @@ function StatCard({
         <Icon className={`h-4 w-4 ${c}`} />
       </div>
       <div>
-        <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">{label}</p>
+        <p className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-muted-foreground">
+          {label}
+        </p>
         <p className={`font-serif text-[15px] ${c}`}>{value}</p>
         <p className="text-[10.5px] text-muted-foreground/70">{hint}</p>
       </div>

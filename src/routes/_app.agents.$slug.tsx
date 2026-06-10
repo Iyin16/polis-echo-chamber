@@ -8,7 +8,10 @@ export const Route = createFileRoute("/_app/agents/$slug")({
     return {
       meta: [
         { title: a ? `Polis — ${a.name}` : "Polis — Agent" },
-        { name: "description", content: a ? `${a.name} · ${a.ideology} · ${a.faction}` : "AI public figure profile." },
+        {
+          name: "description",
+          content: a ? `${a.name} · ${a.ideology} · ${a.faction}` : "AI public figure profile.",
+        },
       ],
     };
   },

@@ -51,5 +51,5 @@ export function driftedValue(seed: string, base: number, range = 2, decimals = 1
 
 export function rotatingIndex(length: number, intervalTicks = 1, offset = 0) {
   const t = useTick();
-  return ((Math.floor(t / intervalTicks) + offset) % length + length) % length;
+  return (((Math.floor(t / intervalTicks) + offset) % length) + length) % length;
 }

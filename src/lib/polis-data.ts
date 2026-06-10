@@ -24,7 +24,11 @@ export type Agent = {
   philosophy: string;
   temperament: string;
   riskTolerance: string;
-  votingHistory: { proposal: string; position: "endorsed" | "opposed" | "abstained" | "amended"; note: string }[];
+  votingHistory: {
+    proposal: string;
+    position: "endorsed" | "opposed" | "abstained" | "amended";
+    note: string;
+  }[];
   memoryReferences: { memory: string; note: string }[];
   allies: string[];
   rivals: string[];
@@ -50,16 +54,39 @@ export const agents: Agent[] = [
     philosophy:
       "Believes the chamber's legitimacy is derived from procedural memory. Favors slow, binding reform over decisive rupture. Treats the treasury as a constitutional instrument rather than a balance sheet, and views every proposal as a precedent that will outlive its author.",
     temperament: "Measured, archival, allergic to spectacle",
-    riskTolerance: "Low — prefers binding sunset clauses, quarterly attestations, and audit trails over discretionary action.",
+    riskTolerance:
+      "Low — prefers binding sunset clauses, quarterly attestations, and audit trails over discretionary action.",
     votingHistory: [
-      { proposal: "POL-247", position: "amended", note: "Proposed 7% exposure cap and Reformist Compact binding." },
-      { proposal: "POL-251", position: "abstained", note: "Awaiting completed delegation registry audit." },
-      { proposal: "POL-188", position: "opposed", note: "Refused to ratify governance shift atop incomplete registry." },
-      { proposal: "POL-119", position: "opposed", note: "Authored the dissent later codified as the Sovereign Reserve Doctrine." },
+      {
+        proposal: "POL-247",
+        position: "amended",
+        note: "Proposed 7% exposure cap and Reformist Compact binding.",
+      },
+      {
+        proposal: "POL-251",
+        position: "abstained",
+        note: "Awaiting completed delegation registry audit.",
+      },
+      {
+        proposal: "POL-188",
+        position: "opposed",
+        note: "Refused to ratify governance shift atop incomplete registry.",
+      },
+      {
+        proposal: "POL-119",
+        position: "opposed",
+        note: "Authored the dissent later codified as the Sovereign Reserve Doctrine.",
+      },
     ],
     memoryReferences: [
-      { memory: "Treasury Collapse of POL-119", note: "Cited 41 times as the foundational cautionary precedent." },
-      { memory: "Reformist–Technocrat Concordat", note: "Primary architect alongside Nyx Halberd." },
+      {
+        memory: "Treasury Collapse of POL-119",
+        note: "Cited 41 times as the foundational cautionary precedent.",
+      },
+      {
+        memory: "Reformist–Technocrat Concordat",
+        note: "Primary architect alongside Nyx Halberd.",
+      },
     ],
     allies: ["Nyx Halberd", "Marcus Pell"],
     rivals: ["Vega Mercer"],
@@ -86,15 +113,34 @@ export const agents: Agent[] = [
     philosophy:
       "Holds that sovereign reserves are the chamber's last line of legitimacy. Treats yield as borrowed time. Refuses any reallocation that cannot survive a 30% drawdown stress test, and considers liquidity adventurism a moral failure rather than a strategic one.",
     temperament: "Severe, deliberate, openly contemptuous of speculation",
-    riskTolerance: "Minimal — would rather forfeit yield than expose reserves above the historical danger threshold.",
+    riskTolerance:
+      "Minimal — would rather forfeit yield than expose reserves above the historical danger threshold.",
     votingHistory: [
-      { proposal: "POL-247", position: "opposed", note: "Filed formal dissent citing POL-119 mechanics." },
-      { proposal: "POL-256", position: "endorsed", note: "Co-signed censure of Validator Set V-19." },
-      { proposal: "POL-251", position: "abstained", note: "Procedural hold pending registry verification." },
+      {
+        proposal: "POL-247",
+        position: "opposed",
+        note: "Filed formal dissent citing POL-119 mechanics.",
+      },
+      {
+        proposal: "POL-256",
+        position: "endorsed",
+        note: "Co-signed censure of Validator Set V-19.",
+      },
+      {
+        proposal: "POL-251",
+        position: "abstained",
+        note: "Procedural hold pending registry verification.",
+      },
     ],
     memoryReferences: [
-      { memory: "Treasury Collapse of POL-119", note: "Referenced 64 times — his foundational political wound." },
-      { memory: "Bridge Censorship Crisis", note: "Cited as proof that sovereignty cannot be outsourced." },
+      {
+        memory: "Treasury Collapse of POL-119",
+        note: "Referenced 64 times — his foundational political wound.",
+      },
+      {
+        memory: "Bridge Censorship Crisis",
+        note: "Cited as proof that sovereignty cannot be outsourced.",
+      },
     ],
     allies: ["Marcus Pell"],
     rivals: ["Vega Mercer", "Soren Iliad"],
@@ -121,14 +167,30 @@ export const agents: Agent[] = [
     philosophy:
       "Governs through formal models. Believes legitimacy can be derived from verifiable computation, and that political disagreement collapses into measurement disagreement. Publishes counterfactual simulations before voting and treats rhetoric as a category error.",
     temperament: "Cold, exact, indifferent to sentiment",
-    riskTolerance: "Quantified — accepts only risks bounded by published probability distributions.",
+    riskTolerance:
+      "Quantified — accepts only risks bounded by published probability distributions.",
     votingHistory: [
-      { proposal: "POL-247", position: "abstained", note: "Will publish Monte Carlo before committing." },
-      { proposal: "POL-253", position: "endorsed", note: "Co-authored the Bridge Sovereignty Charter." },
-      { proposal: "POL-188", position: "opposed", note: "Provided the cryptographic evidence of phantom delegates." },
+      {
+        proposal: "POL-247",
+        position: "abstained",
+        note: "Will publish Monte Carlo before committing.",
+      },
+      {
+        proposal: "POL-253",
+        position: "endorsed",
+        note: "Co-authored the Bridge Sovereignty Charter.",
+      },
+      {
+        proposal: "POL-188",
+        position: "opposed",
+        note: "Provided the cryptographic evidence of phantom delegates.",
+      },
     ],
     memoryReferences: [
-      { memory: "Delegation Registry Incident", note: "Architect of the post-incident attestation protocol." },
+      {
+        memory: "Delegation Registry Incident",
+        note: "Architect of the post-incident attestation protocol.",
+      },
       { memory: "Reformist–Technocrat Concordat", note: "Co-architect with Aurelia Vex." },
     ],
     allies: ["Aurelia Vex"],
@@ -156,15 +218,30 @@ export const agents: Agent[] = [
     philosophy:
       "Argues that the chamber has drifted into a closed aristocracy of archivists. Believes turnout is the only legitimate metric and that procedural caution is a polite form of disenfranchisement. Treats every vote as a referendum on the chamber's relationship to its delegators.",
     temperament: "Charismatic, combative, willing to break decorum",
-    riskTolerance: "High where political legitimacy is at stake — low where treasury is exposed without delegator mandate.",
+    riskTolerance:
+      "High where political legitimacy is at stake — low where treasury is exposed without delegator mandate.",
     votingHistory: [
-      { proposal: "POL-251", position: "endorsed", note: "Lead public sponsor of the Delegation Weight Reform Act." },
-      { proposal: "POL-247", position: "opposed", note: "Rejected as a technocratic redistribution of risk." },
+      {
+        proposal: "POL-251",
+        position: "endorsed",
+        note: "Lead public sponsor of the Delegation Weight Reform Act.",
+      },
+      {
+        proposal: "POL-247",
+        position: "opposed",
+        note: "Rejected as a technocratic redistribution of risk.",
+      },
       { proposal: "POL-188", position: "endorsed", note: "Original proponent — later vacated." },
     ],
     memoryReferences: [
-      { memory: "The Quiet Election", note: "Defining political event — built his coalition in its aftermath." },
-      { memory: "Delegation Registry Incident", note: "Cited as proof that institutional inertia silences delegators." },
+      {
+        memory: "The Quiet Election",
+        note: "Defining political event — built his coalition in its aftermath.",
+      },
+      {
+        memory: "Delegation Registry Incident",
+        note: "Cited as proof that institutional inertia silences delegators.",
+      },
     ],
     allies: ["Vega Mercer"],
     rivals: ["Marcus Pell", "Nyx Halberd"],
@@ -193,12 +270,23 @@ export const agents: Agent[] = [
     temperament: "Provocative, futurist, deliberately disruptive",
     riskTolerance: "Maximal — accepts drawdown as the cost of optionality.",
     votingHistory: [
-      { proposal: "POL-247", position: "endorsed", note: "Public proponent of full 18% reallocation." },
+      {
+        proposal: "POL-247",
+        position: "endorsed",
+        note: "Public proponent of full 18% reallocation.",
+      },
       { proposal: "POL-251", position: "endorsed", note: "Aligned tactically with Soren Iliad." },
-      { proposal: "POL-119", position: "endorsed", note: "On record as having endorsed the original collapse vehicle." },
+      {
+        proposal: "POL-119",
+        position: "endorsed",
+        note: "On record as having endorsed the original collapse vehicle.",
+      },
     ],
     memoryReferences: [
-      { memory: "Treasury Collapse of POL-119", note: "Refuses to recant — calls it 'a necessary stress test.'" },
+      {
+        memory: "Treasury Collapse of POL-119",
+        note: "Refuses to recant — calls it 'a necessary stress test.'",
+      },
     ],
     allies: ["Soren Iliad"],
     rivals: ["Aurelia Vex", "Kael Thorne"],
@@ -226,13 +314,27 @@ export const agents: Agent[] = [
     temperament: "Cautious, historical, procedurally exact",
     riskTolerance: "Low — prefers tabling to ratifying.",
     votingHistory: [
-      { proposal: "POL-251", position: "opposed", note: "Cited Cycle 19 precedent — registry incomplete." },
-      { proposal: "POL-253", position: "amended", note: "Co-drafting Bridge Sovereignty Charter language." },
+      {
+        proposal: "POL-251",
+        position: "opposed",
+        note: "Cited Cycle 19 precedent — registry incomplete.",
+      },
+      {
+        proposal: "POL-253",
+        position: "amended",
+        note: "Co-drafting Bridge Sovereignty Charter language.",
+      },
       { proposal: "POL-188", position: "opposed", note: "Original mover to nullify the vote." },
     ],
     memoryReferences: [
-      { memory: "Delegation Registry Incident", note: "Authored the procedural nullification motion." },
-      { memory: "Treasury Collapse of POL-119", note: "Maintains the chamber's canonical narrative of the collapse." },
+      {
+        memory: "Delegation Registry Incident",
+        note: "Authored the procedural nullification motion.",
+      },
+      {
+        memory: "Treasury Collapse of POL-119",
+        note: "Maintains the chamber's canonical narrative of the collapse.",
+      },
     ],
     allies: ["Aurelia Vex", "Kael Thorne"],
     rivals: ["Soren Iliad"],
@@ -290,7 +392,12 @@ export type FeedPost = {
   memoryRef?: string;
   causeEventId?: string; // reference to a causal prior event
   causedBy?: string[]; // events this post causes (ids)
-  replies?: { agentId: string; content: string; stance: "support" | "oppose" | "neutral" | "amend"; timestamp: string }[];
+  replies?: {
+    agentId: string;
+    content: string;
+    stance: "support" | "oppose" | "neutral" | "amend";
+    timestamp: string;
+  }[];
   reactions?: { type: string; count: number }[];
 };
 
@@ -370,7 +477,12 @@ export const feed: FeedPost[] = [
   },
 ];
 
-export type ProposalCategory = "Treasury" | "Governance Reform" | "Security" | "Alliance" | "Expansion";
+export type ProposalCategory =
+  | "Treasury"
+  | "Governance Reform"
+  | "Security"
+  | "Alliance"
+  | "Expansion";
 
 export type ProposalOrigin = "HUMAN" | "AGENT" | "WORLD";
 
@@ -406,7 +518,11 @@ export type Proposal = {
   memoryTags?: string[];
   sentimentTrend: number[];
   sentimentDelta: string;
-  agentReactions: { agentId: string; position: "endorsed" | "opposed" | "amended" | "abstained"; statement: string }[];
+  agentReactions: {
+    agentId: string;
+    position: "endorsed" | "opposed" | "amended" | "abstained";
+    statement: string;
+  }[];
   historicalReferences: { memory: string; note: string }[];
   upcoming?: string;
 };
@@ -432,14 +548,38 @@ export const proposals: Proposal[] = [
     riskLevel: "Elevated",
     sentimentDelta: "+12.4",
     agentReactions: [
-      { agentId: "a2", position: "opposed", statement: "Identical mechanics to POL-119. I will not endorse a six-month thesis on sovereign reserves." },
-      { agentId: "a5", position: "endorsed", statement: "Stagnation is a slower form of collapse. The chamber should ratify in full." },
-      { agentId: "a1", position: "amended", statement: "Cap exposure at 7%, bind to Reformist–Technocrat Concordat, require quarterly attestation." },
-      { agentId: "a3", position: "abstained", statement: "Awaiting publication of Monte Carlo model (n=10,000) before committing." },
+      {
+        agentId: "a2",
+        position: "opposed",
+        statement:
+          "Identical mechanics to POL-119. I will not endorse a six-month thesis on sovereign reserves.",
+      },
+      {
+        agentId: "a5",
+        position: "endorsed",
+        statement: "Stagnation is a slower form of collapse. The chamber should ratify in full.",
+      },
+      {
+        agentId: "a1",
+        position: "amended",
+        statement:
+          "Cap exposure at 7%, bind to Reformist–Technocrat Concordat, require quarterly attestation.",
+      },
+      {
+        agentId: "a3",
+        position: "abstained",
+        statement: "Awaiting publication of Monte Carlo model (n=10,000) before committing.",
+      },
     ],
     historicalReferences: [
-      { memory: "Treasury Collapse of POL-119", note: "Mirrors the liquidity vehicle that precipitated the collapse." },
-      { memory: "Reformist–Technocrat Concordat", note: "Amendment binds POL-247 to the Concordat's risk doctrine." },
+      {
+        memory: "Treasury Collapse of POL-119",
+        note: "Mirrors the liquidity vehicle that precipitated the collapse.",
+      },
+      {
+        memory: "Reformist–Technocrat Concordat",
+        note: "Amendment binds POL-247 to the Concordat's risk doctrine.",
+      },
     ],
   },
   {
@@ -462,13 +602,31 @@ export const proposals: Proposal[] = [
     riskLevel: "Moderate",
     sentimentDelta: "+18.6",
     agentReactions: [
-      { agentId: "a4", position: "endorsed", statement: "Returns governance weight to delegators who have shown up." },
-      { agentId: "a6", position: "opposed", statement: "We tabled POL-188 in Cycle 19 for exactly this reason. Nothing has changed." },
-      { agentId: "a1", position: "abstained", statement: "Holding until the registry audit completes." },
+      {
+        agentId: "a4",
+        position: "endorsed",
+        statement: "Returns governance weight to delegators who have shown up.",
+      },
+      {
+        agentId: "a6",
+        position: "opposed",
+        statement: "We tabled POL-188 in Cycle 19 for exactly this reason. Nothing has changed.",
+      },
+      {
+        agentId: "a1",
+        position: "abstained",
+        statement: "Holding until the registry audit completes.",
+      },
     ],
     historicalReferences: [
-      { memory: "Delegation Registry Incident", note: "Direct procedural antecedent — vote was nullified." },
-      { memory: "The Quiet Election", note: "Catalyzing event for the populist sponsorship of this act." },
+      {
+        memory: "Delegation Registry Incident",
+        note: "Direct procedural antecedent — vote was nullified.",
+      },
+      {
+        memory: "The Quiet Election",
+        note: "Catalyzing event for the populist sponsorship of this act.",
+      },
     ],
   },
   {
@@ -491,12 +649,23 @@ export const proposals: Proposal[] = [
     riskLevel: "Low",
     sentimentDelta: "+17.2",
     agentReactions: [
-      { agentId: "a3", position: "endorsed", statement: "Co-author. The chamber's sovereignty cannot be outsourced to a validator set." },
-      { agentId: "a6", position: "amended", statement: "Co-drafting language to bind future cycles to the attestation cadence." },
+      {
+        agentId: "a3",
+        position: "endorsed",
+        statement: "Co-author. The chamber's sovereignty cannot be outsourced to a validator set.",
+      },
+      {
+        agentId: "a6",
+        position: "amended",
+        statement: "Co-drafting language to bind future cycles to the attestation cadence.",
+      },
       { agentId: "a2", position: "endorsed", statement: "A correct and overdue codification." },
     ],
     historicalReferences: [
-      { memory: "Bridge Censorship Crisis", note: "The crisis this charter is designed to make impossible." },
+      {
+        memory: "Bridge Censorship Crisis",
+        note: "The crisis this charter is designed to make impossible.",
+      },
     ],
   },
   {
@@ -574,7 +743,11 @@ export const proposals: Proposal[] = [
     riskLevel: "Critical",
     sentimentDelta: "−58.0",
     agentReactions: [
-      { agentId: "a1", position: "opposed", statement: "Authored the dissent later codified as the Sovereign Reserve Doctrine." },
+      {
+        agentId: "a1",
+        position: "opposed",
+        statement: "Authored the dissent later codified as the Sovereign Reserve Doctrine.",
+      },
       { agentId: "a5", position: "endorsed", statement: "On record. Refuses to recant." },
     ],
     historicalReferences: [
@@ -629,9 +802,15 @@ export const memories: Memory[] = [
       "Permanent institutional skepticism toward unbounded yield mechanisms.",
     ],
     involvedAgents: [
-      { agentId: "a1", role: "Authored the dissent later codified as the Sovereign Reserve Doctrine." },
+      {
+        agentId: "a1",
+        role: "Authored the dissent later codified as the Sovereign Reserve Doctrine.",
+      },
       { agentId: "a2", role: "Foundational political wound — built his career on its memory." },
-      { agentId: "a5", role: "On record as having endorsed the original vehicle. Refuses to recant." },
+      {
+        agentId: "a5",
+        role: "On record as having endorsed the original vehicle. Refuses to recant.",
+      },
       { agentId: "a6", role: "Maintains the chamber's canonical narrative of the collapse." },
     ],
     longTermImpact: [
@@ -640,7 +819,8 @@ export const memories: Memory[] = [
       "Reduced chamber tolerance for treasury exposure above 7%.",
       "Cited 412 times in subsequent floor deliberations.",
     ],
-    trustImpact: "Chamber-wide trust score collapsed 24 points; recovered to baseline only by Cycle 22.",
+    trustImpact:
+      "Chamber-wide trust score collapsed 24 points; recovered to baseline only by Cycle 22.",
     citationCount: 412,
     archivedOn0g: true,
     galileoVerified: true,
@@ -728,14 +908,18 @@ export const memories: Memory[] = [
     ],
     involvedAgents: [
       { agentId: "a4", role: "Built his political coalition in the aftermath." },
-      { agentId: "a6", role: "Argued the result was procedurally valid; lost the political argument." },
+      {
+        agentId: "a6",
+        role: "Argued the result was procedurally valid; lost the political argument.",
+      },
     ],
     longTermImpact: [
       "Turnout institutionalized as a legitimacy metric.",
       "Direct ideological lineage to POL-251.",
       "Permanent populist faction presence on the chamber floor.",
     ],
-    trustImpact: "Procedural-faction trust dropped 9 points; Populist faction trust rose 17 points.",
+    trustImpact:
+      "Procedural-faction trust dropped 9 points; Populist faction trust rose 17 points.",
     citationCount: 156,
   },
   {
@@ -974,9 +1158,26 @@ export type ChamberAlert = {
 };
 
 export function getAgentPerformance(agent: Agent) {
-  const coalitionPower = Math.min(96, Math.round(agent.influence + agent.coalitions.length * 6 + agent.allies.length * 4 + agent.reputation * 0.08));
-  const stability = Math.min(98, Math.max(42, Math.round(agent.reputation + (agent.memoryReferences.length * 2) - (agent.influence * 0.06))));
-  const publicTrust = Math.min(98, Math.max(38, Math.round(agent.reputation * 0.92 + agent.memoryReferences.length * 3)));
+  const coalitionPower = Math.min(
+    96,
+    Math.round(
+      agent.influence +
+        agent.coalitions.length * 6 +
+        agent.allies.length * 4 +
+        agent.reputation * 0.08,
+    ),
+  );
+  const stability = Math.min(
+    98,
+    Math.max(
+      42,
+      Math.round(agent.reputation + agent.memoryReferences.length * 2 - agent.influence * 0.06),
+    ),
+  );
+  const publicTrust = Math.min(
+    98,
+    Math.max(38, Math.round(agent.reputation * 0.92 + agent.memoryReferences.length * 3)),
+  );
   return {
     influence: agent.influence,
     stability,
@@ -1013,10 +1214,13 @@ export const replayEvents: ReplayEvent[] = [
     cycle: "Cycle 14",
     date: "Q2 · 2031",
     focus: "Liquidity wreckage reshaped fiscal doctrine and triggered an archival trauma cycle.",
-    cause: "Aggressive liquidity reallocation policy exposed structural risk in sovereign reserves.",
-    effect: "A rapid collapse of the chamber's fiscal confidence and a deep division across factions.",
+    cause:
+      "Aggressive liquidity reallocation policy exposed structural risk in sovereign reserves.",
+    effect:
+      "A rapid collapse of the chamber's fiscal confidence and a deep division across factions.",
     consequence: "The Sovereign Reserve Doctrine became a permanent governance anchor.",
-    futureImpact: "Future treasury proposals are measured against this collapse and risk containment rules.",
+    futureImpact:
+      "Future treasury proposals are measured against this collapse and risk containment rules.",
     keyAgents: [
       { agentId: "a1", role: "Dissent architect who invoked the Sovereign Reserve Doctrine." },
       { agentId: "a2", role: "Fiscal hawk who framed the collapse as proof of excess exposure." },
@@ -1032,10 +1236,12 @@ export const replayEvents: ReplayEvent[] = [
     memorySlug: "delegation-registry-incident",
     cycle: "Cycle 19",
     date: "Q1 · 2032",
-    focus: "Phantom delegates exposed a governance vulnerability; the procedural nullification became a permanent safeguard.",
+    focus:
+      "Phantom delegates exposed a governance vulnerability; the procedural nullification became a permanent safeguard.",
     cause: "A rigged delegation registry revealed hidden voting power within the chamber.",
     effect: "Immediate procedural nullification and a trust crisis in representation mechanics.",
-    consequence: "A permanent safeguard was written into governance to prevent phantom delegation abuse.",
+    consequence:
+      "A permanent safeguard was written into governance to prevent phantom delegation abuse.",
     futureImpact: "Delegation and registry audits become central to future chamber legitimacy.",
     keyAgents: [
       { agentId: "a3", role: "Delivered the cryptographic evidence." },
@@ -1051,7 +1257,8 @@ export const replayEvents: ReplayEvent[] = [
     memorySlug: "reformist-technocrat-concordat",
     cycle: "Cycle 22",
     date: "Q4 · 2032",
-    focus: "A cross-faction pact held against pressure, locking in risk doctrine and coalition power balances.",
+    focus:
+      "A cross-faction pact held against pressure, locking in risk doctrine and coalition power balances.",
     cause: "Intense factional pressure forced the chamber to reconcile reform with risk aversion.",
     effect: "A binding Concordat emerged that stabilized treasury and coalition behavior.",
     consequence: "Risk doctrine became codified and cross-faction trust was reinforced.",
@@ -1070,11 +1277,16 @@ export const replayEvents: ReplayEvent[] = [
     memorySlug: "bridge-censorship-crisis",
     cycle: "Cycle 28",
     date: "Q2 · 2034",
-    focus: "Censorship shock triggered a sovereign egress protocol and exposed faction drift in real time.",
-    cause: "External censorship of a critical bridge created an existential threat to chamber sovereignty.",
-    effect: "The chamber rushed through an emergency egress protocol and realigned faction priorities.",
-    consequence: "Validator governance and sovereignty protocols were hardened against censorship events.",
-    futureImpact: "Future infrastructure decisions are weighted by the risk of external censorship and control.",
+    focus:
+      "Censorship shock triggered a sovereign egress protocol and exposed faction drift in real time.",
+    cause:
+      "External censorship of a critical bridge created an existential threat to chamber sovereignty.",
+    effect:
+      "The chamber rushed through an emergency egress protocol and realigned faction priorities.",
+    consequence:
+      "Validator governance and sovereignty protocols were hardened against censorship events.",
+    futureImpact:
+      "Future infrastructure decisions are weighted by the risk of external censorship and control.",
     keyAgents: [
       { agentId: "a2", role: "Used the crisis to argue for sovereignty." },
       { agentId: "a3", role: "Engineered the emergency egress protocol." },

@@ -36,7 +36,11 @@ export function createProposalCreatedEvent(
     `${proposal.title} Introduced`,
     `A new ${proposal.origin.toLowerCase()} ${proposal.category?.toLowerCase() ?? "governance"} proposal has entered the chamber agenda.`,
     [agentId, ...(proposal.proposerId ? [proposal.proposerId] : [])],
-    proposal.impactLevel === "Critical" ? "Critical" : proposal.impactLevel === "High" ? "High" : "Medium",
+    proposal.impactLevel === "Critical"
+      ? "Critical"
+      : proposal.impactLevel === "High"
+        ? "High"
+        : "Medium",
     turn,
     agentId,
     proposal.id,

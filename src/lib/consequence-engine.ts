@@ -63,7 +63,9 @@ function applyStreakConsequences(state: CState): CState {
   const prevStreaks = state.worldState.factionStreaks ?? {};
   const newStreaks: WorldState["factionStreaks"] = {};
   const newMorale: WorldState["factionMorale"] = { ...(state.worldState.factionMorale ?? {}) };
-  const newGrievances: WorldState["factionGrievances"] = { ...(state.worldState.factionGrievances ?? {}) };
+  const newGrievances: WorldState["factionGrievances"] = {
+    ...(state.worldState.factionGrievances ?? {}),
+  };
   const feedUpdates: FeedPost[] = [];
   const memoryUpdates: Memory[] = [];
 
@@ -138,7 +140,12 @@ function applyStreakConsequences(state: CState): CState {
     ...state,
     feed: feedUpdates.length ? [...feedUpdates, ...state.feed].slice(0, 200) : state.feed,
     memories: memoryUpdates.length ? [...memoryUpdates, ...state.memories] : state.memories,
-    worldState: { ...state.worldState, factionStreaks: newStreaks, factionMorale: newMorale, factionGrievances: newGrievances },
+    worldState: {
+      ...state.worldState,
+      factionStreaks: newStreaks,
+      factionMorale: newMorale,
+      factionGrievances: newGrievances,
+    },
   };
 }
 
@@ -200,7 +207,10 @@ function applyDominanceConsequences(state: CState): CState {
       ],
       involvedAgents: [...factionAgents, ...rivals]
         .slice(0, 4)
-        .map((a) => ({ agentId: a.id, role: a.faction === faction ? "Dominant faction" : "Rival coalition" })),
+        .map((a) => ({
+          agentId: a.id,
+          role: a.faction === faction ? "Dominant faction" : "Rival coalition",
+        })),
       longTermImpact: [
         "Dominant faction may splinter if dissent is not managed.",
         "Opposition coalition may persist across future cycles.",
@@ -227,7 +237,9 @@ function applyCloseVoteConsequences(state: CState): CState {
   let tensionDelta = 0;
   const feedUpdates: FeedPost[] = [];
   const memoryUpdates: Memory[] = [];
-  const newGrievances: WorldState["factionGrievances"] = { ...(state.worldState.factionGrievances ?? {}) };
+  const newGrievances: WorldState["factionGrievances"] = {
+    ...(state.worldState.factionGrievances ?? {}),
+  };
 
   for (const proposal of resolvedThisTurn) {
     const total = proposal.votes.for + proposal.votes.against + proposal.votes.abstain;
@@ -282,7 +294,9 @@ function applyCloseVoteConsequences(state: CState): CState {
           "Losing coalition filed formal grievances.",
           "Chamber legitimacy perception weakened.",
         ],
-        involvedAgents: state.agents.slice(0, 4).map((a) => ({ agentId: a.id, role: "Chamber voter" })),
+        involvedAgents: state.agents
+          .slice(0, 4)
+          .map((a) => ({ agentId: a.id, role: "Chamber voter" })),
         longTermImpact: [
           "Grievances may escalate into formal challenge motions.",
           "Future close votes will be viewed through this precedent.",
@@ -308,7 +322,9 @@ function applyCloseVoteConsequences(state: CState): CState {
 // ── 4. Alliance trust maintenance ──────────────────────────────────────────
 
 function applyAllianceConsequences(state: CState): CState {
-  const newAllianceTrust: WorldState["allianceTrust"] = { ...(state.worldState.allianceTrust ?? {}) };
+  const newAllianceTrust: WorldState["allianceTrust"] = {
+    ...(state.worldState.allianceTrust ?? {}),
+  };
   const feedUpdates: FeedPost[] = [];
 
   const coalitions = new Map<string, Agent[]>();
@@ -342,12 +358,19 @@ function applyAllianceConsequences(state: CState): CState {
   }
 
   const activeTrustBonuses = Object.values(newAllianceTrust).filter((v) => v >= 3).length;
-  const newTension = Math.max(0, (state.worldState.politicalTension ?? 20) - activeTrustBonuses * 3);
+  const newTension = Math.max(
+    0,
+    (state.worldState.politicalTension ?? 20) - activeTrustBonuses * 3,
+  );
 
   return {
     ...state,
     feed: feedUpdates.length ? [...feedUpdates, ...state.feed].slice(0, 200) : state.feed,
-    worldState: { ...state.worldState, allianceTrust: newAllianceTrust, politicalTension: newTension },
+    worldState: {
+      ...state.worldState,
+      allianceTrust: newAllianceTrust,
+      politicalTension: newTension,
+    },
   };
 }
 
@@ -359,7 +382,9 @@ function applyBetrayalConsequences(state: CState): CState {
   );
   if (resolvedThisTurn.length === 0) return state;
 
-  const newBetrayalCounts: WorldState["betrayalCounts"] = { ...(state.worldState.betrayalCounts ?? {}) };
+  const newBetrayalCounts: WorldState["betrayalCounts"] = {
+    ...(state.worldState.betrayalCounts ?? {}),
+  };
   const feedUpdates: FeedPost[] = [];
   const memoryUpdates: Memory[] = [];
 
@@ -435,13 +460,20 @@ function applyBetrayalConsequences(state: CState): CState {
   }
 
   const totalBetrayals = Object.values(newBetrayalCounts).reduce((s, v) => s + v, 0);
-  const newTension = Math.min(100, (state.worldState.politicalTension ?? 20) + Math.min(20, totalBetrayals * 3));
+  const newTension = Math.min(
+    100,
+    (state.worldState.politicalTension ?? 20) + Math.min(20, totalBetrayals * 3),
+  );
 
   return {
     ...state,
     feed: feedUpdates.length ? [...feedUpdates, ...state.feed].slice(0, 200) : state.feed,
     memories: memoryUpdates.length ? [...memoryUpdates, ...state.memories] : state.memories,
-    worldState: { ...state.worldState, betrayalCounts: newBetrayalCounts, politicalTension: newTension },
+    worldState: {
+      ...state.worldState,
+      betrayalCounts: newBetrayalCounts,
+      politicalTension: newTension,
+    },
   };
 }
 

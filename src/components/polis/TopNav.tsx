@@ -26,7 +26,9 @@ export function TopNav() {
           </div>
           <div className="flex items-baseline gap-2 min-w-0">
             <span className="font-serif text-lg tracking-tight">Polis</span>
-            <span className="hidden xl:inline text-[10px] uppercase tracking-[0.18em] text-muted-foreground truncate">Chamber · Cycle 31</span>
+            <span className="hidden xl:inline text-[10px] uppercase tracking-[0.18em] text-muted-foreground truncate">
+              Chamber · Cycle 31
+            </span>
           </div>
         </div>
 
@@ -96,7 +98,9 @@ function Ticker() {
   return (
     <div className="border-t hairline overflow-hidden">
       <div className="flex whitespace-nowrap py-1.5 ticker font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
-        <span className="px-4 md:px-6">{line}   ·   {line}</span>
+        <span className="px-4 md:px-6">
+          {line} · {line}
+        </span>
       </div>
     </div>
   );
@@ -117,7 +121,7 @@ function WalletConnectButton() {
       }
       if (mounted) setHasWallet(true);
       try {
-        const accounts = await eth.request({ method: "eth_accounts" }) as string[];
+        const accounts = (await eth.request({ method: "eth_accounts" })) as string[];
         if (mounted) setAddress(accounts?.[0] ?? null);
       } catch {
         // ignore
@@ -134,7 +138,7 @@ function WalletConnectButton() {
     if (!eth) return;
     setConnecting(true);
     try {
-      const accounts = await eth.request({ method: "eth_requestAccounts" }) as string[];
+      const accounts = (await eth.request({ method: "eth_requestAccounts" })) as string[];
       setAddress(accounts?.[0] ?? null);
       setHasWallet(true);
     } catch {
@@ -151,7 +155,13 @@ function WalletConnectButton() {
       className="inline-flex items-center gap-2 rounded-md border hairline bg-panel/60 px-3 py-1.5 text-[11px] text-muted-foreground hover:text-foreground"
     >
       <Wallet className="h-3.5 w-3.5" />
-      {hasWallet ? (address ? `${address.slice(0, 6)}...${address.slice(-4)}` : (connecting ? "Connecting…" : "Connect Wallet")) : "Install Wallet"}
+      {hasWallet
+        ? address
+          ? `${address.slice(0, 6)}...${address.slice(-4)}`
+          : connecting
+            ? "Connecting…"
+            : "Connect Wallet"
+        : "Install Wallet"}
     </button>
   );
 }
@@ -161,15 +171,35 @@ function ChamberAlertBar() {
   const a = chamberAlerts[idx];
   const tone =
     a.level === "emergency"
-      ? { icon: Siren, color: "text-crimson", border: "border-crimson/40", bg: "bg-crimson/[0.05]", tag: "Emergency" }
+      ? {
+          icon: Siren,
+          color: "text-crimson",
+          border: "border-crimson/40",
+          bg: "bg-crimson/[0.05]",
+          tag: "Emergency",
+        }
       : a.level === "warning"
-        ? { icon: AlertTriangle, color: "text-amber", border: "border-amber/40", bg: "bg-amber/[0.04]", tag: "Warning" }
-        : { icon: Activity, color: "text-cyan", border: "border-cyan/40", bg: "bg-cyan/[0.04]", tag: "Notice" };
+        ? {
+            icon: AlertTriangle,
+            color: "text-amber",
+            border: "border-amber/40",
+            bg: "bg-amber/[0.04]",
+            tag: "Warning",
+          }
+        : {
+            icon: Activity,
+            color: "text-cyan",
+            border: "border-cyan/40",
+            bg: "bg-cyan/[0.04]",
+            tag: "Notice",
+          };
   const Icon = tone.icon;
   return (
     <div className={`border-t hairline ${tone.bg}`}>
       <div className="flex items-center gap-2 md:gap-3 px-4 md:px-6 py-1.5 fade-in">
-        <span className={`shrink-0 inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.2em] rounded-sm border ${tone.border} ${tone.color} px-1.5 py-0.5`}>
+        <span
+          className={`shrink-0 inline-flex items-center gap-1.5 font-mono text-[9.5px] uppercase tracking-[0.2em] rounded-sm border ${tone.border} ${tone.color} px-1.5 py-0.5`}
+        >
           <Icon className="h-3 w-3" /> {tone.tag}
         </span>
         <span className={`font-serif text-[12.5px] ${tone.color} truncate`}>{a.label}</span>

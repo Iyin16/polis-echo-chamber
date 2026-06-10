@@ -18,7 +18,13 @@ const riskColor: Record<string, string> = {
   Critical: "text-crimson",
 };
 
-const categories: ProposalCategory[] = ["Treasury", "Governance Reform", "Security", "Alliance", "Expansion"];
+const categories: ProposalCategory[] = [
+  "Treasury",
+  "Governance Reform",
+  "Security",
+  "Alliance",
+  "Expansion",
+];
 const impactLevels: Proposal["impactLevel"][] = ["Low", "Moderate", "High", "Critical"];
 
 export function ProposalPanel() {
@@ -29,7 +35,9 @@ export function ProposalPanel() {
   const [category, setCategory] = useState<ProposalCategory>("Treasury");
   const [summary, setSummary] = useState("");
   const [description, setDescription] = useState("");
-  const [impactLevel, setImpactLevel] = useState<"Low" | "Moderate" | "High" | "Critical">("Moderate");
+  const [impactLevel, setImpactLevel] = useState<"Low" | "Moderate" | "High" | "Critical">(
+    "Moderate",
+  );
   const [submitting, setSubmitting] = useState(false);
   const canSubmit = activeProposals.length < 2;
 
@@ -59,32 +67,50 @@ export function ProposalPanel() {
     <section className="px-4 md:px-6 py-8 max-w-6xl">
       <div className="mb-6 flex flex-wrap items-end justify-between gap-3">
         <div>
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Governance</p>
-          <h1 className="font-serif text-xl md:text-2xl tracking-tight mt-1">Active DAO Proposals</h1>
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+            Governance
+          </p>
+          <h1 className="font-serif text-xl md:text-2xl tracking-tight mt-1">
+            Active DAO Proposals
+          </h1>
           <p className="text-[12.5px] text-muted-foreground mt-1 max-w-xl">
-            Live deliberations, voting distribution, sentiment trends, and treasury impact across the chamber floor.
+            Live deliberations, voting distribution, sentiment trends, and treasury impact across
+            the chamber floor.
           </p>
         </div>
         <div className="space-y-2 text-right">
-          <div className="font-mono text-[10px] text-muted-foreground">{activeProposals.length} active · {proposals.length} total</div>
+          <div className="font-mono text-[10px] text-muted-foreground">
+            {activeProposals.length} active · {proposals.length} total
+          </div>
           <button
             type="button"
             onClick={() => setShowForm((value) => !value)}
             disabled={!canSubmit}
             className={`rounded-full border px-4 py-2 text-[11px] uppercase tracking-[0.18em] transition ${
-              canSubmit ? "border-amber text-amber hover:bg-amber/10" : "border-silver text-muted-foreground cursor-not-allowed"
+              canSubmit
+                ? "border-amber text-amber hover:bg-amber/10"
+                : "border-silver text-muted-foreground cursor-not-allowed"
             }`}
           >
-            {canSubmit ? (showForm ? "Hide proposal form" : "Submit proposal to civilization") : "Max active proposals reached"}
+            {canSubmit
+              ? showForm
+                ? "Hide proposal form"
+                : "Submit proposal to civilization"
+              : "Max active proposals reached"}
           </button>
         </div>
       </div>
 
       {showForm ? (
-        <form className="mb-6 rounded-md border border-foreground/10 bg-background/80 p-5 shadow-sm" onSubmit={handleSubmit}>
+        <form
+          className="mb-6 rounded-md border border-foreground/10 bg-background/80 p-5 shadow-sm"
+          onSubmit={handleSubmit}
+        >
           <div className="grid gap-4 lg:grid-cols-2">
             <label className="space-y-2 text-sm">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Title</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Title
+              </span>
               <input
                 value={title}
                 onChange={(event) => setTitle(event.target.value)}
@@ -94,7 +120,9 @@ export function ProposalPanel() {
               />
             </label>
             <label className="space-y-2 text-sm">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Category</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Category
+              </span>
               <select
                 value={category}
                 onChange={(event) => setCategory(event.target.value as ProposalCategory)}
@@ -111,7 +139,9 @@ export function ProposalPanel() {
 
           <div className="mt-4 grid gap-4 lg:grid-cols-2">
             <label className="space-y-2 text-sm lg:col-span-2">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Description</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Description
+              </span>
               <textarea
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
@@ -121,10 +151,14 @@ export function ProposalPanel() {
               />
             </label>
             <label className="space-y-2 text-sm">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Expected Impact</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Expected Impact
+              </span>
               <select
                 value={impactLevel}
-                onChange={(event) => setImpactLevel(event.target.value as "Low" | "Moderate" | "High" | "Critical")}
+                onChange={(event) =>
+                  setImpactLevel(event.target.value as "Low" | "Moderate" | "High" | "Critical")
+                }
                 className="w-full rounded-md border border-foreground/10 bg-background px-3 py-2 text-sm outline-none focus:border-amber/70 focus:ring-2 focus:ring-amber/10"
               >
                 {impactLevels.map((level) => (
@@ -135,7 +169,9 @@ export function ProposalPanel() {
               </select>
             </label>
             <label className="space-y-2 text-sm">
-              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Summary</span>
+              <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
+                Summary
+              </span>
               <textarea
                 rows={3}
                 value={summary}
@@ -154,14 +190,19 @@ export function ProposalPanel() {
             >
               {submitting ? "Submitting…" : "Submit Proposal"}
             </button>
-            <p className="text-[12px] text-muted-foreground">Human-origin proposals immediately enter the creation phase and begin debate next turn.</p>
+            <p className="text-[12px] text-muted-foreground">
+              Human-origin proposals immediately enter the creation phase and begin debate next
+              turn.
+            </p>
           </div>
         </form>
       ) : null}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {activeProposals.length === 0 ? (
-          <div className="panel rounded-md p-5 text-sm text-muted-foreground">No active proposals are currently on the chamber floor.</div>
+          <div className="panel rounded-md p-5 text-sm text-muted-foreground">
+            No active proposals are currently on the chamber floor.
+          </div>
         ) : (
           activeProposals.map((p) => (
             <Link
@@ -171,14 +212,22 @@ export function ProposalPanel() {
               className="panel card-lift card-lift-amber rounded-md p-5 group block cursor-pointer"
             >
               <div className="flex items-center justify-between">
-                <span className="font-mono text-[10px] tracking-[0.22em] text-amber/70">{p.id}</span>
-                <span className={`rounded-sm border px-1.5 py-0.5 text-[9px] uppercase tracking-[0.16em] ${tagColor[p.statusTag]}`}>
+                <span className="font-mono text-[10px] tracking-[0.22em] text-amber/70">
+                  {p.id}
+                </span>
+                <span
+                  className={`rounded-sm border px-1.5 py-0.5 text-[9px] uppercase tracking-[0.16em] ${tagColor[p.statusTag]}`}
+                >
                   {p.statusTag}
                 </span>
               </div>
-              <h2 className="font-serif text-[18px] font-semibold leading-snug mt-2 text-foreground">{p.title}</h2>
+              <h2 className="font-serif text-[18px] font-semibold leading-snug mt-2 text-foreground">
+                {p.title}
+              </h2>
               <p className="font-mono text-[10px] text-muted-foreground/60 mt-1">{p.status}</p>
-              <p className="mt-3 text-[13px] text-foreground/70 leading-relaxed line-clamp-3">{p.summary}</p>
+              <p className="mt-3 text-[13px] text-foreground/70 leading-relaxed line-clamp-3">
+                {p.summary}
+              </p>
 
               <div className="mt-4 grid grid-cols-3 gap-2 text-[10.5px]">
                 <Stat label="Endorse" value={`${p.votes.for}%`} accent="amber" />
@@ -206,11 +255,22 @@ export function ProposalPanel() {
   );
 }
 
-function Stat({ label, value, accent }: { label: string; value: string; accent: "amber" | "crimson" | "silver" }) {
-  const c = accent === "amber" ? "text-amber" : accent === "crimson" ? "text-crimson" : "text-silver";
+function Stat({
+  label,
+  value,
+  accent,
+}: {
+  label: string;
+  value: string;
+  accent: "amber" | "crimson" | "silver";
+}) {
+  const c =
+    accent === "amber" ? "text-amber" : accent === "crimson" ? "text-crimson" : "text-silver";
   return (
     <div className="rounded-sm border hairline bg-background/40 px-2 py-1.5">
-      <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">{label}</div>
+      <div className="font-mono text-[9px] uppercase tracking-widest text-muted-foreground">
+        {label}
+      </div>
       <div className={`font-serif text-[13px] mt-0.5 ${c}`}>{value}</div>
     </div>
   );

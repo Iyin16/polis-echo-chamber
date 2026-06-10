@@ -53,6 +53,7 @@ The POLIS Agent NFT system allows agents to be minted as sovereign on-chain iden
 The **agent** in POLIS remains the off-chain simulation entity with all its political logic, voting history, and ideology.
 
 The **NFT** is a snapshot of that agent's identity at the moment of minting, representing:
+
 - Ownership (the wallet that minted it)
 - Persistence (recorded on-chain permanently)
 - Provenance (creation turn, initial metadata)
@@ -60,6 +61,7 @@ The **NFT** is a snapshot of that agent's identity at the moment of minting, rep
 ### 2. Metadata Stored On-Chain
 
 Each NFT stores:
+
 ```solidity
 struct AgentNFTData {
   string agentName;
@@ -86,6 +88,7 @@ This allows NFTs to stay synchronized with agent evolution.
 ### Backend (TypeScript)
 
 **When agent is created:**
+
 ```typescript
 // In createAgentInPolisSimulation()
 const feedPost: FeedPost = {
@@ -106,6 +109,7 @@ if (autoMintEnabled) {
 ```
 
 **When agent is updated:**
+
 ```typescript
 // In applyInfluenceEngine() or evolveAgents()
 if (agent.nftTokenId && influenceChanged) {
@@ -119,6 +123,7 @@ if (agent.nftTokenId && influenceChanged) {
 ### Frontend (React)
 
 **In Agent Detail Page:**
+
 ```tsx
 import { AgentMintButton } from "@/components/polis/AgentMintButton";
 
@@ -126,7 +131,7 @@ export function AgentDetail({ agent }: Props) {
   return (
     <div>
       {/* ... agent info ... */}
-      
+
       {!agent.nftMintedAt ? (
         <AgentMintButton
           agent={agent}
@@ -141,9 +146,7 @@ export function AgentDetail({ agent }: Props) {
           }}
         />
       ) : (
-        <div className="text-sm text-amber">
-          ✓ Minted as NFT #{agent.nftTokenId}
-        </div>
+        <div className="text-sm text-amber">✓ Minted as NFT #{agent.nftTokenId}</div>
       )}
     </div>
   );
@@ -153,6 +156,7 @@ export function AgentDetail({ agent }: Props) {
 ### Feed Event
 
 **When NFT is minted:**
+
 ```typescript
 // In turnEngine.ts or user action handler
 const feedEvent = createAgentMintedEvent(
@@ -169,6 +173,7 @@ state.feed = [feedEvent, ...state.feed].slice(0, 200);
 ```
 
 **In Feed UI:**
+
 ```tsx
 // Displays as:
 💎 "Aurelia Vex Sovereignty Established On-Chain"
@@ -233,6 +238,7 @@ REACT_APP_DEPLOYER_ADDRESS=0x...        # Owner wallet
 ### Local Testing
 
 1. Deploy to local Hardhat network:
+
    ```bash
    npx hardhat node
    npx hardhat run scripts/deploy.ts --network localhost
@@ -247,6 +253,7 @@ REACT_APP_DEPLOYER_ADDRESS=0x...        # Owner wallet
 1. Get Arbitrum Sepolia ETH from [faucet](https://faucet.arbitrum.io/)
 
 2. Deploy to testnet:
+
    ```bash
    npx hardhat run scripts/deploy.ts --network arbitrumSepolia
    ```

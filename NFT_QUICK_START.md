@@ -14,18 +14,22 @@ Agent → [Mint Button] → MetaMask → [Contract] → NFT Token #123
 ## Files Created/Modified
 
 ### Smart Contract
+
 - **`contracts/PolisAgentNFT.sol`** — ERC-721 contract with agent metadata storage
 
 ### Frontend Components
+
 - **`src/components/polis/AgentMintButton.tsx`** — Mint button with loading states
 - **`src/components/polis/MintModals.tsx`** — Success/error modals
 
 ### Backend Services
+
 - **`src/lib/use-nft-minting.ts`** — Minting service & metadata builder
 - **`src/lib/polis-data.ts`** — Updated Agent type with NFT fields
 - **`src/lib/feed-events.ts`** — Added `createAgentMintedEvent()`
 
 ### Deployment & Documentation
+
 - **`hardhat.config.ts`** — Hardhat configuration for Arbitrum networks
 - **`scripts/deploy.ts`** — Deployment script with explorer links
 - **`DEPLOYMENT.md`** — Step-by-step deployment guide
@@ -55,6 +59,7 @@ cp .env.example .env
 ```
 
 Then edit `.env` with:
+
 - `DEPLOYER_PRIVATE_KEY=<your_wallet_private_key>`
 - `ARBISCAN_API_KEY=<optional_for_verification>`
 
@@ -67,6 +72,7 @@ npx hardhat run scripts/deploy.ts --network arbitrumSepolia
 ```
 
 This will output:
+
 ```
 ✅ PolisAgentNFT deployed successfully!
 📍 Contract address: 0x...
@@ -98,9 +104,9 @@ export function AgentDetail({ agent }) {
   return (
     <div>
       {/* ... agent info ... */}
-      
+
       {!agent.nftMintedAt && (
-        <AgentMintButton 
+        <AgentMintButton
           agent={agent}
           createdTurn={agent.createdTurn}
           onMintSuccess={(tokenId) => {
@@ -125,22 +131,26 @@ export function AgentDetail({ agent }) {
 ## What Each Component Does
 
 ### AgentMintButton
+
 - Displays mint button or "Already Minted" state
 - Handles loading and error states
 - Calls minting service
 - Shows result/error modals
 
 ### MintResultModal
+
 - Displays token ID
 - Shows transaction hash (clickable → Arbiscan)
 - Shows contract address
 - Provides visual feedback (✓ icon)
 
 ### MintErrorModal
+
 - Displays error message
 - Allows user to retry
 
 ### use-nft-minting Hook
+
 ```typescript
 // Service for minting
 const result = await mintAgentNFT({
@@ -150,28 +160,22 @@ const result = await mintAgentNFT({
   faction: "Forward Party",
   influenceSnapshot: 85,
   createdTurn: 0,
-  metadataURI: "ipfs://..." // or HTTP URL
+  metadataURI: "ipfs://...", // or HTTP URL
 });
 
 // Returns
-result.tokenId        // 123
-result.txHash        // 0x...
-result.contractAddress // 0x...
-result.blockExplorerUrl // https://sepolia.arbiscan.io/tx/0x...
+result.tokenId; // 123
+result.txHash; // 0x...
+result.contractAddress; // 0x...
+result.blockExplorerUrl; // https://sepolia.arbiscan.io/tx/0x...
 ```
 
 ### Feed Event
+
 Automatically emitted when agent is minted:
 
 ```typescript
-createAgentMintedEvent(
-  agentName,
-  agentId,
-  tokenId,
-  contractAddress,
-  ownerAddress,
-  turn
-);
+createAgentMintedEvent(agentName, agentId, tokenId, contractAddress, ownerAddress, turn);
 
 // Displays in feed as:
 // 💎 "Agent Name Sovereignty Established On-Chain"
@@ -251,30 +255,36 @@ getTokenIdForAgent(string polisAgentId) → tokenId
 ## Troubleshooting
 
 ### "window.ethereum is undefined"
+
 - MetaMask not installed
 - Solution: Install MetaMask extension
 
 ### "Network is not Arbitrum Sepolia"
+
 - User has different network selected
 - Solution: MetaMask will prompt user to switch
 
 ### "Contract not found at address"
+
 - Wrong contract address in `.env.local`
 - Solution: Double-check address from deployment output
 
 ### "Insufficient balance for gas"
+
 - Not enough testnet ETH
 - Solution: Get more from [faucet](https://faucet.arbitrum.io/)
 
 ## Next Steps
 
 ### Phase 2: Production Hardening
+
 1. **IPFS Integration** — Store full metadata on IPFS instead of inline
 2. **Agent Consent** — Require agent wallet signature to mint
 3. **MetaMask Wallet Detection** — Better UX for non-connected users
 4. **Dynamic Snapshots** — Auto-update NFT metadata as agent evolves
 
 ### Phase 3: Advanced Features
+
 1. **DAO Governance** — Give NFT holders voting power
 2. **OpenSea Integration** — Make NFTs tradeable
 3. **Multi-Chain** — Deploy to Ethereum mainnet, Optimism, etc.
@@ -282,6 +292,7 @@ getTokenIdForAgent(string polisAgentId) → tokenId
 5. **Staking** — Earn rewards by locking NFTs
 
 ### Phase 4: On-Chain Agent Logic
+
 1. **Smart Contract Agent** — Move voting logic on-chain
 2. **Autonomous Minting** — Agents mint NFTs for themselves
 3. **On-Chain Proposals** — Governance proposals on Arbitrum
@@ -312,6 +323,7 @@ getTokenIdForAgent(string polisAgentId) → tokenId
 ## Status
 
 ✅ **Complete & Ready for Deployment**
+
 - All components built and tested
 - TypeScript validation passing
 - Smart contract compiled without errors

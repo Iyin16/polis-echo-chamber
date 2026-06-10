@@ -5,7 +5,10 @@ export const Route = createFileRoute("/_app/dominance")({
   head: () => ({
     meta: [
       { title: "Polis — Faction Dominance" },
-      { name: "description", content: "Real-time faction dominance, tension, stability and political event feed." },
+      {
+        name: "description",
+        content: "Real-time faction dominance, tension, stability and political event feed.",
+      },
     ],
   }),
   component: () => <Dominance />,

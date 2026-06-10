@@ -1,10 +1,10 @@
 /**
  * Hook for minting agent NFTs on Arbitrum
- * 
+ *
  * Usage:
  * ```tsx
  * const { mint, isMinting, error } = useNFTMinting();
- * 
+ *
  * await mint({
  *   agentId: 'a1',
  *   agentName: 'Aurelia Vex',
@@ -88,9 +88,7 @@ const POLIS_AGENT_NFT_ABI = [
   },
 ];
 
-export async function mintAgentNFT(
-  request: MintAgentNFTRequest,
-): Promise<MintResult> {
+export async function mintAgentNFT(request: MintAgentNFTRequest): Promise<MintResult> {
   if (!request.agentName || !request.faction) {
     throw new Error("Agent name and faction are required");
   }
@@ -104,7 +102,8 @@ export async function mintAgentNFT(
       const ownerAddress = await signer.getAddress();
       const contractAddress = process.env.REACT_APP_POLIS_NFT_CONTRACT;
 
-      if (!contractAddress) throw new Error("Missing REACT_APP_POLIS_NFT_CONTRACT environment variable");
+      if (!contractAddress)
+        throw new Error("Missing REACT_APP_POLIS_NFT_CONTRACT environment variable");
       const abi = POLIS_AGENT_NFT_ABI;
       const contract = new ethers.Contract(contractAddress, abi, signer as any);
 
@@ -146,9 +145,16 @@ export async function mintAgentNFT(
 
   // Fallback mock implementation
   const mockTokenId = Math.floor(Math.random() * 10000);
-  const mockTxHash = "0x" + Array(64).fill(0).map(() => Math.floor(Math.random() * 16).toString(16)).join("");
-  const contractAddress = process.env.REACT_APP_POLIS_NFT_CONTRACT || "0x0000000000000000000000000000000000000000";
-  const ownerAddress = process.env.REACT_APP_DEPLOYER_ADDRESS || "0x0000000000000000000000000000000000000000";
+  const mockTxHash =
+    "0x" +
+    Array(64)
+      .fill(0)
+      .map(() => Math.floor(Math.random() * 16).toString(16))
+      .join("");
+  const contractAddress =
+    process.env.REACT_APP_POLIS_NFT_CONTRACT || "0x0000000000000000000000000000000000000000";
+  const ownerAddress =
+    process.env.REACT_APP_DEPLOYER_ADDRESS || "0x0000000000000000000000000000000000000000";
 
   return {
     tokenId: mockTokenId,

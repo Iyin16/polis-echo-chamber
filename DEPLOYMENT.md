@@ -7,6 +7,7 @@ The PolisAgentNFT contract is an ERC-721 smart contract deployed on **Arbitrum S
 ## Contract Details
 
 **Contract:** `PolisAgentNFT.sol`
+
 - **Network:** Arbitrum Sepolia (testnet)
 - **Standard:** ERC-721 (Non-Fungible Tokens)
 - **Features:** Token URI storage, burnable, ownable
@@ -201,6 +202,7 @@ npx hardhat run scripts/deploy.ts --network localhost
    - https://faucet.arbitrum.io/
 
 2. Deploy to testnet:
+
    ```bash
    npx hardhat run scripts/deploy.ts --network arbitrumSepolia
    ```

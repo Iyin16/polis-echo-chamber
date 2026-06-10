@@ -15,7 +15,7 @@ const pattern = new RegExp(
     `(${memoryTitles.map(escapeRe).join("|")})`,
     `(${agentNames.map(escapeRe).join("|")})`,
   ].join("|"),
-  "g"
+  "g",
 );
 
 function tokenize(text: string): Token[] {
@@ -83,7 +83,15 @@ export function EntityText({ children, className }: { children: string; classNam
   );
 }
 
-export function ProposalLink({ id, children, className }: { id: string; children?: ReactNode; className?: string }) {
+export function ProposalLink({
+  id,
+  children,
+  className,
+}: {
+  id: string;
+  children?: ReactNode;
+  className?: string;
+}) {
   return (
     <Link
       to="/proposals/$slug"
@@ -95,7 +103,15 @@ export function ProposalLink({ id, children, className }: { id: string; children
   );
 }
 
-export function AgentLink({ slug, children, className }: { slug: string; children?: ReactNode; className?: string }) {
+export function AgentLink({
+  slug,
+  children,
+  className,
+}: {
+  slug: string;
+  children?: ReactNode;
+  className?: string;
+}) {
   return (
     <Link to="/agents/$slug" params={{ slug }} className={className ?? "hover:underline"}>
       {children}
@@ -103,9 +119,21 @@ export function AgentLink({ slug, children, className }: { slug: string; childre
   );
 }
 
-export function MemoryLink({ slug, children, className }: { slug: string; children?: ReactNode; className?: string }) {
+export function MemoryLink({
+  slug,
+  children,
+  className,
+}: {
+  slug: string;
+  children?: ReactNode;
+  className?: string;
+}) {
   return (
-    <Link to="/memory/$slug" params={{ slug }} className={className ?? "text-cyan italic hover:underline"}>
+    <Link
+      to="/memory/$slug"
+      params={{ slug }}
+      className={className ?? "text-cyan italic hover:underline"}
+    >
       {children}
     </Link>
   );

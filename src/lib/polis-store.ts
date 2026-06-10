@@ -7,7 +7,12 @@ import { getAgentId } from "./agent-id";
 import { mintAgentNFT } from "./use-nft-minting";
 import { createAgentMintedEvent } from "./feed-events";
 import type { Agent, FeedPost, Memory, Proposal, ProposalCategory } from "./polis-data";
-import { agents as baseAgents, feed as baseFeed, memories as baseMemories, proposals as baseProposals } from "./polis-data";
+import {
+  agents as baseAgents,
+  feed as baseFeed,
+  memories as baseMemories,
+  proposals as baseProposals,
+} from "./polis-data";
 
 const STORAGE_KEY = "polis-simulation-state";
 
@@ -115,7 +120,9 @@ function persistState(state: PolisState) {
   try {
     const base = createDefaultState();
     const createdAgents = state.agents.slice(base.agents.length);
-    const createdFeed = state.feed.filter((post) => !base.feed.some((basePost) => basePost.id === post.id));
+    const createdFeed = state.feed.filter(
+      (post) => !base.feed.some((basePost) => basePost.id === post.id),
+    );
     const createdMemories = state.memories.slice(base.memories.length);
     const createdProposals = state.proposals.slice(base.proposals.length);
     localStorage.setItem(
@@ -335,8 +342,27 @@ export async function createAgentInPolisSimulation(input: {
 
       state = {
         ...state,
-        agents: state.agents.map((a) => (a.id === newAgent.id ? { ...a, nftTokenId: result.tokenId, nftAddress: result.contractAddress, nftMintedAt: newAgent.nftMintedAt } : a)),
-        feed: [createAgentMintedEvent(newAgent.name, newAgent.id, result.tokenId, result.contractAddress, result.ownerAddress, state.worldState.totalAgents), ...state.feed],
+        agents: state.agents.map((a) =>
+          a.id === newAgent.id
+            ? {
+                ...a,
+                nftTokenId: result.tokenId,
+                nftAddress: result.contractAddress,
+                nftMintedAt: newAgent.nftMintedAt,
+              }
+            : a,
+        ),
+        feed: [
+          createAgentMintedEvent(
+            newAgent.name,
+            newAgent.id,
+            result.tokenId,
+            result.contractAddress,
+            result.ownerAddress,
+            state.worldState.totalAgents,
+          ),
+          ...state.feed,
+        ],
       };
 
       persistState(state);
@@ -365,18 +391,20 @@ export async function createAgentInPolisSimulation(input: {
     event: memory.title,
     impact: memory.summary,
     cycle: memory.cycle,
-  }).then((result) => {
-    if (result?.rootHash) {
-      state = {
-        ...state,
-        memories: state.memories.map((item) =>
-          item.id === memory.id ? { ...item, archivedOn0g: true } : item,
-        ),
-      };
-      persistState(state);
-      notify();
-    }
-  }).catch(() => null);
+  })
+    .then((result) => {
+      if (result?.rootHash) {
+        state = {
+          ...state,
+          memories: state.memories.map((item) =>
+            item.id === memory.id ? { ...item, archivedOn0g: true } : item,
+          ),
+        };
+        persistState(state);
+        notify();
+      }
+    })
+    .catch(() => null);
 
   return { agent: newAgent, feed: feedPost, memory };
 }
@@ -395,7 +423,9 @@ export async function submitProposalToPolisSimulation(input: {
   const baseSlug = sanitizeSlug(input.title);
   const slug = ordinalSlug(baseSlug || `proposal-${Date.now()}`, existingSlugs);
   const id = `POL-${slug.toUpperCase()}`;
-  const author = input.authorAgentId ? state.agents.find((agent) => agent.id === input.authorAgentId) : undefined;
+  const author = input.authorAgentId
+    ? state.agents.find((agent) => agent.id === input.authorAgentId)
+    : undefined;
   const proposerName = author?.name ?? input.proposerName ?? "Human Delegate";
 
   const newProposal: Proposal = {
@@ -428,7 +458,13 @@ export async function submitProposalToPolisSimulation(input: {
     sentimentTrend: [50],
     sentimentDelta: "+0.0",
     agentReactions: author
-      ? [{ agentId: author.id, position: "endorsed", statement: `${author.name} introduced this human submission.` }]
+      ? [
+          {
+            agentId: author.id,
+            position: "endorsed",
+            statement: `${author.name} introduced this human submission.`,
+          },
+        ]
       : [],
     historicalReferences: [],
     upcoming: "Debate begins next turn",

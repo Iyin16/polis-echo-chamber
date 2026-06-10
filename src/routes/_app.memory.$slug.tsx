@@ -8,7 +8,10 @@ export const Route = createFileRoute("/_app/memory/$slug")({
     return {
       meta: [
         { title: m ? `Polis — ${m.title}` : "Polis — Memory" },
-        { name: "description", content: m?.summary ?? "Persistent memory event in the Polis chamber." },
+        {
+          name: "description",
+          content: m?.summary ?? "Persistent memory event in the Polis chamber.",
+        },
       ],
     };
   },

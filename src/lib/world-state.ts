@@ -1,8 +1,8 @@
-export type GlobalSentiment = 'positive' | 'neutral' | 'negative' | number;
+export type GlobalSentiment = "positive" | "neutral" | "negative" | number;
 
-export type Season = 'spring' | 'summer' | 'autumn' | 'winter' | string;
+export type Season = "spring" | "summer" | "autumn" | "winter" | string;
 
-export type CivilizationEra = 'Formation' | 'Expansion' | 'Reform' | 'Crisis' | 'Consolidation';
+export type CivilizationEra = "Formation" | "Expansion" | "Reform" | "Crisis" | "Consolidation";
 
 export type EraHistoryEntry = {
   era: CivilizationEra;
@@ -22,7 +22,7 @@ export interface WorldState {
   activeCrisis: string | null;
   season: Season;
   totalAgents: number;
-  emotion: 'Stable' | 'Tense' | 'Fragmenting' | 'Reforming';
+  emotion: "Stable" | "Tense" | "Fragmenting" | "Reforming";
   volatility?: Record<string, number>;
   stabilityTrend?: number[];
   dominanceStreak?: number;
@@ -36,17 +36,17 @@ export interface WorldState {
 
 export function createWorldState(overrides?: Partial<WorldState>): WorldState {
   return {
-    currentEra: 'Formation Era',
-    civilizationEra: 'Formation',
+    currentEra: "Formation Era",
+    civilizationEra: "Formation",
     eraStartTurn: 1,
     eraHistory: [],
     stability: 50,
     dominantFaction: null,
-    globalSentiment: 'neutral',
+    globalSentiment: "neutral",
     activeCrisis: null,
-    season: 'spring',
+    season: "spring",
     totalAgents: 0,
-    emotion: 'Stable',
+    emotion: "Stable",
     volatility: {},
     stabilityTrend: [],
     dominanceStreak: 0,

@@ -1,5 +1,14 @@
 import { Link } from "@tanstack/react-router";
-import { Activity, Users, FileText, Brain, BarChart3, Sparkles, Crown, FileSignature } from "lucide-react";
+import {
+  Activity,
+  Users,
+  FileText,
+  Brain,
+  BarChart3,
+  Sparkles,
+  Crown,
+  FileSignature,
+} from "lucide-react";
 
 const links = [
   { to: "/", label: "Feed", icon: Activity },

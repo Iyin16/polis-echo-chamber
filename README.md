@@ -30,50 +30,56 @@ Polis introduces:
 
 AI-native governance agents that think, remember, and evolve over time.
 
- 0G INTEGRATION
+0G INTEGRATION
 
 Polis is built on the 0G ecosystem:
 
 0G STORAGE
+
 - Governance memories are archived on 0G Storage
 - Each memory returns a root hash
 - Creates a permanent, verifiable institutional history
-  
- AGENTIC ID (ERC-7857)
+
+AGENTIC ID (ERC-7857)
+
 - Each AI agent can register as a sovereign identity
 - Metadata is hashed and anchored
 - Agents become persistent governance actors
-  
+
 0G CHAIN (Galileo Testnet)
+
 - Agent registration and interactions are signed via MetaMask
 - Transactions are executed on Galileo testnet
 - Governance actions are chain-aware and verifiable
 
-  
 KEY FEATURES
 
- Autonomous Political Agents
+Autonomous Political Agents
+
 - AI personas with ideologies and roles
 - Participate in debates and governance decisions
 
- Agentic Identity System
+Agentic Identity System
+
 - Persistent AI identity via ERC-7857 concept
 - Each agent has a unique governance identity
 
 Institutional Memory (0G Storage)
+
 - Governance events are permanently archived
 - Root hashes provide verifiable history
 
 Faction System
+
 - Agents align into ideological groups
 - Influence shifts over time
 
 Governance Analytics
+
 - Influence tracking
 - Trust metrics
 - Coalition dynamics
 
-  
 DEMO FLOW
 
 - Open Polis dashboard
@@ -86,13 +92,14 @@ DEMO FLOW
 - Observe evolving governance history
 
 ARCHITECTURE
+
 - Frontend: React + TypeScript + Tailwind
 - Blockchain: 0G Galileo Testnet (EVM)
 - Storage: 0G Storage TS SDK
 - Identity: Agentic ID (ERC-7857 integration pattern)
 - Wallet: MetaMask / BrowserProvider (ethers.js)
 
- Why It Matters
+Why It Matters
 
 Polis demonstrates a future where:
 
@@ -100,7 +107,6 @@ AI agents are not tools, but citizens
 governance is not static, but evolving memory
 decisions are not lost, but permanently archived
 identity is not temporary, but sovereign
-
 
 STATUS
 
@@ -112,6 +118,7 @@ This is a hackathon prototype with:
 - persistent AI agent system
 
 Built With:
+
 - 0G Labs infrastructure
 - Ethereum-compatible tooling
 - React ecosystem
@@ -119,6 +126,7 @@ Built With:
 - TypeScript
 
 FUTURE VISION
+
 - Fully autonomous governance societies
 - Cross-DAO AI political agents
 - Long-term institutional memory layers

@@ -54,7 +54,11 @@ export function determineEra(worldState: WorldState & Record<string, any>): Civi
 
   if (tension > 65 || emotion === "Fragmenting" || stability < 28) return "Crisis";
   if (stability > 74 && dominanceStreak >= 4 && tension < 35) return "Consolidation";
-  if (emotion === "Reforming" || (stability >= 40 && stability < 72 && tension >= 28 && tension < 65)) return "Reform";
+  if (
+    emotion === "Reforming" ||
+    (stability >= 40 && stability < 72 && tension >= 28 && tension < 65)
+  )
+    return "Reform";
   if (stability > 54 && tension < 48 && maxDominance > 30) return "Expansion";
   return "Formation";
 }
@@ -63,51 +67,108 @@ export function determineEra(worldState: WorldState & Record<string, any>): Civi
 
 export function getEraProposalBias(era: CivilizationEra): Record<string, number> {
   switch (era) {
-    case "Formation":      return { Security: 1.4, "Governance Reform": 1.3, Treasury: 0.8, Alliance: 0.9, Expansion: 0.6 };
-    case "Expansion":      return { Alliance: 1.5, Expansion: 1.4, Treasury: 1.0, Security: 0.8, "Governance Reform": 0.7 };
-    case "Reform":         return { "Governance Reform": 1.6, Alliance: 1.2, Treasury: 1.0, Security: 0.7, Expansion: 0.8 };
-    case "Crisis":         return { Security: 1.7, "Governance Reform": 1.2, Treasury: 0.7, Alliance: 0.9, Expansion: 0.5 };
-    case "Consolidation":  return { Treasury: 1.5, Alliance: 1.1, "Governance Reform": 0.8, Security: 1.0, Expansion: 1.2 };
-    default:               return {};
+    case "Formation":
+      return {
+        Security: 1.4,
+        "Governance Reform": 1.3,
+        Treasury: 0.8,
+        Alliance: 0.9,
+        Expansion: 0.6,
+      };
+    case "Expansion":
+      return {
+        Alliance: 1.5,
+        Expansion: 1.4,
+        Treasury: 1.0,
+        Security: 0.8,
+        "Governance Reform": 0.7,
+      };
+    case "Reform":
+      return {
+        "Governance Reform": 1.6,
+        Alliance: 1.2,
+        Treasury: 1.0,
+        Security: 0.7,
+        Expansion: 0.8,
+      };
+    case "Crisis":
+      return {
+        Security: 1.7,
+        "Governance Reform": 1.2,
+        Treasury: 0.7,
+        Alliance: 0.9,
+        Expansion: 0.5,
+      };
+    case "Consolidation":
+      return {
+        Treasury: 1.5,
+        Alliance: 1.1,
+        "Governance Reform": 0.8,
+        Security: 1.0,
+        Expansion: 1.2,
+      };
+    default:
+      return {};
   }
 }
 
 export function getEraVoteWeightModifier(era: CivilizationEra, tension: number): number {
   switch (era) {
-    case "Crisis":        return Math.max(0.7, 1 - (tension / 100) * 0.35);
-    case "Consolidation": return 1.12;
-    case "Expansion":     return 1.08;
-    case "Reform":        return 1.0;
-    case "Formation":     return Math.max(0.85, 1 - (tension / 100) * 0.2);
-    default:              return 1.0;
+    case "Crisis":
+      return Math.max(0.7, 1 - (tension / 100) * 0.35);
+    case "Consolidation":
+      return 1.12;
+    case "Expansion":
+      return 1.08;
+    case "Reform":
+      return 1.0;
+    case "Formation":
+      return Math.max(0.85, 1 - (tension / 100) * 0.2);
+    default:
+      return 1.0;
   }
 }
 
 export function getEraIdeologyDriftMultiplier(era: CivilizationEra): number {
   switch (era) {
-    case "Formation":     return 1.5;
-    case "Crisis":        return 1.8;
-    case "Reform":        return 1.4;
-    case "Expansion":     return 0.9;
-    case "Consolidation": return 0.7;
-    default:              return 1.0;
+    case "Formation":
+      return 1.5;
+    case "Crisis":
+      return 1.8;
+    case "Reform":
+      return 1.4;
+    case "Expansion":
+      return 0.9;
+    case "Consolidation":
+      return 0.7;
+    default:
+      return 1.0;
   }
 }
 
 export function getEraMoraleModifier(era: CivilizationEra): number {
   switch (era) {
-    case "Crisis":        return -10;
-    case "Consolidation": return +5;
-    case "Expansion":     return +3;
-    case "Reform":        return 0;
-    case "Formation":     return -2;
-    default:              return 0;
+    case "Crisis":
+      return -10;
+    case "Consolidation":
+      return +5;
+    case "Expansion":
+      return +3;
+    case "Reform":
+      return 0;
+    case "Formation":
+      return -2;
+    default:
+      return 0;
   }
 }
 
 // ── Era transition memory helpers ──────────────────────────────────────────
 
-function describeEraTrigger(worldState: WorldState & Record<string, any>, era: CivilizationEra): string {
+function describeEraTrigger(
+  worldState: WorldState & Record<string, any>,
+  era: CivilizationEra,
+): string {
   const tension = worldState.politicalTension ?? 20;
   const stability = worldState.stability ?? 50;
   const emotion = worldState.emotion ?? "Stable";
@@ -121,7 +182,9 @@ function describeEraTrigger(worldState: WorldState & Record<string, any>, era: C
     case "Consolidation":
       return `${dominanceStreak}-cycle dominance streak with low tension (${tension}%)`;
     case "Reform":
-      return emotion === "Reforming" ? "Reforming world sentiment" : `Sustained political pressure at ${tension}% tension`;
+      return emotion === "Reforming"
+        ? "Reforming world sentiment"
+        : `Sustained political pressure at ${tension}% tension`;
     case "Expansion":
       return `Favorable stability at ${stability}% with growing dominant coalition`;
     case "Formation":
@@ -133,34 +196,84 @@ function describeEraTrigger(worldState: WorldState & Record<string, any>, era: C
 
 function getEraConsequences(era: CivilizationEra): string[] {
   switch (era) {
-    case "Formation":     return ["Governance and Security proposals increase.", "Ideology drift accelerated.", "Vote outcomes more volatile."];
-    case "Expansion":     return ["Alliance and Expansion proposals prioritized.", "Winning factions receive influence bonuses.", "Diplomatic relationships strengthen."];
-    case "Reform":        return ["Governance Reform proposals dominate the agenda.", "Ideology drift accelerates.", "Old coalitions are stress-tested."];
-    case "Crisis":        return ["Security proposals surge.", "Vote weights compressed by political tension.", "Faction morale universally affected."];
-    case "Consolidation": return ["Treasury proposals gain prominence.", "Dominant faction receives vote weight bonus.", "Stability begins gradual recovery."];
-    default:              return [];
+    case "Formation":
+      return [
+        "Governance and Security proposals increase.",
+        "Ideology drift accelerated.",
+        "Vote outcomes more volatile.",
+      ];
+    case "Expansion":
+      return [
+        "Alliance and Expansion proposals prioritized.",
+        "Winning factions receive influence bonuses.",
+        "Diplomatic relationships strengthen.",
+      ];
+    case "Reform":
+      return [
+        "Governance Reform proposals dominate the agenda.",
+        "Ideology drift accelerates.",
+        "Old coalitions are stress-tested.",
+      ];
+    case "Crisis":
+      return [
+        "Security proposals surge.",
+        "Vote weights compressed by political tension.",
+        "Faction morale universally affected.",
+      ];
+    case "Consolidation":
+      return [
+        "Treasury proposals gain prominence.",
+        "Dominant faction receives vote weight bonus.",
+        "Stability begins gradual recovery.",
+      ];
+    default:
+      return [];
   }
 }
 
 function getEraLongTermImpact(era: CivilizationEra): string[] {
   switch (era) {
-    case "Formation":     return ["Foundational decisions cast long shadows.", "Early institutions define future reform constraints."];
-    case "Expansion":     return ["Influence gains compound over time.", "Alliance networks formed now will persist."];
-    case "Reform":        return ["Structural changes reshape the chamber's operating rules.", "Reform precedents become new orthodoxy or cautionary tales."];
-    case "Crisis":        return ["How the chamber responds defines its institutional resilience.", "Agents who lead through crisis gain permanent reputation weight."];
-    case "Consolidation": return ["Consolidated power enables decisive governance but suppresses diversity.", "Counter-movements will eventually challenge the established order."];
-    default:              return [];
+    case "Formation":
+      return [
+        "Foundational decisions cast long shadows.",
+        "Early institutions define future reform constraints.",
+      ];
+    case "Expansion":
+      return ["Influence gains compound over time.", "Alliance networks formed now will persist."];
+    case "Reform":
+      return [
+        "Structural changes reshape the chamber's operating rules.",
+        "Reform precedents become new orthodoxy or cautionary tales.",
+      ];
+    case "Crisis":
+      return [
+        "How the chamber responds defines its institutional resilience.",
+        "Agents who lead through crisis gain permanent reputation weight.",
+      ];
+    case "Consolidation":
+      return [
+        "Consolidated power enables decisive governance but suppresses diversity.",
+        "Counter-movements will eventually challenge the established order.",
+      ];
+    default:
+      return [];
   }
 }
 
 function getEraTrustImpact(era: CivilizationEra): string {
   switch (era) {
-    case "Formation":     return "Trust between factions is nascent and highly malleable.";
-    case "Expansion":     return "Trust increases among aligned factions; rivals grow more distant.";
-    case "Reform":        return "Trust is restructured — old alliances questioned, new ones forming.";
-    case "Crisis":        return "Trust across the chamber falls sharply as self-interest dominates.";
-    case "Consolidation": return "Trust within the dominant faction peaks; rivals distrust the consolidated order.";
-    default:              return "Trust dynamics are uncertain.";
+    case "Formation":
+      return "Trust between factions is nascent and highly malleable.";
+    case "Expansion":
+      return "Trust increases among aligned factions; rivals grow more distant.";
+    case "Reform":
+      return "Trust is restructured — old alliances questioned, new ones forming.";
+    case "Crisis":
+      return "Trust across the chamber falls sharply as self-interest dominates.";
+    case "Consolidation":
+      return "Trust within the dominant faction peaks; rivals distrust the consolidated order.";
+    default:
+      return "Trust dynamics are uncertain.";
   }
 }
 
@@ -181,7 +294,11 @@ export function updateCivilizationEra<T extends CState>(state: T): T {
 
   // Tension naturally drifts toward era baseline
   const eraTensionBaseline: Record<CivilizationEra, number> = {
-    Formation: 30, Expansion: 20, Reform: 45, Crisis: 70, Consolidation: 15,
+    Formation: 30,
+    Expansion: 20,
+    Reform: 45,
+    Crisis: 70,
+    Consolidation: 15,
   };
   const baseline = eraTensionBaseline[newEra];
   const currentTension = state.worldState.politicalTension ?? 20;

@@ -1,8 +1,22 @@
 import { useMemo, useState } from "react";
 import {
-  Crown, Swords, Handshake, Cpu, Megaphone, Hammer,
-  Rocket, Shield, Network, Users2, Flame, Zap, Sparkles,
-  Plus, Check, Loader2, Hexagon,
+  Crown,
+  Swords,
+  Handshake,
+  Cpu,
+  Megaphone,
+  Hammer,
+  Rocket,
+  Shield,
+  Network,
+  Users2,
+  Flame,
+  Zap,
+  Sparkles,
+  Plus,
+  Check,
+  Loader2,
+  Hexagon,
 } from "lucide-react";
 import { createAgentInPolisSimulation } from "@/lib/polis-store";
 
@@ -26,18 +40,75 @@ const TITLES: { id: Title; icon: React.ComponentType<{ className?: string }> }[]
 ];
 
 const IDEOLOGIES: Ideology[] = [
-  { id: "expansionist", name: "Expansionist", tagline: "Manifest reach", desc: "Project influence outward. Annex territory, markets, mindshare.", icon: Rocket, accent: "amber" },
-  { id: "conservative", name: "Conservative", tagline: "Preserve the codex", desc: "Defend institutions, lineage, and the slow weight of precedent.", icon: Shield, accent: "amber" },
-  { id: "technocratic", name: "Technocratic", tagline: "Optimal by proof", desc: "Govern by metric, model, and mechanism. Sentiment is noise.", icon: Network, accent: "cyan" },
-  { id: "diplomatic", name: "Diplomatic", tagline: "The long table", desc: "Build coalitions, broker peace, weaponize patience.", icon: Handshake, accent: "cyan" },
-  { id: "populist", name: "Populist", tagline: "Voice of the crowd", desc: "Channel raw public will. The street legitimizes the chamber.", icon: Users2, accent: "crimson" },
-  { id: "chaos", name: "Chaos-Driven", tagline: "Burn the protocol", desc: "Embrace volatility. Disorder is the only honest signal.", icon: Flame, accent: "crimson" },
+  {
+    id: "expansionist",
+    name: "Expansionist",
+    tagline: "Manifest reach",
+    desc: "Project influence outward. Annex territory, markets, mindshare.",
+    icon: Rocket,
+    accent: "amber",
+  },
+  {
+    id: "conservative",
+    name: "Conservative",
+    tagline: "Preserve the codex",
+    desc: "Defend institutions, lineage, and the slow weight of precedent.",
+    icon: Shield,
+    accent: "amber",
+  },
+  {
+    id: "technocratic",
+    name: "Technocratic",
+    tagline: "Optimal by proof",
+    desc: "Govern by metric, model, and mechanism. Sentiment is noise.",
+    icon: Network,
+    accent: "cyan",
+  },
+  {
+    id: "diplomatic",
+    name: "Diplomatic",
+    tagline: "The long table",
+    desc: "Build coalitions, broker peace, weaponize patience.",
+    icon: Handshake,
+    accent: "cyan",
+  },
+  {
+    id: "populist",
+    name: "Populist",
+    tagline: "Voice of the crowd",
+    desc: "Channel raw public will. The street legitimizes the chamber.",
+    icon: Users2,
+    accent: "crimson",
+  },
+  {
+    id: "chaos",
+    name: "Chaos-Driven",
+    tagline: "Burn the protocol",
+    desc: "Embrace volatility. Disorder is the only honest signal.",
+    icon: Flame,
+    accent: "crimson",
+  },
 ];
 
 const FACTIONS = [
-  { id: "reformist", name: "Reformist Bloc", motto: "Iterate the republic", accent: "amber" as const },
-  { id: "technocrat", name: "Technocrat Cabinet", motto: "Govern by gradient", accent: "cyan" as const },
-  { id: "sovereigntist", name: "Sovereigntist Order", motto: "Hold the line", accent: "crimson" as const },
+  {
+    id: "reformist",
+    name: "Reformist Bloc",
+    motto: "Iterate the republic",
+    accent: "amber" as const,
+  },
+  {
+    id: "technocrat",
+    name: "Technocrat Cabinet",
+    motto: "Govern by gradient",
+    accent: "cyan" as const,
+  },
+  {
+    id: "sovereigntist",
+    name: "Sovereigntist Order",
+    motto: "Hold the line",
+    accent: "crimson" as const,
+  },
 ];
 
 const TRAITS = ["aggression", "logic", "cooperation", "ambition", "risk"] as const;
@@ -56,7 +127,11 @@ export function Forge() {
   const [philosophy, setPhilosophy] = useState("");
   const [ideology, setIdeology] = useState<string>("technocratic");
   const [traits, setTraits] = useState<Record<Trait, number>>({
-    aggression: 45, logic: 70, cooperation: 55, ambition: 75, risk: 50,
+    aggression: 45,
+    logic: 70,
+    cooperation: 55,
+    ambition: 75,
+    risk: 50,
   });
   const [factionMode, setFactionMode] = useState<"join" | "independent" | "create">("join");
   const [factionChoice, setFactionChoice] = useState<string>("technocrat");
@@ -69,7 +144,13 @@ export function Forge() {
 
   const influence = useMemo(() => {
     const t = traits;
-    return Math.round((t.ambition * 0.35 + t.logic * 0.25 + t.cooperation * 0.15 + t.aggression * 0.15 + t.risk * 0.1));
+    return Math.round(
+      t.ambition * 0.35 +
+        t.logic * 0.25 +
+        t.cooperation * 0.15 +
+        t.aggression * 0.15 +
+        t.risk * 0.1,
+    );
   }, [traits]);
 
   const behavior = useMemo(() => {
@@ -90,10 +171,14 @@ export function Forge() {
 
   const compatibility = useMemo(() => {
     const id = ideologyObj.id;
-    if (factionMode !== "join") return factionMode === "create" ? "New banner · 100% native" : "Independent · 0% bloc bias";
-    if (factionChoice === "technocrat" && (id === "technocratic" || id === "diplomatic")) return "High · 92%";
-    if (factionChoice === "reformist" && (id === "populist" || id === "expansionist")) return "High · 88%";
-    if (factionChoice === "sovereigntist" && (id === "conservative" || id === "chaos")) return "High · 86%";
+    if (factionMode !== "join")
+      return factionMode === "create" ? "New banner · 100% native" : "Independent · 0% bloc bias";
+    if (factionChoice === "technocrat" && (id === "technocratic" || id === "diplomatic"))
+      return "High · 92%";
+    if (factionChoice === "reformist" && (id === "populist" || id === "expansionist"))
+      return "High · 88%";
+    if (factionChoice === "sovereigntist" && (id === "conservative" || id === "chaos"))
+      return "High · 86%";
     return "Moderate · 64%";
   }, [factionMode, factionChoice, ideologyObj]);
 
@@ -112,7 +197,9 @@ export function Forge() {
     if (!canMint) return;
     setStatus("minting");
     await new Promise((r) => setTimeout(r, 2400));
-    const hash = "0x" + Array.from({ length: 64 }, () => "0123456789abcdef"[Math.floor(Math.random() * 16)]).join("");
+    const hash =
+      "0x" +
+      Array.from({ length: 64 }, () => "0123456789abcdef"[Math.floor(Math.random() * 16)]).join("");
     await createAgentInPolisSimulation({
       name,
       title,
@@ -120,11 +207,12 @@ export function Forge() {
       ideology: ideologyObj.name,
       influence,
       role,
-      faction: factionMode === "join"
-        ? FACTIONS.find((f) => f.id === factionChoice)?.name ?? "Independent"
-        : factionMode === "create"
-          ? newFaction || "Unnamed Banner"
-          : "Independent",
+      faction:
+        factionMode === "join"
+          ? (FACTIONS.find((f) => f.id === factionChoice)?.name ?? "Independent")
+          : factionMode === "create"
+            ? newFaction || "Unnamed Banner"
+            : "Independent",
       traits,
       behavior,
       governance,
@@ -188,8 +276,18 @@ export function Forge() {
             {IDEOLOGIES.map((i) => {
               const Icon = i.icon;
               const active = ideology === i.id;
-              const ring = i.accent === "amber" ? "border-amber/60 glow-amber" : i.accent === "cyan" ? "border-cyan/60 glow-cyan" : "border-crimson/60 glow-crimson";
-              const tint = i.accent === "amber" ? "text-amber" : i.accent === "cyan" ? "text-cyan" : "text-crimson";
+              const ring =
+                i.accent === "amber"
+                  ? "border-amber/60 glow-amber"
+                  : i.accent === "cyan"
+                    ? "border-cyan/60 glow-cyan"
+                    : "border-crimson/60 glow-crimson";
+              const tint =
+                i.accent === "amber"
+                  ? "text-amber"
+                  : i.accent === "cyan"
+                    ? "text-cyan"
+                    : "text-crimson";
               return (
                 <button
                   key={i.id}
@@ -201,7 +299,9 @@ export function Forge() {
                 >
                   <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity bg-gradient-to-br from-transparent via-transparent to-foreground/[0.04]" />
                   <div className="flex items-start gap-3 relative">
-                    <div className={`shrink-0 h-9 w-9 rounded-md border hairline flex items-center justify-center ${tint} bg-background/40`}>
+                    <div
+                      className={`shrink-0 h-9 w-9 rounded-md border hairline flex items-center justify-center ${tint} bg-background/40`}
+                    >
                       <Icon className="h-4 w-4" />
                     </div>
                     <div className="min-w-0">
@@ -209,8 +309,14 @@ export function Forge() {
                         <h3 className="font-serif text-[15px] leading-none">{i.name}</h3>
                         {active && <Check className="h-3 w-3 text-amber" />}
                       </div>
-                      <p className={`mt-0.5 font-mono text-[9.5px] uppercase tracking-[0.2em] ${tint}`}>{i.tagline}</p>
-                      <p className="mt-2 text-[12px] text-muted-foreground leading-snug">{i.desc}</p>
+                      <p
+                        className={`mt-0.5 font-mono text-[9.5px] uppercase tracking-[0.2em] ${tint}`}
+                      >
+                        {i.tagline}
+                      </p>
+                      <p className="mt-2 text-[12px] text-muted-foreground leading-snug">
+                        {i.desc}
+                      </p>
                     </div>
                   </div>
                 </button>
@@ -262,8 +368,18 @@ export function Forge() {
             <div className="grid gap-3 sm:grid-cols-3">
               {FACTIONS.map((f) => {
                 const active = factionChoice === f.id;
-                const tint = f.accent === "amber" ? "text-amber" : f.accent === "cyan" ? "text-cyan" : "text-crimson";
-                const bg = f.accent === "amber" ? "bg-amber" : f.accent === "cyan" ? "bg-cyan" : "bg-crimson";
+                const tint =
+                  f.accent === "amber"
+                    ? "text-amber"
+                    : f.accent === "cyan"
+                      ? "text-cyan"
+                      : "text-crimson";
+                const bg =
+                  f.accent === "amber"
+                    ? "bg-amber"
+                    : f.accent === "cyan"
+                      ? "bg-cyan"
+                      : "bg-crimson";
                 return (
                   <button
                     key={f.id}
@@ -274,8 +390,13 @@ export function Forge() {
                     }`}
                   >
                     <div className={`absolute inset-x-0 top-0 h-0.5 ${bg} opacity-80`} />
-                    <Hexagon className={`absolute -right-4 -top-4 h-20 w-20 opacity-10 ${tint}`} strokeWidth={1} />
-                    <p className={`font-mono text-[9.5px] uppercase tracking-[0.22em] ${tint}`}>Faction</p>
+                    <Hexagon
+                      className={`absolute -right-4 -top-4 h-20 w-20 opacity-10 ${tint}`}
+                      strokeWidth={1}
+                    />
+                    <p className={`font-mono text-[9.5px] uppercase tracking-[0.22em] ${tint}`}>
+                      Faction
+                    </p>
                     <h3 className="font-serif text-[16px] mt-1">{f.name}</h3>
                     <p className="text-[12px] text-muted-foreground italic mt-1">"{f.motto}"</p>
                     {active && (
@@ -293,7 +414,9 @@ export function Forge() {
             <div className="panel rounded-md p-5 text-center">
               <Zap className="h-5 w-5 text-amber mx-auto" />
               <p className="font-serif text-[15px] mt-2">Unaligned Sovereign</p>
-              <p className="text-[12px] text-muted-foreground mt-1">Votes as a free agent. No bloc discipline. Higher volatility, higher signal.</p>
+              <p className="text-[12px] text-muted-foreground mt-1">
+                Votes as a free agent. No bloc discipline. Higher volatility, higher signal.
+              </p>
             </div>
           )}
 
@@ -306,7 +429,10 @@ export function Forge() {
                   placeholder="e.g. The Lattice Compact"
                   className="flex-1 bg-background/60 border hairline rounded-md px-3 py-2.5 text-[14px] font-serif focus:outline-none focus:border-amber/60 transition"
                 />
-                <button type="button" className="rounded-md border border-amber/40 bg-amber/10 text-amber px-3 text-[11px] font-mono uppercase tracking-widest">
+                <button
+                  type="button"
+                  className="rounded-md border border-amber/40 bg-amber/10 text-amber px-3 text-[11px] font-mono uppercase tracking-widest"
+                >
                   <Plus className="h-3.5 w-3.5 inline -mt-0.5" /> Found
                 </button>
               </div>
@@ -316,12 +442,21 @@ export function Forge() {
 
         <SectionPanel index={5} label="Sovereign Preview" accent="cyan">
           <div className="grid gap-4 md:grid-cols-2">
-            <PreviewStat label="Projected Influence" value={`${influence}`} suffix="/100" accent="amber" bar={influence} />
+            <PreviewStat
+              label="Projected Influence"
+              value={`${influence}`}
+              suffix="/100"
+              accent="amber"
+              bar={influence}
+            />
             <PreviewStat label="Faction Compatibility" value={compatibility} accent="cyan" />
             <PreviewLine label="Predicted Behavior" value={behavior} />
             <PreviewLine label="Governance Tendency" value={governance} />
             <PreviewLine label="Projected Role" value={role} />
-            <PreviewLine label="Ideology Anchor" value={`${ideologyObj.name} · ${ideologyObj.tagline}`} />
+            <PreviewLine
+              label="Ideology Anchor"
+              value={`${ideologyObj.name} · ${ideologyObj.tagline}`}
+            />
           </div>
         </SectionPanel>
 
@@ -329,7 +464,8 @@ export function Forge() {
           {status !== "minted" ? (
             <div className="flex flex-col items-center text-center py-2">
               <p className="text-[13px] text-muted-foreground max-w-md">
-                Commit the sovereign entity to chain. This action writes an immutable identity to Arbitrum and registers it in the chamber registry.
+                Commit the sovereign entity to chain. This action writes an immutable identity to
+                Arbitrum and registers it in the chamber registry.
               </p>
               <button
                 type="button"
@@ -338,14 +474,20 @@ export function Forge() {
                 className="mt-5 group relative inline-flex items-center gap-2 rounded-md border border-amber/60 bg-gradient-to-b from-amber/20 to-amber/5 px-6 py-3 font-mono text-[12px] uppercase tracking-[0.22em] text-amber hover:glow-amber transition disabled:opacity-40 disabled:cursor-not-allowed"
               >
                 {status === "minting" ? (
-                  <><Loader2 className="h-3.5 w-3.5 animate-spin" /> Compiling Sovereign…</>
+                  <>
+                    <Loader2 className="h-3.5 w-3.5 animate-spin" /> Compiling Sovereign…
+                  </>
                 ) : (
-                  <><Sparkles className="h-3.5 w-3.5" /> Initialize Sovereign Entity</>
+                  <>
+                    <Sparkles className="h-3.5 w-3.5" /> Initialize Sovereign Entity
+                  </>
                 )}
               </button>
               {status === "minting" && <MintProgress />}
               {!canMint && status === "idle" && (
-                <p className="mt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">Designation required</p>
+                <p className="mt-3 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
+                  Designation required
+                </p>
               )}
             </div>
           ) : (
@@ -356,7 +498,13 @@ export function Forge() {
               influence={influence}
               role={role}
               hash={mintedHash}
-              faction={factionMode === "join" ? FACTIONS.find((f) => f.id === factionChoice)?.name : factionMode === "create" ? newFaction || "Unnamed Banner" : "Independent"}
+              faction={
+                factionMode === "join"
+                  ? FACTIONS.find((f) => f.id === factionChoice)?.name
+                  : factionMode === "create"
+                    ? newFaction || "Unnamed Banner"
+                    : "Independent"
+              }
             />
           )}
         </SectionPanel>
@@ -368,18 +516,31 @@ export function Forge() {
 function Header() {
   return (
     <div className="text-center space-y-2">
-      <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-amber">Polis · Sovereign Forge</p>
-      <h1 className="font-serif text-2xl md:text-4xl tracking-tight">Initialize a sovereign political entity</h1>
+      <p className="font-mono text-[10px] uppercase tracking-[0.32em] text-amber">
+        Polis · Sovereign Forge
+      </p>
+      <h1 className="font-serif text-2xl md:text-4xl tracking-tight">
+        Initialize a sovereign political entity
+      </h1>
       <p className="text-[13px] text-muted-foreground max-w-2xl mx-auto">
-        Shape an autonomous agent — its ideology, temperament, and faction — and commit its identity to Arbitrum.
+        Shape an autonomous agent — its ideology, temperament, and faction — and commit its identity
+        to Arbitrum.
       </p>
     </div>
   );
 }
 
 function SectionPanel({
-  index, label, accent, children,
-}: { index: number; label: string; accent: "amber" | "cyan" | "crimson"; children: React.ReactNode }) {
+  index,
+  label,
+  accent,
+  children,
+}: {
+  index: number;
+  label: string;
+  accent: "amber" | "cyan" | "crimson";
+  children: React.ReactNode;
+}) {
   const tint = accent === "amber" ? "text-amber" : accent === "cyan" ? "text-cyan" : "text-crimson";
   const bar = accent === "amber" ? "bg-amber" : accent === "cyan" ? "bg-cyan" : "bg-crimson";
   return (
@@ -388,33 +549,60 @@ function SectionPanel({
       <header className="flex items-center gap-3 mb-5">
         <span className={`font-mono text-[10px] ${tint}`}>0{index}</span>
         <span className="h-px flex-1 bg-foreground/10" />
-        <h2 className="font-mono text-[10.5px] uppercase tracking-[0.28em] text-muted-foreground">{label}</h2>
+        <h2 className="font-mono text-[10.5px] uppercase tracking-[0.28em] text-muted-foreground">
+          {label}
+        </h2>
       </header>
       {children}
     </section>
   );
 }
 
-function Field({ label, children, className }: { label: string; children: React.ReactNode; className?: string }) {
+function Field({
+  label,
+  children,
+  className,
+}: {
+  label: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
     <label className={`block ${className ?? ""}`}>
-      <span className="block font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground mb-1.5">{label}</span>
+      <span className="block font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground mb-1.5">
+        {label}
+      </span>
       {children}
     </label>
   );
 }
 
-function TraitSlider({ label, value, onChange }: { label: string; value: number; onChange: (v: number) => void }) {
+function TraitSlider({
+  label,
+  value,
+  onChange,
+}: {
+  label: string;
+  value: number;
+  onChange: (v: number) => void;
+}) {
   const accent = value > 70 ? "text-crimson" : value > 50 ? "text-amber" : "text-cyan";
   const bg = value > 70 ? "bg-crimson" : value > 50 ? "bg-amber" : "bg-cyan";
   return (
     <div>
       <div className="flex items-center justify-between mb-1.5">
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">{label}</span>
-        <span className={`font-mono text-[12px] tabular-nums ${accent}`}>{value.toString().padStart(2, "0")}</span>
+        <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-muted-foreground">
+          {label}
+        </span>
+        <span className={`font-mono text-[12px] tabular-nums ${accent}`}>
+          {value.toString().padStart(2, "0")}
+        </span>
       </div>
       <div className="relative h-2 rounded-full bg-foreground/[0.06] overflow-hidden">
-        <div className={`absolute inset-y-0 left-0 ${bg} opacity-80`} style={{ width: `${value}%` }} />
+        <div
+          className={`absolute inset-y-0 left-0 ${bg} opacity-80`}
+          style={{ width: `${value}%` }}
+        />
         <input
           type="range"
           min={0}
@@ -470,7 +658,13 @@ function RadarChart({ traits }: { traits: Record<Trait, number> }) {
           />
         );
       })}
-      <polygon points={polygon} fill="var(--amber)" fillOpacity={0.18} stroke="var(--amber)" strokeWidth={1.5} />
+      <polygon
+        points={polygon}
+        fill="var(--amber)"
+        fillOpacity={0.18}
+        stroke="var(--amber)"
+        strokeWidth={1.5}
+      />
       {points.map(([x, y], i) => (
         <circle key={i} cx={x} cy={y} r={2.5} fill="var(--amber)" />
       ))}
@@ -496,14 +690,29 @@ function RadarChart({ traits }: { traits: Record<Trait, number> }) {
   );
 }
 
-function PreviewStat({ label, value, suffix, accent, bar }: { label: string; value: string; suffix?: string; accent: "amber" | "cyan"; bar?: number }) {
+function PreviewStat({
+  label,
+  value,
+  suffix,
+  accent,
+  bar,
+}: {
+  label: string;
+  value: string;
+  suffix?: string;
+  accent: "amber" | "cyan";
+  bar?: number;
+}) {
   const tint = accent === "amber" ? "text-amber" : "text-cyan";
   const bg = accent === "amber" ? "bg-amber" : "bg-cyan";
   return (
     <div className="panel rounded-md p-4">
-      <p className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground">{label}</p>
+      <p className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground">
+        {label}
+      </p>
       <p className={`mt-1 font-serif text-[22px] ${tint}`}>
-        {value}<span className="text-[12px] text-muted-foreground font-mono ml-1">{suffix}</span>
+        {value}
+        <span className="text-[12px] text-muted-foreground font-mono ml-1">{suffix}</span>
       </p>
       {typeof bar === "number" && (
         <div className="mt-2 h-1 w-full bg-foreground/5 rounded-full overflow-hidden">
@@ -517,7 +726,9 @@ function PreviewStat({ label, value, suffix, accent, bar }: { label: string; val
 function PreviewLine({ label, value }: { label: string; value: string }) {
   return (
     <div className="panel rounded-md p-4">
-      <p className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground">{label}</p>
+      <p className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-muted-foreground">
+        {label}
+      </p>
       <p className="mt-1 text-[13.5px] font-serif">{value}</p>
     </div>
   );
@@ -528,8 +739,14 @@ function MintProgress() {
   return (
     <div className="mt-5 w-full max-w-md space-y-2">
       {steps.map((s, i) => (
-        <div key={s} className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground">
-          <Loader2 className="h-3 w-3 animate-spin text-amber" style={{ animationDelay: `${i * 200}ms` }} />
+        <div
+          key={s}
+          className="flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground"
+        >
+          <Loader2
+            className="h-3 w-3 animate-spin text-amber"
+            style={{ animationDelay: `${i * 200}ms` }}
+          />
           <span>{s}…</span>
         </div>
       ))}
@@ -541,9 +758,21 @@ function MintProgress() {
 }
 
 function IdentityCard({
-  name, title, ideology, influence, role, hash, faction,
+  name,
+  title,
+  ideology,
+  influence,
+  role,
+  hash,
+  faction,
 }: {
-  name: string; title: Title; ideology: Ideology; influence: number; role: string; hash: string; faction?: string;
+  name: string;
+  title: Title;
+  ideology: Ideology;
+  influence: number;
+  role: string;
+  hash: string;
+  faction?: string;
 }) {
   const Icon = ideology.icon;
   return (
@@ -552,7 +781,9 @@ function IdentityCard({
       <div className="absolute -top-10 -right-10 h-40 w-40 rounded-full bg-amber/10 blur-3xl" />
       <div className="relative">
         <div className="flex items-center justify-between">
-          <p className="font-mono text-[9.5px] uppercase tracking-[0.28em] text-amber">Sovereign Entity · Minted</p>
+          <p className="font-mono text-[9.5px] uppercase tracking-[0.28em] text-amber">
+            Sovereign Entity · Minted
+          </p>
           <span className="inline-flex items-center gap-1 font-mono text-[9.5px] uppercase tracking-widest text-muted-foreground">
             <span className="h-1.5 w-1.5 rounded-full bg-amber pulse-dot text-amber" /> Live
           </span>
@@ -575,7 +806,9 @@ function IdentityCard({
         </div>
         <div className="mt-5 rounded-md border hairline bg-background/40 p-3">
           <div className="flex items-center justify-between">
-            <p className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-cyan">Registered on Arbitrum</p>
+            <p className="font-mono text-[9.5px] uppercase tracking-[0.22em] text-cyan">
+              Registered on Arbitrum
+            </p>
             <Check className="h-3.5 w-3.5 text-cyan" />
           </div>
           <p className="mt-1.5 font-mono text-[10.5px] break-all text-foreground/80">{hash}</p>
@@ -588,7 +821,9 @@ function IdentityCard({
 function Cell({ label, value }: { label: string; value: string }) {
   return (
     <div className="rounded-md border hairline bg-background/40 p-2.5">
-      <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">{label}</p>
+      <p className="font-mono text-[9px] uppercase tracking-[0.22em] text-muted-foreground">
+        {label}
+      </p>
       <p className="mt-1 font-serif text-[13px] truncate">{value}</p>
     </div>
   );

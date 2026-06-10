@@ -2,9 +2,7 @@ import { usePolisStore } from "@/lib/polis-store";
 import { determineEra, ERA_DESCRIPTIONS } from "@/lib/era-system";
 import type { CivilizationEra } from "@/lib/world-state";
 import { useTick } from "@/lib/use-live-pulse";
-import {
-  Layers, TrendingUp, Zap, AlertTriangle, Crown,
-} from "lucide-react";
+import { Layers, TrendingUp, Zap, AlertTriangle, Crown } from "lucide-react";
 
 const ERA_ICON: Record<CivilizationEra, React.ComponentType<{ className?: string }>> = {
   Formation: Layers,
@@ -55,8 +53,7 @@ export function EraPanel() {
     tension > 65 ? "Critical" : tension > 40 ? "Elevated" : tension > 20 ? "Moderate" : "Low";
   const tensionTextColor =
     tension > 65 ? "text-crimson" : tension > 40 ? "text-amber" : "text-cyan";
-  const tensionBarColor =
-    tension > 65 ? "bg-crimson" : tension > 40 ? "bg-amber" : "bg-cyan";
+  const tensionBarColor = tension > 65 ? "bg-crimson" : tension > 40 ? "bg-amber" : "bg-cyan";
 
   const activeTrustBonuses = Object.values(allianceTrust).filter((v) => v >= 3).length;
 
@@ -64,14 +61,15 @@ export function EraPanel() {
     <div className="panel rounded-md p-5 relative overflow-hidden">
       <div className="absolute inset-0 grid-bg opacity-15 pointer-events-none" />
       <div className="relative space-y-5">
-
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2 font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             <EraIcon className={`h-3 w-3 text-${color}`} />
             Civilization Era
           </div>
-          <span className={`font-mono text-[10px] uppercase tracking-[0.18em] text-${color} flex items-center gap-1.5`}>
+          <span
+            className={`font-mono text-[10px] uppercase tracking-[0.18em] text-${color} flex items-center gap-1.5`}
+          >
             <span className={`h-1.5 w-1.5 rounded-full ${barColor} animate-pulse`} />
             TICK {String(t).padStart(4, "0")}
           </span>
@@ -106,7 +104,8 @@ export function EraPanel() {
           </div>
           {activeTrustBonuses > 0 && (
             <p className="font-mono text-[10px] text-cyan mt-1">
-              {activeTrustBonuses} active alliance trust bonus{activeTrustBonuses !== 1 ? "es" : ""} reducing tension
+              {activeTrustBonuses} active alliance trust bonus{activeTrustBonuses !== 1 ? "es" : ""}{" "}
+              reducing tension
             </p>
           )}
         </div>
@@ -182,26 +181,30 @@ export function EraPanel() {
               Era History
             </p>
             <div className="space-y-1.5">
-              {[...eraHistory].reverse().slice(0, 6).map((entry: any, i: number) => {
-                const entryColor = ERA_COLOR[entry.era as CivilizationEra] ?? "amber";
-                return (
-                  <div key={i} className="flex items-start gap-2.5">
-                    <span className={`font-mono text-[10px] text-${entryColor} mt-0.5 w-14 shrink-0 tabular-nums`}>
-                      CYC {String(entry.turn).padStart(3, "0")}
-                    </span>
-                    <div className="min-w-0">
-                      <p className="text-[11px] text-foreground/80">{entry.era} Era</p>
-                      <p className="font-mono text-[9.5px] text-muted-foreground truncate">
-                        {entry.trigger}
-                      </p>
+              {[...eraHistory]
+                .reverse()
+                .slice(0, 6)
+                .map((entry: any, i: number) => {
+                  const entryColor = ERA_COLOR[entry.era as CivilizationEra] ?? "amber";
+                  return (
+                    <div key={i} className="flex items-start gap-2.5">
+                      <span
+                        className={`font-mono text-[10px] text-${entryColor} mt-0.5 w-14 shrink-0 tabular-nums`}
+                      >
+                        CYC {String(entry.turn).padStart(3, "0")}
+                      </span>
+                      <div className="min-w-0">
+                        <p className="text-[11px] text-foreground/80">{entry.era} Era</p>
+                        <p className="font-mono text-[9.5px] text-muted-foreground truncate">
+                          {entry.trigger}
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                );
-              })}
+                  );
+                })}
             </div>
           </div>
         )}
-
       </div>
     </div>
   );

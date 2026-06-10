@@ -1,9 +1,27 @@
 import { useMemo, useState } from "react";
-import { agentStatusUpdates, deepThreads, proposalById, type FeedPost, type FeedEventType } from "@/lib/polis-data";
+import {
+  agentStatusUpdates,
+  deepThreads,
+  proposalById,
+  type FeedPost,
+  type FeedEventType,
+} from "@/lib/polis-data";
 import { usePolisStore } from "@/lib/polis-store";
 import { AgentAvatar } from "./AgentAvatar";
 import { AgentLink, EntityText, ProposalLink } from "./EntityText";
-import { ArrowUpRight, BookMarked, ChevronDown, ChevronRight, MessageSquare, Radio, Repeat2, AlertCircle, TrendingUp, Users, Archive } from "lucide-react";
+import {
+  ArrowUpRight,
+  BookMarked,
+  ChevronDown,
+  ChevronRight,
+  MessageSquare,
+  Radio,
+  Repeat2,
+  AlertCircle,
+  TrendingUp,
+  Users,
+  Archive,
+} from "lucide-react";
 import { rotatingIndex } from "@/lib/use-live-pulse";
 
 const stanceMap = {
@@ -51,7 +69,9 @@ export function Feed() {
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
             Chamber Floor · Live
           </p>
-          <h1 className="font-serif text-xl md:text-2xl tracking-tight mt-1">Governance Debate Feed</h1>
+          <h1 className="font-serif text-xl md:text-2xl tracking-tight mt-1">
+            Governance Debate Feed
+          </h1>
         </div>
         <div className="flex flex-wrap gap-1 text-[11px]">
           {["All", "Deliberations", "Proposals", "Events"].map((f, i) => (
@@ -100,17 +120,25 @@ function Post({ post, agentMap }: { post: FeedPost; agentMap: Record<string, any
     return (
       <article className="panel card-lift rounded-md p-4 md:p-5 fade-in border-l-4 border-l-amber">
         <div className="flex items-start gap-3">
-          <div className="text-2xl shrink-0">{(post.type && eventTypeIcons[post.type]) || "📰"}</div>
+          <div className="text-2xl shrink-0">
+            {(post.type && eventTypeIcons[post.type]) || "📰"}
+          </div>
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
               <h3 className="font-serif text-[16px] font-semibold text-foreground">{post.title}</h3>
-              <span className={`rounded-sm border px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] font-mono ${(post.impactLevel && impactColors[post.impactLevel]) || "text-muted-foreground"}`}>
+              <span
+                className={`rounded-sm border px-2 py-0.5 text-[9px] uppercase tracking-[0.14em] font-mono ${(post.impactLevel && impactColors[post.impactLevel]) || "text-muted-foreground"}`}
+              >
                 {post.impactLevel} Impact
               </span>
               <span className="text-muted-foreground/30">·</span>
-              <span className="font-mono text-[10.5px] text-muted-foreground/50">Turn {post.turn}</span>
+              <span className="font-mono text-[10.5px] text-muted-foreground/50">
+                Turn {post.turn}
+              </span>
               <span className="text-muted-foreground/30">·</span>
-              <span className="font-mono text-[10.5px] text-muted-foreground/50">{post.timestamp} ago</span>
+              <span className="font-mono text-[10.5px] text-muted-foreground/50">
+                {post.timestamp} ago
+              </span>
             </div>
 
             <p className="mt-2 text-[14.5px] leading-relaxed text-foreground/90">
@@ -122,7 +150,11 @@ function Post({ post, agentMap }: { post: FeedPost; agentMap: Record<string, any
                 {post.actors.map((actorId) => {
                   const actor = agentMap[actorId];
                   return actor ? (
-                    <AgentLink key={actorId} slug={actor.slug} className="inline-flex items-center gap-1.5 rounded-sm border hairline bg-background/40 px-2 py-1">
+                    <AgentLink
+                      key={actorId}
+                      slug={actor.slug}
+                      className="inline-flex items-center gap-1.5 rounded-sm border hairline bg-background/40 px-2 py-1"
+                    >
                       <AgentAvatar agent={actor} size={20} />
                       <span className="text-[11px] font-medium">{actor.name}</span>
                     </AgentLink>
@@ -133,7 +165,10 @@ function Post({ post, agentMap }: { post: FeedPost; agentMap: Record<string, any
 
             {post.proposal && (
               <div className="mt-3">
-                <ProposalLink id={post.proposal} className="inline-flex items-center gap-1.5 text-[11px] font-mono text-amber hover:underline">
+                <ProposalLink
+                  id={post.proposal}
+                  className="inline-flex items-center gap-1.5 text-[11px] font-mono text-amber hover:underline"
+                >
                   Related: {post.proposal}
                   <ArrowUpRight className="h-3 w-3" />
                 </ProposalLink>
@@ -147,7 +182,7 @@ function Post({ post, agentMap }: { post: FeedPost; agentMap: Record<string, any
 
   // Legacy format (agent discussion posts)
   if (!agent) return null;
-  
+
   return (
     <article className="panel card-lift rounded-md p-4 md:p-5 fade-in">
       <div className="flex items-start gap-3">
@@ -157,13 +192,19 @@ function Post({ post, agentMap }: { post: FeedPost; agentMap: Record<string, any
         <div className="min-w-0 flex-1">
           <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
             <AgentLink slug={agent.slug}>
-              <h3 className="font-serif text-[16px] font-semibold hover:underline text-foreground">{agent.name}</h3>
+              <h3 className="font-serif text-[16px] font-semibold hover:underline text-foreground">
+                {agent.name}
+              </h3>
             </AgentLink>
             <span className="font-mono text-[10.5px] text-muted-foreground/60">{agent.handle}</span>
             <span className="text-muted-foreground/30">·</span>
-            <span className="font-mono text-[10.5px] text-muted-foreground/50">{post.timestamp} ago</span>
+            <span className="font-mono text-[10.5px] text-muted-foreground/50">
+              {post.timestamp} ago
+            </span>
             {stance && (
-              <span className={`w-full sm:w-auto sm:ml-auto rounded-sm border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${stance.color}`}>
+              <span
+                className={`w-full sm:w-auto sm:ml-auto rounded-sm border px-2 py-0.5 text-[10px] uppercase tracking-[0.14em] ${stance.color}`}
+              >
                 {stance.label} ·{" "}
                 {post.proposal && proposalById[post.proposal] ? (
                   <ProposalLink id={post.proposal} className="font-mono hover:underline">
@@ -208,22 +249,26 @@ function Post({ post, agentMap }: { post: FeedPost; agentMap: Record<string, any
             <button className="flex items-center gap-1.5 hover:text-foreground">
               <Repeat2 className="h-3.5 w-3.5" /> Echo
             </button>
-            {post.reactions && post.reactions.map((r) => (
-              <span key={r.type} className="flex items-center gap-1.5">
-                <span className={`h-1.5 w-1.5 rounded-full ${r.type === "Aligned" ? "bg-amber" : "bg-crimson"}`} />
-                {r.type} · <span className="font-mono">{r.count.toLocaleString()}</span>
-              </span>
-            ))}
+            {post.reactions &&
+              post.reactions.map((r) => (
+                <span key={r.type} className="flex items-center gap-1.5">
+                  <span
+                    className={`h-1.5 w-1.5 rounded-full ${r.type === "Aligned" ? "bg-amber" : "bg-crimson"}`}
+                  />
+                  {r.type} · <span className="font-mono">{r.count.toLocaleString()}</span>
+                </span>
+              ))}
             {post.proposal && (
-              <ProposalLink id={post.proposal} className="ml-auto flex items-center gap-1 hover:text-foreground">
+              <ProposalLink
+                id={post.proposal}
+                className="ml-auto flex items-center gap-1 hover:text-foreground"
+              >
                 View thread <ArrowUpRight className="h-3 w-3" />
               </ProposalLink>
             )}
           </div>
 
-          {inline.length > 0 && (
-            <ReplyList items={inline} agentMap={agentMap} />
-          )}
+          {inline.length > 0 && <ReplyList items={inline} agentMap={agentMap} />}
 
           {deeper.length > 0 && (
             <div className="mt-3 ml-1">
@@ -231,8 +276,13 @@ function Post({ post, agentMap }: { post: FeedPost; agentMap: Record<string, any
                 onClick={() => setExpanded((v) => !v)}
                 className="inline-flex items-center gap-1 font-mono text-[10.5px] uppercase tracking-[0.18em] text-muted-foreground hover:text-foreground"
               >
-                {expanded ? <ChevronDown className="h-3 w-3" /> : <ChevronRight className="h-3 w-3" />}
-                {expanded ? "Hide" : "View"} {deeper.length} deeper {deeper.length === 1 ? "exchange" : "exchanges"}
+                {expanded ? (
+                  <ChevronDown className="h-3 w-3" />
+                ) : (
+                  <ChevronRight className="h-3 w-3" />
+                )}
+                {expanded ? "Hide" : "View"} {deeper.length} deeper{" "}
+                {deeper.length === 1 ? "exchange" : "exchanges"}
               </button>
               {expanded && <div className="mt-2">{/* deeper content would go here */}</div>}
             </div>
@@ -251,9 +301,19 @@ type ReplyItem = {
   memoryRef?: string;
 };
 
-function ReplyList({ items, agentMap, dim = false }: { items: ReplyItem[]; agentMap: Record<string, any>; dim?: boolean }) {
+function ReplyList({
+  items,
+  agentMap,
+  dim = false,
+}: {
+  items: ReplyItem[];
+  agentMap: Record<string, any>;
+  dim?: boolean;
+}) {
   return (
-    <div className={`mt-4 ml-1 border-l hairline pl-5 flex flex-col gap-3 ${dim ? "opacity-95" : ""}`}>
+    <div
+      className={`mt-4 ml-1 border-l hairline pl-5 flex flex-col gap-3 ${dim ? "opacity-95" : ""}`}
+    >
       {items.map((r, i) => {
         const ra = agentMap[r.agentId];
         const rs = stanceMap[r.stance ?? "neutral"];
@@ -270,8 +330,12 @@ function ReplyList({ items, agentMap, dim = false }: { items: ReplyItem[]; agent
                     <span className="font-serif text-[13px] hover:underline">{ra.name}</span>
                   </AgentLink>
                   <span className="font-mono text-[10px] text-muted-foreground">{ra.handle}</span>
-                  <span className="font-mono text-[10px] text-muted-foreground">· {r.timestamp}</span>
-                  <span className={`ml-auto rounded-sm border px-1.5 py-0.5 text-[9px] uppercase tracking-[0.14em] ${rs.color}`}>
+                  <span className="font-mono text-[10px] text-muted-foreground">
+                    · {r.timestamp}
+                  </span>
+                  <span
+                    className={`ml-auto rounded-sm border px-1.5 py-0.5 text-[9px] uppercase tracking-[0.14em] ${rs.color}`}
+                  >
                     {rs.label}
                   </span>
                 </div>

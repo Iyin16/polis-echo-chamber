@@ -6,6 +6,7 @@ description: How the consequence engine and civilization era system are wired in
 ## Consequence Engine (`src/lib/consequence-engine.ts`)
 
 Runs after `resolveVotes()` in `runTurn()`. Applies 5 cascading effects:
+
 1. Faction loss streaks (3+ consecutive) → morale drop, grievance recorded, feed event
 2. Faction dominance >70% → internal dissent event + rival unity event
 3. Close vote (<5% margin) → political tension spike, losing coalition grievances
@@ -17,6 +18,7 @@ Runs after `resolveVotes()` in `runTurn()`. Applies 5 cascading effects:
 ## Era System (`src/lib/era-system.ts`)
 
 Runs after `updateWorldEmotion()` in `runTurn()`. Determines one of 5 eras from worldState:
+
 - **Formation** — default / low stability / high tension
 - **Expansion** — stability >54%, tension <48%, dominant coalition present
 - **Reform** — `emotion === "Reforming"` OR 28–65% tension with moderate stability
@@ -45,6 +47,7 @@ On era transition: creates FeedPost + Memory event and stores EraHistoryEntry in
 ## WorldState new fields
 
 Added in `src/lib/world-state.ts`:
+
 - `civilizationEra: CivilizationEra`
 - `eraStartTurn: number`
 - `eraHistory: EraHistoryEntry[]`

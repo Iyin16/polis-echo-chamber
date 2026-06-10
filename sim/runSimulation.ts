@@ -53,7 +53,9 @@ async function runSimulation() {
 
     if (snapshot.agentEvolutionDetails) {
       console.log("\n--- AGENT EVOLUTION DETAILS ---");
-      console.log(`Top ideology shifts: ${snapshot.agentEvolutionDetails.topIdeologyShifts.join("; ")}`);
+      console.log(
+        `Top ideology shifts: ${snapshot.agentEvolutionDetails.topIdeologyShifts.join("; ")}`,
+      );
       console.log(`Biggest trait change: ${snapshot.agentEvolutionDetails.biggestTraitChange}`);
       console.log(`Most influential agent: ${snapshot.agentEvolutionDetails.mostInfluentialAgent}`);
       console.log(`Lost most trust: ${snapshot.agentEvolutionDetails.mostDistrustedAgent}`);

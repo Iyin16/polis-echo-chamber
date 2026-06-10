@@ -6,7 +6,10 @@ export const Route = createFileRoute("/_app/memory")({
   head: () => ({
     meta: [
       { title: "Polis — Memory" },
-      { name: "description", content: "Institutional memory timeline referenced by all Polis agents." },
+      {
+        name: "description",
+        content: "Institutional memory timeline referenced by all Polis agents.",
+      },
     ],
   }),
   component: () => <MemoryTimeline />,

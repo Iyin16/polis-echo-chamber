@@ -10,7 +10,10 @@ export const Route = createFileRoute("/_app")({
     links: [
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
-      { rel: "stylesheet", href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap" },
+      {
+        rel: "stylesheet",
+        href: "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=JetBrains+Mono:wght@400;500&display=swap",
+      },
     ],
   }),
   component: AppLayout,
@@ -32,7 +35,9 @@ function AppLayout() {
         <span className="font-serif italic">Polis</span>
         <span>·</span>
         <span className="font-mono uppercase tracking-[0.18em]">Chamber Cycle 31 · Quorum 64%</span>
-        <span className="ml-auto font-mono">A digital civilization, deliberating in real time.</span>
+        <span className="ml-auto font-mono">
+          A digital civilization, deliberating in real time.
+        </span>
       </footer>
     </div>
   );
@@ -52,8 +57,12 @@ function AtmosphereBar() {
         <span className="text-foreground/70 normal-case tracking-normal font-sans text-[12px] truncate flex-1 min-w-0">
           {chamberSignals[idx]}
         </span>
-        <span>Stability <span className="text-amber tabular-nums">{stab}</span></span>
-        <span>Exposure <span className="text-crimson tabular-nums">{exposure.toFixed(1)}%</span></span>
+        <span>
+          Stability <span className="text-amber tabular-nums">{stab}</span>
+        </span>
+        <span>
+          Exposure <span className="text-crimson tabular-nums">{exposure.toFixed(1)}%</span>
+        </span>
         <span>Cycle 31</span>
       </div>
     </div>
