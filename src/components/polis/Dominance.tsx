@@ -1,7 +1,7 @@
-import { agents, factionInfluence, factionTrends, chamberSignals, eras } from "@/lib/polis-data";
+import { agents, factionInfluence, factionTrends, chamberSignals, eras, proposals } from "@/lib/polis-data";
 import { AgentAvatar } from "./AgentAvatar";
 import { driftedValue, useTick, rotatingIndex } from "@/lib/use-live-pulse";
-import { Activity, Crown, Flame, Radio, ShieldAlert, Sparkles } from "lucide-react";
+import { Activity, BrainCircuit, Crown, Flame, Gauge, HeartPulse, Radio, ShieldAlert, Sparkles } from "lucide-react";
 
 export function Dominance() {
   const t = useTick();
