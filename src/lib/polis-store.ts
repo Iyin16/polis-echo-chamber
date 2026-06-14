@@ -478,79 +478,92 @@ export async function submitProposalToPolisSimulation(input: {
   proposerId?: string;
   authorAgentId?: string;
 }) {
-  const existingSlugs = new Set(state.proposals.map((proposal) => proposal.slug));
-  const baseSlug = sanitizeSlug(input.title);
-  const slug = ordinalSlug(baseSlug || `proposal-${Date.now()}`, existingSlugs);
-  const id = `POL-${slug.toUpperCase()}`;
-  const author = input.authorAgentId
-    ? state.agents.find((agent) => agent.id === input.authorAgentId)
-    : undefined;
-  const proposerName = author?.name ?? input.proposerName ?? "Human Delegate";
+  // Delegate proposal creation and the full governance turn execution to the turn engine
+  // This ensures: Create Proposal -> Execute Turn -> Agent Reactions -> Voting -> Resolution -> Influence updates -> Dominance -> World State -> Feed -> Archive
+  try {
+    await advanceTurn({ type: "SUBMIT_PROPOSAL", data: input } as any);
 
-  const newProposal: Proposal = {
-    id,
-    slug,
-    title: input.title,
-    origin: "HUMAN",
-    proposerId: author?.id ?? input.proposerId,
-    proposerName,
-    status: "Created — waiting debate",
-    phase: "Created",
-    statusTag: "Active",
-    lifecycle: "Created",
-    createdTurn: state.worldState.totalAgents,
-    age: 0,
-    category: input.category,
-    summary: input.summary,
-    description: input.description,
-    votes: { for: 0, against: 0, abstain: 0 },
-    supportVotes: 0,
-    opposeVotes: 0,
-    abstainVotes: 0,
-    outcome: "Pending",
-    impactLevel: input.impactLevel,
-    treasuryImpact: "Moderate",
-    treasuryExposure: "Undetermined",
-    risk: 52,
-    riskLevel: "Moderate",
-    memoryTags: [input.category, "HUMAN"],
-    sentimentTrend: [50],
-    sentimentDelta: "+0.0",
-    agentReactions: author
-      ? [
-          {
-            agentId: author.id,
-            position: "endorsed",
-            statement: `${author.name} introduced this human submission.`,
-          },
-        ]
-      : [],
-    historicalReferences: [],
-    upcoming: "Debate begins next turn",
-  };
+    // After advancing the turn, the newest proposal/feed items are at the head of the arrays
+    const createdProposal = state.proposals.find((p) => p.title === input.title) ?? state.proposals[0];
+    const relatedFeed = state.feed.find((f) => f.proposal === createdProposal?.id) ?? state.feed[0];
 
-  const feedPost: FeedPost = {
-    id: `p-proposal-${Date.now()}`,
-    agentId: author?.id ?? "",
-    proposal: newProposal.id,
-    timestamp: "just now",
-    stance: "support",
-    content: `${proposerName} submitted ${newProposal.title} to the chamber as a human-origin proposal.`,
-    memoryRef: input.category,
-    reactions: [{ type: "Aligned", count: 28 }],
-    replies: [],
-  };
+    return { proposal: createdProposal, feed: relatedFeed } as { proposal: Proposal; feed: FeedPost };
+  } catch (e) {
+    // Fall back to creating a queued proposal without executing turn if advance fails
+    const existingSlugs = new Set(state.proposals.map((proposal) => proposal.slug));
+    const baseSlug = sanitizeSlug(input.title);
+    const slug = ordinalSlug(baseSlug || `proposal-${Date.now()}`, existingSlugs);
+    const id = `POL-${slug.toUpperCase()}`;
+    const author = input.authorAgentId
+      ? state.agents.find((agent) => agent.id === input.authorAgentId)
+      : undefined;
+    const proposerName = author?.name ?? input.proposerName ?? "Human Delegate";
 
-  state = {
-    ...state,
-    proposals: [newProposal, ...state.proposals],
-    feed: [feedPost, ...state.feed],
-  };
+    const newProposal: Proposal = {
+      id,
+      slug,
+      title: input.title,
+      origin: "HUMAN",
+      proposerId: author?.id ?? input.proposerId,
+      proposerName,
+      status: "Created — waiting debate",
+      phase: "Created",
+      statusTag: "Active",
+      lifecycle: "Created",
+      createdTurn: state.worldState.totalAgents,
+      age: 0,
+      category: input.category,
+      summary: input.summary,
+      description: input.description,
+      votes: { for: 0, against: 0, abstain: 0 },
+      supportVotes: 0,
+      opposeVotes: 0,
+      abstainVotes: 0,
+      outcome: "Pending",
+      impactLevel: input.impactLevel,
+      treasuryImpact: "Moderate",
+      treasuryExposure: "Undetermined",
+      risk: 52,
+      riskLevel: "Moderate",
+      memoryTags: [input.category, "HUMAN"],
+      sentimentTrend: [50],
+      sentimentDelta: "+0.0",
+      agentReactions: author
+        ? [
+            {
+              agentId: author.id,
+              position: "endorsed",
+              statement: `${author.name} introduced this human submission.`,
+            },
+          ]
+        : [],
+      historicalReferences: [],
+      upcoming: "Debate begins next turn",
+    };
 
-  persistState(state);
-  notify();
+    const feedPost: FeedPost = {
+      id: `p-proposal-${Date.now()}`,
+      agentId: author?.id ?? "",
+      proposal: newProposal.id,
+      timestamp: "just now",
+      stance: "support",
+      content: `${proposerName} submitted ${newProposal.title} to the chamber as a human-origin proposal.`,
+      memoryRef: input.category,
+      reactions: [{ type: "Aligned", count: 28 }],
+      replies: [],
+    };
 
-  return { proposal: newProposal, feed: feedPost };
+    state = {
+      ...state,
+      proposals: [newProposal, ...state.proposals],
+      feed: [feedPost, ...state.feed],
+    };
+
+    persistState(state);
+    notify();
+
+    return { proposal: newProposal, feed: feedPost };
+  }
 }
 
 /**
