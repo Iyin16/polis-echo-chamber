@@ -62,20 +62,11 @@ export function PersonaPanel() {
       return;
     }
     setHasWallet(true);
-<<<<<<< HEAD
     eth
       .request({ method: "eth_accounts" })
-      .then((accounts: string[]) => {
-        setAddress(accounts?.[0] ?? null);
-      })
+      .then((accounts: string[]) => setAddress(accounts?.[0] ?? null))
       .catch(() => null);
-  }, []);
-=======
-    eth.request({ method: "eth_accounts" }).then((accounts: string[]) => {
-      setAddress(accounts?.[0] ?? null);
-    }).catch(() => null);
   }, [agents]);
->>>>>>> 246e9f4d1be2f42f7217b00c610d71750f3b9354
 
   const connectWallet = async () => {
     const eth = (window as any).ethereum;
