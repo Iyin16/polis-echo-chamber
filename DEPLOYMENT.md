@@ -231,3 +231,27 @@ For mainnet deployment:
 - Each agent can be minted only once (tracked by `agentIdToTokenId`)
 - Snapshots can be updated via `updateAgentSnapshot()` without reminting
 - Contract is burnable (owners can burn their tokens)
+
+## Removing committed .env files
+
+If an `.env` file was accidentally committed, stop tracking it and push the change. This does not remove it from repository history.
+
+1) Stop tracking and remove from latest commit:
+
+```bash
+git rm --cached .env
+git commit -m "Remove committed .env and ignore it"
+git push
+```
+
+2) If the secret was pushed and you need to remove it from the repository history, use the BFG Repo-Cleaner (recommended):
+
+```bash
+# install bfg, then
+bfg --delete-files .env
+git reflog expire --expire=now --all
+git gc --prune=now --aggressive
+git push --force
+```
+
+Alternatively, use `git filter-branch` (slower and more complex). After cleaning history, rotate any exposed secrets (change API keys, revoke private keys).
