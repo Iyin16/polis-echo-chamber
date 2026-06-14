@@ -22,6 +22,7 @@ export function Dominance() {
 
   const tension = driftedValue("dom-tension", 62, 4, 0);
   const stability = driftedValue("dom-stability", 71, 3, 0);
+  const currentEra = eras[0] ?? { name: "Formation", description: "" };
 
   const leaderboard = [...agents]
     .map((a) => ({

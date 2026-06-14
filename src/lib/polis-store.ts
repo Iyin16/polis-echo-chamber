@@ -6,6 +6,13 @@ import { generateAgentPortrait } from "./portrait";
 import { getAgentId } from "./agent-id";
 import { mintAgentNFT } from "./use-nft-minting";
 import { createAgentMintedEvent } from "./feed-events";
+import {
+  AgentIntelligenceEngine,
+  type AgentCreationInputs,
+  type AgentIntelligenceProfile,
+} from "./agent-intelligence-engine";
+import { getAWSStorageService } from "./aws-storage-service";
+import { getBlockchainService } from "./blockchain-service";
 import type { Agent, FeedPost, Memory, Proposal, ProposalCategory } from "./polis-data";
 import {
   agents as baseAgents,
