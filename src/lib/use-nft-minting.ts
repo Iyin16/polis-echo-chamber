@@ -101,10 +101,13 @@ export async function mintAgentNFT(request: MintAgentNFTRequest): Promise<MintRe
       await provider.send("eth_requestAccounts", []);
       const signer = await provider.getSigner();
       const ownerAddress = await signer.getAddress();
-      const contractAddress = process.env.REACT_APP_POLIS_NFT_CONTRACT;
+      // Read contract address from Vite env variable
+      // NOTE: Vite exposes env vars as import.meta.env.VITE_*
+      // For browser context use import.meta.env; for node fallback to process.env
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const contractAddress = (typeof import.meta !== "undefined" ? (import.meta as any).env?.VITE_POLIS_NFT_CONTRACT : process.env.VITE_POLIS_NFT_CONTRACT) as string;
 
-      if (!contractAddress)
-        throw new Error("Missing REACT_APP_POLIS_NFT_CONTRACT environment variable");
+      if (!contractAddress) throw new Error("Missing VITE_POLIS_NFT_CONTRACT environment variable");
       const abi = POLIS_AGENT_NFT_ABI;
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       const contract = new ethers.Contract(contractAddress, abi, signer as any);
@@ -155,10 +158,12 @@ export async function mintAgentNFT(request: MintAgentNFTRequest): Promise<MintRe
       .fill(0)
       .map(() => Math.floor(Math.random() * 16).toString(16))
       .join("");
-  const contractAddress =
-    process.env.REACT_APP_POLIS_NFT_CONTRACT || "0x0000000000000000000000000000000000000000";
-  const ownerAddress =
-    process.env.REACT_APP_DEPLOYER_ADDRESS || "0x0000000000000000000000000000000000000000";
+  // Fallback mocks when not configured
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const contractAddress = ((typeof import.meta !== "undefined" ? (import.meta as any).env?.VITE_POLIS_NFT_CONTRACT : process.env.VITE_POLIS_NFT_CONTRACT) as string) || "0x0000000000000000000000000000000000000000";
+  // Deployer address env (optional)
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const ownerAddress = ((typeof import.meta !== "undefined" ? (import.meta as any).env?.VITE_DEPLOYER_ADDRESS : process.env.VITE_DEPLOYER_ADDRESS) as string) || "0x0000000000000000000000000000000000000000";
 
   return {
     tokenId: mockTokenId,
