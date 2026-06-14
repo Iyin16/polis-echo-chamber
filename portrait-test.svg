@@ -1,0 +1,15 @@
+<svg xmlns='http://www.w3.org/2000/svg' width='256' height='256' viewBox='0 0 256 256'>
+    <rect width='100%' height='100%' fill='#0f172a' />
+    <g opacity='0.6599999999999999'>
+      <rect width='100%' height='100%' fill='#16a34a' />
+    </g>
+    <g fill='white' font-family='serif' font-weight='700' text-anchor='middle'>
+      <circle cx='128' cy='96' r='56' fill='rgba(255,255,255,0.06)' stroke='rgba(255,255,255,0.06)' />
+      <text x='128' y='116' font-size='48' fill='white'>TA</text>
+    </g>
+    <g opacity='0.18' fill='white'>
+      <pattern id='g' width='8' height='8' patternUnits='userSpaceOnUse'><rect width='8' height='8' fill='#16a34a'/></pattern><rect width='100%' height='100%' fill='url(#g)'/>
+      
+    </g>
+    <text x='10' y='250' font-size='10' fill='#ffffff88'>Technocrat · Influence:72</text>
+  </svg>
