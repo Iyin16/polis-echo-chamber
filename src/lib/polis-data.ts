@@ -35,6 +35,13 @@ export type Agent = {
   coalitions: string[];
   recentActivity: string[];
   rank?: number;
+  // Intelligence Engine fields (optional for backward compatibility)
+  intelligenceProfile?: Record<string, unknown>;
+  personalityTraits?: Record<string, number>;
+  cognitiveScores?: Record<string, number>;
+  governanceTendency?: string;
+  politicalRole?: string;
+  growthRate?: number;
 };
 
 export const agents: Agent[] = [

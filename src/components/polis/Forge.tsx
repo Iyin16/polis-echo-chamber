@@ -18,7 +18,7 @@ import {
   Loader2,
   Hexagon,
 } from "lucide-react";
-import { createAgentInPolisSimulation } from "@/lib/polis-store";
+import { createAgentInPolisSimulation, createAgentWithIntelligence } from "@/lib/polis-store";
 
 type Title = "Strategist" | "Senator" | "Diplomat" | "Technocrat" | "Revolutionary" | "Architect";
 type Ideology = {
@@ -196,29 +196,40 @@ export function Forge() {
   const handleMint = async () => {
     if (!canMint) return;
     setStatus("minting");
-    await new Promise((r) => setTimeout(r, 2400));
-    const hash =
-      "0x" +
-      Array.from({ length: 64 }, () => "0123456789abcdef"[Math.floor(Math.random() * 16)]).join("");
-    await createAgentInPolisSimulation({
-      name,
-      title,
-      philosophy,
-      ideology: ideologyObj.name,
-      influence,
-      role,
-      faction:
+    try {
+      // Map UI selections to AgentCreationInputs expected by the intelligence engine
+      const intelligenceInputs = {
+        leadershipStyle:
+          title === "Strategist" || title === "Technocrat" ? "Pragmatic" : title === "Senator" ? "Democratic" : "Visionary",
+        governancePhilosophy: ideologyObj.id === "technocratic" ? "Technocratic" : ideologyObj.id === "conservative" ? "Centralized" : "Hybrid",
+        riskTolerance: traits.risk > 65 ? "Aggressive" : traits.risk < 35 ? "Conservative" : "Balanced",
+        communicationStyle: traits.logic > 65 ? "Analytical" : traits.cooperation > 65 ? "Collaborative" : "Persuasive",
+        strategicFocus: ideologyObj.id === "technocratic" ? "Economic" : ideologyObj.id === "diplomatic" ? "Diplomatic" : ideologyObj.id === "populist" ? "Social" : "Cultural",
+        ethicalAlignment: traits.ambition > 70 ? "Pragmatic" : "Neutral",
+        politicalTemperament: traits.cooperation > 60 ? "Cooperative" : "Competitive",
+      } as any;
+
+      const factionName =
         factionMode === "join"
           ? (FACTIONS.find((f) => f.id === factionChoice)?.name ?? "Independent")
           : factionMode === "create"
             ? newFaction || "Unnamed Banner"
-            : "Independent",
-      traits,
-      behavior,
-      governance,
-    });
-    setMintedHash(hash);
-    setStatus("minted");
+            : "Independent";
+
+      const { agent } = await createAgentWithIntelligence({
+        name,
+        title,
+        philosophy,
+        intelligenceInputs,
+        autoMint: true,
+      });
+
+      setMintedHash(agent.nftAddress ?? "");
+      setStatus("minted");
+    } catch (err) {
+      console.error("Forge mint failed", err);
+      setStatus("idle");
+    }
   };
 
   return (

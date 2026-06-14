@@ -200,6 +200,46 @@ export function getPolisAgentById(agentId: string) {
   return state.agents.find((agent) => agent.id === agentId) ?? null;
 }
 
+/**
+ * Advance the simulation by one turn by invoking the turn engine.
+ * Updates local store state, persists, and notifies subscribers.
+ */
+export async function advanceTurn(playerAction?: unknown) {
+  try {
+    // Lazy import to avoid circular deps at module load time
+    const { runTurn } = await import("./turnEngine");
+    const turnState = {
+      ...state,
+      turn: (state.worldState as any)?.turn ?? 0,
+      factions: (state.worldState as any)?.factions ?? {},
+      events: [],
+      proposals: state.proposals,
+      history: (state.worldState as any)?.history ?? [],
+    } as any;
+
+    const newState = await runTurn(turnState as any, playerAction as any);
+
+    // Map returned TurnState back into PolisState shape
+    state = {
+      agents: newState.agents,
+      feed: newState.feed,
+      memories: newState.memories,
+      proposals: newState.proposals,
+      worldState: {
+        ...(newState.worldState ?? {}),
+        totalAgents: newState.agents.length,
+      },
+    };
+
+    persistState(state);
+    notify();
+    return state;
+  } catch (e) {
+    console.error("advanceTurn failed:", e);
+    throw e;
+  }
+}
+
 export async function createAgentInPolisSimulation(input: {
   name: string;
   title: string;
@@ -511,4 +551,309 @@ export async function submitProposalToPolisSimulation(input: {
   notify();
 
   return { proposal: newProposal, feed: feedPost };
+}
+
+/**
+ * Enhanced agent creation using Agent Intelligence Engine
+ * Generates full intelligence profile and optionally mints NFT with portrait
+ */
+export async function createAgentWithIntelligence(input: {
+  name: string;
+  title: string;
+  philosophy: string;
+  intelligenceInputs: AgentCreationInputs;
+  portraitImage?: Blob | string; // Generated AI portrait
+  autoMint?: boolean;
+}) {
+  // 1. Generate intelligence profile
+  const intelligenceProfile = AgentIntelligenceEngine.generateProfile(
+    input.intelligenceInputs
+  );
+
+  // 2. Build base agent from intelligence
+  const existingSlugs = new Set(state.agents.map((agent) => agent.slug));
+  const baseSlug = sanitizeSlug(input.name);
+  const slug = ordinalSlug(baseSlug || `agent-${Date.now()}`, existingSlugs);
+  const id = `a-${Math.abs(
+    Array.from({ length: 6 }).reduce<number>((hash, _, index) => {
+      const char = input.name.charCodeAt(index % input.name.length) || 0;
+      return (hash << 5) - hash + char + index;
+    }, 0),
+  )}`;
+
+  // Use intelligence to set initial stats
+  const influence = Math.round(intelligenceProfile.growthPotential.projectedInfluence);
+  const reputation = Math.round(intelligenceProfile.growthPotential.projectedReputation);
+  const faction = intelligenceProfile.recommendedFaction;
+  const ideology = intelligenceProfile.ideologyAnchor.primaryIdeology;
+  const governanceRole = intelligenceProfile.governanceTendency;
+  const politicalRole = intelligenceProfile.projectedRole;
+
+  const color = selectColor(faction);
+  const traitsList = Object.entries(intelligenceProfile.personalityTraits)
+    .filter(([, value]) => value > 60)
+    .map(([key]) =>
+      key
+        .replace(/([A-Z])/g, " $1")
+        .trim()
+        .split(" ")
+        .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+        .join("")
+    )
+    .slice(0, 3);
+
+  const rank = rankForInfluence(influence);
+
+  // 3. Upload portrait to S3 if provided
+  let portraitUrl = "";
+  if (input.portraitImage) {
+    try {
+      const storageService = getAWSStorageService();
+      const { url } = storageService.generatePresignedPutUrl(id, 3600);
+      portraitUrl = url;
+
+      // In production, upload would happen here
+      // await fetch(uploadUrl, { method: "PUT", body: portraitImage });
+    } catch (e) {
+      console.warn("Failed to upload portrait to S3:", e);
+      // Continue without portrait URL
+    }
+  }
+
+  // 4. Create agent with full intelligence profile
+  const newAgent: Agent = {
+    id,
+    slug,
+    name: input.name,
+    handle: `@${slug}.polis`,
+    ideology,
+    faction,
+    portraitUri: portraitUrl || undefined,
+    reputation,
+    influence,
+    traits: traitsList.length > 0 ? traitsList : ["Unclassified"],
+    status: "idle",
+    initials: agentInitials(input.name),
+    color,
+    philosophy: input.philosophy || intelligenceProfile.behaviorProfile,
+    temperament: `${governanceRole} • ${politicalRole}`,
+    riskTolerance: `${Math.round(intelligenceProfile.cognitiveScores.stabilityPreference)}% stability preference`,
+    votingHistory: [],
+    memoryReferences: [],
+    allies: [],
+    rivals: [],
+    coalitions: [],
+    recentActivity: [
+      `Manifests as a ${governanceRole} with ${politicalRole} tendencies.`,
+      `Political alignment: ${ideology} (${intelligenceProfile.ideologyAnchor.ideologyStrength}% conviction).`,
+    ],
+    rank,
+    // Extended fields for intelligence
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    intelligenceProfile: intelligenceProfile as any,
+    personalityTraits: intelligenceProfile.personalityTraits,
+    cognitiveScores: intelligenceProfile.cognitiveScores,
+    governanceTendency: governanceRole,
+    politicalRole,
+    growthRate: intelligenceProfile.growthPotential.growthRate,
+  };
+
+  // 5. Create memory entry
+  const memoryTitle = `Founding of ${input.name}`;
+  const memory: Memory = {
+    id: `m-${slug}`,
+    slug: `founding-${slug}`,
+    cycle: `Cycle ${state.memories.length + 1}`,
+    date: new Date().toLocaleDateString("en-US", { month: "short", year: "numeric" }),
+    title: memoryTitle,
+    category: "Community",
+    summary: `The founding of ${input.name} introduced a new sovereign actor into the Polis chamber as a ${governanceRole}.`,
+    weight: 62,
+    fullSummary: `${input.name} entered the chamber as a ${ideology} ${governanceRole} aligned with ${faction}. Intelligence profile indicates ${intelligenceProfile.behaviorProfile.toLowerCase()}`,
+    consequences: [
+      `Introduced ${governanceRole} archetype to chamber dynamics.`,
+      `Established ${ideology} ideological anchor at ${intelligenceProfile.ideologyAnchor.ideologyStrength}% conviction strength.`,
+    ],
+    involvedAgents: [{ agentId: newAgent.id, role: governanceRole }],
+    longTermImpact: [
+      `Growth trajectory: ${intelligenceProfile.growthPotential.growthRate > 0 ? "ascending" : "declining"} at ${Math.abs(intelligenceProfile.growthPotential.growthRate).toFixed(2)}/turn`,
+    ],
+    trustImpact: `Entered at ${reputation} reputation, ${influence} influence.`,
+    citationCount: 1,
+    archivedOn0g: false,
+  };
+
+  newAgent.memoryReferences = [
+    { memory: memory.title, note: "Founding event with intelligence profile." },
+  ];
+
+  // 6. Create feed post
+  const feedPost: FeedPost = {
+    id: `p-${slug}-${Date.now()}`,
+    agentId: newAgent.id,
+    proposal: "Founding Declaration",
+    timestamp: "just now",
+    stance: "support",
+    content: `${input.name}, a ${governanceRole}, has entered as a new sovereign actor aligned with ${faction}. ${intelligenceProfile.behaviorProfile}`,
+    memoryRef: memory.title,
+    reactions: [{ type: "Aligned", count: 172 }],
+    replies: [],
+  };
+
+  // 7. Update state
+  const nextWorldState = {
+    ...state.worldState,
+    totalAgents: state.agents.length + 1,
+  };
+  const computedEra = determineEra(nextWorldState as any);
+  const ERA_LABEL_MAP: Record<string, string> = {
+    Formation: "Formation Era",
+    Expansion: "Expansion Era",
+    Reform: "Reform Era",
+    Crisis: "Crisis Era",
+    Consolidation: "Consolidation Era",
+  };
+
+  const nextState: PolisState = {
+    agents: [...state.agents, newAgent],
+    feed: [feedPost, ...state.feed],
+    memories: [memory, ...state.memories],
+    proposals: [...state.proposals],
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
+    worldState: {
+      ...nextWorldState,
+      civilizationEra: computedEra,
+      currentEra: ERA_LABEL_MAP[computedEra] ?? `${computedEra} Era`,
+    } as any,
+  };
+
+  state = nextState;
+  persistState(state);
+  notify();
+
+  // 8. Optional: Mint NFT with full intelligence profile
+  if (input.autoMint) {
+    try {
+      const metadata = getAWSStorageService().generateMetadata({
+        agentId: newAgent.id,
+        name: newAgent.name,
+        faction: newAgent.faction,
+        influence: newAgent.influence,
+        reputation: newAgent.reputation,
+        ideology: newAgent.ideology,
+        governanceStyle: newAgent.temperament,
+        creationTurn: state.worldState.totalAgents,
+        traits: JSON.stringify(intelligenceProfile.personalityTraits),
+        cognitiveScores: JSON.stringify(intelligenceProfile.cognitiveScores),
+        portraitUrl: portraitUrl || "ipfs://QmDefaultPortrait",
+      });
+
+      // Attempt to use blockchain service for minting
+      try {
+        const blockchainService = getBlockchainService();
+        const result = await blockchainService.mintAgentNFT(
+          (window as any).ethereum?.selectedAddress || "",
+          newAgent.id,
+          {
+            agentName: newAgent.name,
+            ideology: newAgent.ideology,
+            faction: newAgent.faction,
+            influenceSnapshot: newAgent.influence,
+            reputationSnapshot: newAgent.reputation,
+            createdTurn: state.worldState.totalAgents,
+            metadataURI: JSON.stringify(metadata),
+            traits: JSON.stringify(intelligenceProfile.personalityTraits),
+            cognitiveScores: JSON.stringify(intelligenceProfile.cognitiveScores),
+            governanceTendency: governanceRole,
+            portraitUrl,
+          }
+        );
+
+        // Update agent with NFT info
+        newAgent.nftTokenId = result.tokenId;
+        newAgent.nftAddress = result.txHash;
+        newAgent.nftMintedAt = Date.now();
+
+        state = {
+          ...state,
+          agents: state.agents.map((a) =>
+            a.id === newAgent.id
+              ? {
+                  ...a,
+                  nftTokenId: result.tokenId,
+                  nftAddress: result.txHash,
+                  nftMintedAt: newAgent.nftMintedAt,
+                }
+              : a
+          ),
+          feed: [
+            createAgentMintedEvent(
+              newAgent.name,
+              newAgent.id,
+              result.tokenId,
+              result.txHash,
+              (window as any).ethereum?.selectedAddress || "",
+              state.worldState.totalAgents
+            ),
+            ...state.feed,
+          ],
+        };
+
+        persistState(state);
+        notify();
+      } catch (e) {
+        // Fall back to old minting method if blockchain service fails
+        console.warn("Blockchain service minting failed, trying legacy method:", e);
+        const legacyResult = await mintAgentNFT({
+          agentId: newAgent.id,
+          agentName: newAgent.name,
+          ideology: newAgent.ideology,
+          faction: newAgent.faction,
+          influenceSnapshot: newAgent.influence,
+          createdTurn: state.worldState.totalAgents,
+          metadataURI: JSON.stringify(metadata),
+        } as any);
+
+        newAgent.nftTokenId = legacyResult.tokenId;
+        newAgent.nftAddress = legacyResult.contractAddress;
+        newAgent.nftMintedAt = Date.now();
+
+        state = {
+          ...state,
+          agents: state.agents.map((a) =>
+            a.id === newAgent.id
+              ? {
+                  ...a,
+                  nftTokenId: legacyResult.tokenId,
+                  nftAddress: legacyResult.contractAddress,
+                  nftMintedAt: newAgent.nftMintedAt,
+                }
+              : a
+          ),
+        };
+
+        persistState(state);
+        notify();
+      }
+    } catch (e) {
+      console.error("Agent NFT minting failed:", e);
+      const errMsg = e instanceof Error ? e.message : "Mint failed";
+      const failPost: FeedPost = {
+        id: `p-mintfail-${Date.now()}`,
+        agentId: newAgent.id,
+        proposal: "MintAttempt",
+        timestamp: "just now",
+        stance: "neutral",
+        content: `Intelligence-guided mint attempt failed: ${errMsg}`,
+        memoryRef: "MintFailure",
+        reactions: [],
+        replies: [],
+      };
+      state = { ...state, feed: [failPost, ...state.feed] };
+      persistState(state);
+      notify();
+    }
+  }
+
+  return { agent: newAgent, feed: feedPost, memory, intelligenceProfile };
 }

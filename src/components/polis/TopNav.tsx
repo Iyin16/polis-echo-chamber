@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { Activity, AlertTriangle, Bell, Search, Siren, Wallet } from "lucide-react";
 import { chamberAlerts, chamberSignals } from "@/lib/polis-data";
 import { rotatingIndex } from "@/lib/use-live-pulse";
+import { advanceTurn } from "@/lib/polis-store";
+import { toast } from "sonner";
 
 const tabs = [
   { label: "Feed", to: "/" as const, exact: true },
@@ -63,6 +65,7 @@ export function TopNav() {
             <Activity className="h-3.5 w-3.5 text-amber" />
             <span className="font-mono text-[11px] text-muted-foreground">SYS · NOMINAL</span>
           </div>
+          <AdvanceTurnButton />
           <WalletConnectButton />
         </div>
       </div>
@@ -162,6 +165,32 @@ function WalletConnectButton() {
             ? "Connecting…"
             : "Connect Wallet"
         : "Install Wallet"}
+    </button>
+  );
+}
+
+function AdvanceTurnButton() {
+  const [busy, setBusy] = useState(false);
+  const handle = async () => {
+    setBusy(true);
+    try {
+      await advanceTurn();
+      toast.success("Advanced simulation by one turn");
+    } catch (e) {
+      toast.error("Advance turn failed");
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <button
+      type="button"
+      onClick={handle}
+      disabled={busy}
+      className="hidden md:inline-flex items-center gap-2 rounded-md border hairline bg-panel/60 px-3 py-1.5 text-[11px] text-muted-foreground hover:text-foreground"
+    >
+      {busy ? "Advancing…" : "Advance Turn"}
     </button>
   );
 }

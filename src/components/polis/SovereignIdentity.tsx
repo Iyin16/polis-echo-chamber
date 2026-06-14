@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { ExternalLink, Gem, ShieldCheck, Sparkles } from "lucide-react";
-import { mintAgentNFT, buildAgentMetadata, type MintAgentNFTRequest } from "@/lib/use-nft-minting";
+import { buildAgentMetadata, type MintAgentNFTRequest } from "@/lib/use-nft-minting";
+import { getBlockchainService } from "@/lib/blockchain-service";
+import { ethers } from "ethers";
 import { AgentAvatar } from "./AgentAvatar";
 import { toast } from "sonner";
 import type { Agent } from "@/lib/polis-data";
@@ -71,22 +73,66 @@ export function SovereignIdentity({
     setMinting(true);
     try {
       const meta = buildAgentMetadata(agent);
-      const req: MintAgentNFTRequest = {
-        agentId: agent.id,
-        agentName: agent.name,
-        ideology: agent.ideology,
-        faction: agent.faction,
-        influenceSnapshot: agent.influence,
-        createdTurn,
-        metadataURI: `data:application/json;base64,${typeof window !== "undefined" ? btoa(JSON.stringify(meta)) : ""}`,
-      };
-      const res = await mintAgentNFT(req);
-      const record: MintRecord = { ...res, mintedAt: Date.now() };
-      saveMint(agent.id, record);
-      setMint(record);
-      toast.success("Sovereign identity anchored", {
-        description: `${agent.name} · Token #${res.tokenId} on Arbitrum`,
-      });
+      const metadataURI = `data:application/json;base64,${typeof window !== "undefined" ? btoa(JSON.stringify(meta)) : ""}`;
+
+      // Attempt to use BlockchainService + wallet signer if available
+      if (typeof window !== "undefined" && (window as any).ethereum) {
+        const provider = new ethers.BrowserProvider((window as any).ethereum as any);
+        const signer = await provider.getSigner();
+        const owner = await signer.getAddress();
+
+        const blockchainService = getBlockchainService(import.meta.env.VITE_POLIS_NFT_CONTRACT as string);
+        await blockchainService.connectSigner(signer as any);
+
+        const agentData = {
+          agentName: agent.name,
+          ideology: agent.ideology,
+          faction: agent.faction,
+          influenceSnapshot: agent.influence ?? 0,
+          reputationSnapshot: agent.reputation ?? 0,
+          createdTurn,
+          metadataURI,
+          traits: JSON.stringify(agent.personalityTraits ?? {}),
+          cognitiveScores: JSON.stringify(agent.cognitiveScores ?? {}),
+          governanceTendency: agent.governanceTendency ?? "",
+          portraitUrl: agent.portraitUri ?? "",
+        };
+
+        const res = await blockchainService.mintAgentNFT(owner, agent.id, agentData as any);
+        const record: MintRecord = {
+          tokenId: res.tokenId,
+          txHash: res.txHash,
+          contractAddress: import.meta.env.VITE_POLIS_NFT_CONTRACT as string,
+          ownerAddress: owner,
+          blockExplorerUrl: blockchainService.getExplorerTxUrl(res.txHash),
+          mintedAt: Date.now(),
+        };
+
+        saveMint(agent.id, record);
+        setMint(record);
+        toast.success("Sovereign identity anchored", {
+          description: `${agent.name} · Token #${res.tokenId} on Arbitrum`,
+        });
+      } else {
+        // Fallback to legacy mint endpoint (no signer)
+        const req: MintAgentNFTRequest = {
+          agentId: agent.id,
+          agentName: agent.name,
+          ideology: agent.ideology,
+          faction: agent.faction,
+          influenceSnapshot: agent.influence,
+          createdTurn,
+          metadataURI,
+        };
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        const res = await (await import("@/lib/use-nft-minting")).mintAgentNFT(req as any);
+        const record: MintRecord = { ...res, mintedAt: Date.now() };
+        saveMint(agent.id, record);
+        setMint(record);
+        toast.success("Sovereign identity anchored", {
+          description: `${agent.name} · Token #${res.tokenId} on Arbitrum`,
+        });
+      }
     } catch (e: unknown) {
       const msg = e instanceof Error ? e.message : "Mint failed";
       toast.error("Mint failed", { description: msg });
