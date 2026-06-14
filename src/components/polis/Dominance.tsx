@@ -1,15 +1,8 @@
-<<<<<<< HEAD
-import { agents, factionInfluence, factionTrends, chamberSignals } from "@/lib/polis-data";
+import { agents, factionInfluence, factionTrends, chamberSignals, eras, proposals } from "@/lib/polis-data";
 import { EraPanel } from "./EraPanel";
 import { AgentAvatar } from "./AgentAvatar";
 import { driftedValue, useTick, rotatingIndex } from "@/lib/use-live-pulse";
-import { Activity, Crown, Flame, Radio, ShieldAlert } from "lucide-react";
-=======
-import { agents, factionInfluence, factionTrends, chamberSignals, eras, proposals } from "@/lib/polis-data";
-import { AgentAvatar } from "./AgentAvatar";
-import { driftedValue, useTick, rotatingIndex } from "@/lib/use-live-pulse";
 import { Activity, BrainCircuit, Crown, Flame, Gauge, HeartPulse, Radio, ShieldAlert, Sparkles } from "lucide-react";
->>>>>>> 246e9f4d1be2f42f7217b00c610d71750f3b9354
 
 export function Dominance() {
   const t = useTick();
@@ -166,15 +159,8 @@ export function Dominance() {
       {/* Header */}
       <div className="flex flex-wrap items-end justify-between gap-3 mb-6">
         <div>
-<<<<<<< HEAD
-          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">
-            Command Layer · Live
-          </p>
-          <h1 className="font-serif text-2xl md:text-3xl tracking-tight mt-1">Faction Dominance</h1>
-=======
           <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-muted-foreground">Command Layer · Live</p>
           <h2 className="font-serif text-xl md:text-2xl tracking-tight mt-1">Faction Dominance</h2>
->>>>>>> 246e9f4d1be2f42f7217b00c610d71750f3b9354
           <p className="text-[12.5px] text-muted-foreground mt-1 max-w-xl">
             Real-time monitoring of civilizational power balance across the chamber.
           </p>

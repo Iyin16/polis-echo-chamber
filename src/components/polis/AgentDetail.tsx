@@ -9,7 +9,7 @@ import { usePolisStore } from "@/lib/polis-store";
 import { AgentAvatar } from "./AgentAvatar";
 import ChainStatus from "./ChainStatus";
 import { AgentLink, EntityText, MemoryLink, ProposalLink } from "./EntityText";
-<<<<<<< HEAD
+import { SovereignIdentity } from "./SovereignIdentity";
 import {
   Dialog,
   DialogTrigger,
@@ -20,10 +20,6 @@ import {
   DialogFooter,
   DialogClose,
 } from "@/components/ui/dialog";
-=======
-import { SovereignIdentity } from "./SovereignIdentity";
-import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from "@/components/ui/dialog";
->>>>>>> 246e9f4d1be2f42f7217b00c610d71750f3b9354
 import { Badge } from "@/components/ui/badge";
 import { driftedValue } from "@/lib/use-live-pulse";
 import { ArrowLeft } from "lucide-react";
