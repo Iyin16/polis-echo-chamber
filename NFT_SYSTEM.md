@@ -227,7 +227,7 @@ polis-echo-chamber/
 **Required for minting to work:**
 
 ```env
-REACT_APP_POLIS_NFT_CONTRACT=0x...      # Contract address
+VITE_POLIS_NFT_CONTRACT=0x...      # Contract address
 REACT_APP_POLIS_NFT_CHAIN_ID=421614     # Arbitrum Sepolia ID
 REACT_APP_ARBITRUM_RPC_URL=https://...  # RPC endpoint
 REACT_APP_DEPLOYER_ADDRESS=0x...        # Owner wallet

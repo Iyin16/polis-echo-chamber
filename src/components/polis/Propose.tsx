@@ -485,25 +485,25 @@ export function Propose() {
         authorAgentId: undefined,
       } as any;
 
-      // Use real simulation pipeline which will attempt to advance the turn
-      // and return the created proposal + feed.
-      // submitProposalToPolisSimulation internally delegates to advanceTurn(),
-      // ensuring reactions, voting, influence updates, and feed generation.
+      // Use the real simulation pipeline and advance the turn as part of proposal submission.
+      // submitProposalToPolisSimulation delegates to advanceTurn() and returns the created proposal + feed.
       // Import lazily to avoid module cycles in the browser bundler.
       const { submitProposalToPolisSimulation } = await import("@/lib/polis-store");
 
       const result = await submitProposalToPolisSimulation(input);
-
-      // If result contains a proposal, present confirmation using returned values
       const created = result?.proposal as any;
       const feedItem = result?.feed as any;
 
+      if (!created) {
+        throw new Error("Simulation did not return a created proposal");
+      }
+
       const confirmedData = {
-        id: created?.id ?? created?.slug ?? randId(),
-        title: created?.title ?? title,
-        category: (created?.category as any) ?? category,
-        turn: created?.createdTurn ?? 0,
-        hash: feedItem?.id ?? feedItem?.memoryRef ?? randHash(),
+        id: created.id ?? created.slug,
+        title: created.title,
+        category: created.category as Category,
+        turn: created.createdTurn ?? 0,
+        hash: feedItem?.id ?? feedItem?.memoryRef ?? "",
       };
 
       setConfirmed(confirmedData as any);
@@ -514,10 +514,7 @@ export function Propose() {
     } catch (err) {
       console.error("Proposal submission failed:", err);
       toast.error("Proposal submission failed — see console");
-      // Fall back to original mock flow so user still sees feedback
-      const id = randId();
-      setConfirmed({ id, title, category, turn: 31, hash: randHash() });
-      setPhase("confirmed");
+      setPhase("form");
     }
   };
 

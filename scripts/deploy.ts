@@ -71,7 +71,7 @@ async function main() {
 
   // Print env setup instructions
   console.log(`\n📋 Add to .env.local for frontend:`);
-  console.log(`   REACT_APP_POLIS_NFT_CONTRACT=${contract.address}`);
+  console.log(`   VITE_POLIS_NFT_CONTRACT=${contract.address}`);
   console.log(`   REACT_APP_POLIS_NFT_CHAIN_ID=${(await ethers.provider.getNetwork()).chainId}`);
   console.log(`   REACT_APP_DEPLOYER_ADDRESS=${deployer.address}`);
 

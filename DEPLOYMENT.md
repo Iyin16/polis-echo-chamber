@@ -91,7 +91,7 @@ async function main() {
 
   // Save to env for frontend
   console.log(`\nAdd to .env.local:`);
-  console.log(`REACT_APP_POLIS_NFT_CONTRACT=${contract.address}`);
+  console.log(`VITE_POLIS_NFT_CONTRACT=${contract.address}`);
   console.log(`REACT_APP_POLIS_NFT_CHAIN_ID=421614`);
 }
 
@@ -122,7 +122,7 @@ npx hardhat run scripts/deploy.ts --network arbitrumSepolia
 Save the contract address to `.env.local` in the frontend:
 
 ```
-REACT_APP_POLIS_NFT_CONTRACT=0x...
+VITE_POLIS_NFT_CONTRACT=0x...
 REACT_APP_POLIS_NFT_CHAIN_ID=421614
 REACT_APP_DEPLOYER_ADDRESS=0x...
 ```
@@ -140,7 +140,7 @@ npx hardhat verify --network arbitrumSepolia <CONTRACT_ADDRESS>
 Add to `.env.local`:
 
 ```
-REACT_APP_POLIS_NFT_CONTRACT=0xYourContractAddress
+VITE_POLIS_NFT_CONTRACT=0xYourContractAddress
 REACT_APP_POLIS_NFT_CHAIN_ID=421614
 REACT_APP_DEPLOYER_ADDRESS=0xYourDeployerAddress
 REACT_APP_ARBITRUM_RPC_URL=https://sepolia-rollup.arbitrum.io/rpc
