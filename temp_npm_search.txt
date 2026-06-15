@@ -1,0 +1,413 @@
+
+
+IgnoreCase : True
+LineNumber : 1836
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@lovab
+             le.dev/vite-tanstack-config/-/vite-tanstack-config-2.3.2.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 1966
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@oxc-p
+             roject/types/-/types-0.134.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3635
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@redux
+             js/toolkit/-/toolkit-2.12.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3661
+Line       :       "resolved": "http://package-firewall.replit.local/npm/immer/
+             -/immer-11.1.8.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3671
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-android-arm64/-/binding-android-arm64-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3687
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-darwin-arm64/-/binding-darwin-arm64-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3703
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-darwin-x64/-/binding-darwin-x64-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3719
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-freebsd-x64/-/binding-freebsd-x64-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3735
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-linux-arm-gnueabihf/-/binding-linux-arm-gnueabihf-1.1.
+             0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3751
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-linux-arm64-gnu/-/binding-linux-arm64-gnu-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3767
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-linux-arm64-musl/-/binding-linux-arm64-musl-1.1.0.tgz"
+             ,
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3783
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-linux-ppc64-gnu/-/binding-linux-ppc64-gnu-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3799
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-linux-s390x-gnu/-/binding-linux-s390x-gnu-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3815
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-linux-x64-gnu/-/binding-linux-x64-gnu-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3831
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-linux-x64-musl/-/binding-linux-x64-musl-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3847
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-openharmony-arm64/-/binding-openharmony-arm64-1.1.0.tg
+             z",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3863
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-wasm32-wasi/-/binding-wasm32-wasi-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3881
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-win32-arm64-msvc/-/binding-win32-arm64-msvc-1.1.0.tgz"
+             ,
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3897
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rolld
+             own/binding-win32-x64-msvc/-/binding-win32-x64-msvc-1.1.0.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3919
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-android-arm-eabi/-/rollup-android-arm-eabi-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3932
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-android-arm64/-/rollup-android-arm64-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3945
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-darwin-arm64/-/rollup-darwin-arm64-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3958
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-darwin-x64/-/rollup-darwin-x64-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3971
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-freebsd-arm64/-/rollup-freebsd-arm64-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3984
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-freebsd-x64/-/rollup-freebsd-x64-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 3997
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-arm-gnueabihf/-/rollup-linux-arm-gnueabihf-4.61.1.t
+             gz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4010
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-arm-musleabihf/-/rollup-linux-arm-musleabihf-4.61.1
+             .tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4023
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-arm64-gnu/-/rollup-linux-arm64-gnu-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4036
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-arm64-musl/-/rollup-linux-arm64-musl-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4049
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-loong64-gnu/-/rollup-linux-loong64-gnu-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4062
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-loong64-musl/-/rollup-linux-loong64-musl-4.61.1.tgz
+             ",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4075
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-ppc64-gnu/-/rollup-linux-ppc64-gnu-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4088
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-ppc64-musl/-/rollup-linux-ppc64-musl-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4101
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-riscv64-gnu/-/rollup-linux-riscv64-gnu-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4114
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-riscv64-musl/-/rollup-linux-riscv64-musl-4.61.1.tgz
+             ",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4127
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-s390x-gnu/-/rollup-linux-s390x-gnu-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4140
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-x64-gnu/-/rollup-linux-x64-gnu-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4153
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-linux-x64-musl/-/rollup-linux-x64-musl-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4166
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-openbsd-x64/-/rollup-openbsd-x64-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+IgnoreCase : True
+LineNumber : 4179
+Line       :       "resolved": "http://package-firewall.replit.local/npm/@rollu
+             p/rollup-openharmony-arm64/-/rollup-openharmony-arm64-4.61.1.tgz",
+Filename   : package-lock.json
+Path       : C:\Users\HP\polis-echo-chamber\package-lock.json
+Pattern    : package-firewall.replit.local|package-firewall|replit.local
+Context    : 
+Matches    : {0}
+
+
+
+

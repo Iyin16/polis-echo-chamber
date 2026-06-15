@@ -23,7 +23,7 @@ const config: HardhatUserConfig = {
       chainId: 1337,
     },
     arbitrumSepolia: {
-      url: process.env.ARB_SEPOLIA_RPC_URL || "https://arb-sepolia.g.alchemy.com/v2/kReObv8FQfNimOHTFm2zD",
+      url: process.env.ARB_SEPOLIA_RPC_URL || "",
       accounts: process.env.DEPLOYER_PRIVATE_KEY ? [process.env.DEPLOYER_PRIVATE_KEY] : [],
       chainId: 421614,
     },
@@ -35,7 +35,7 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: {
-      arbitrumSepolia: process.env.ARBISCAN_API_KEY || "C5ZHSRSHQ6CYA3VKNP1CFAI88YQBVFVNYQ",
+      arbitrumSepolia: process.env.ARBISCAN_API_KEY || "",
       arbitrumOne: process.env.ARBISCAN_API_KEY || "",
     },
     customChains: [

@@ -34,7 +34,7 @@ export function TopNav() {
           </div>
         </div>
 
-        <nav className="ml-2 hidden xl:flex items-center gap-1 min-w-0">
+        <nav className="ml-2 hidden md:flex items-center gap-1 min-w-0">
           {tabs.map((t) => (
             <Link
               key={t.to}
